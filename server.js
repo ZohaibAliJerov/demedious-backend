@@ -10,6 +10,9 @@ const app = express();
 //port config
 const port = process.env.PORT || 3000;
 
+//services
+florenceService();
+
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
