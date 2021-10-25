@@ -8,7 +8,7 @@ const florenceService = async () => {
   const page = await browser.newPage();
   const url =
     "https://www.florence-nightingale-krankenhaus.de/de/karriere/stellenausschreibungen.html?type=0%27a%3D0%27a%3D0%3Fref%3Dausbildungsatlas";
-  await page.goto(ulr, { timeout: 0 });
+  await page.goto(url, { timeout: 0 });
   await page.waitForNavigation();
   await page.waitForTimeout(3000);
 
