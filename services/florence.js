@@ -34,3 +34,5 @@ async function autoScroll(page) {
     });
   });
 }
+
+export default florenceService;
