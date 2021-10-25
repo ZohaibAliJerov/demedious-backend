@@ -4,7 +4,7 @@
 import puppeteer from "puppeteer";
 
 const florenceService = async () => {
-  const browser = await puppeteer.launch({ headles: false });
+  const browser = await puppeteer.launch({ headless: false });
   const page = await browser.newPage();
   const url =
     "https://www.florence-nightingale-krankenhaus.de/de/karriere/stellenausschreibungen.html?type=0%27a%3D0%27a%3D0%3Fref%3Dausbildungsatlas";
