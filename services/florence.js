@@ -26,6 +26,15 @@ const florenceService = async () => {
         }
       }, delay);
     });
+    //get all job links
+    let allJobs = [];
+    let jobs = await page.evaluate(() => {
+      return Array.from(
+        document.querySelectorAll("div.news-list-item.clearfix > h2 > a")
+      ).map((el) => el.href);
+    });
+    allJobs.push(jobs);
+    console.log(allJobs);
   } catch (err) {
     console.log(err);
   }
