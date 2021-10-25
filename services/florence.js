@@ -10,12 +10,19 @@ const florenceService = async () => {
     "https://www.florence-nightingale-krankenhaus.de/de/karriere/stellenausschreibungen.html?type=0%27a%3D0%27a%3D0%3Fref%3Dausbildungsatlas";
   await page.goto(url, { timeout: 0 });
   await page.waitForNavigation();
-  await page.waitForTimeout(3000);
 
   //scroll the page
-  for (let i = 0; i < 5; i++) {
-    await page.keyboard.press("Space");
-  }
+  const distance = 100;
+  const delay = 100;
+  const timer = setInterval(() => {
+    document.scrollingElement.scrollBy(0, distance);
+    if (
+      document.scrollingElement.scrollTop + window.innerHeight >=
+      document.scrollingElement.scrollHeight
+    ) {
+      clearInterval(timer);
+    }
+  }, delay);
 };
 
 export default florenceService;
