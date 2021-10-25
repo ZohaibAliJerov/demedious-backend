@@ -13,6 +13,9 @@ const florenceService = async () => {
   await page.waitForTimeout(3000);
 
   //scroll the page
+  for (let i = 0; i < 5; i++) {
+    await page.keyboard.press("Space");
+  }
 };
 
 export default florenceService;
