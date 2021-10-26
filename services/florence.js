@@ -44,10 +44,8 @@ const florenceService = async () => {
       console.log(allJobs);
       if (counter == 0) {
         page.evaluate(() => {
-          pages.push(
-            Array.from(
-              document.querySelectorAll("div.browseLinksWrap > span > font")
-            )
+          [...document.querySelectorAll("div.browseLinksWrap > a")].map(
+            (el) => el.href
           );
         });
       }
