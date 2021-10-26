@@ -7,18 +7,18 @@ import puppeteer from "puppeteer";
 
 
     // // contact and address scrape and stored in and array
-    // const addresscon = await page.evaluate(() =>
+    const addresscon = await page.evaluate(() =>{
+        Array.from(document.querySelectorAll('div.article-text a')).map(e => e.href)
+    });
 
-    // Array.from(document.querySelectorAll("p.adressData")).map((e) => e.innerText));
-
-    //     console.log(addresscon) 
+        console.log(addresscon) 
     // click to appy button 
 
     // const clickButton = await page.click('a[href="https://recruiting.lwl.org/r/z11rvmk4ipw44b4/Assistenz%C3%A4rztinAssistenzarzt+oder+Fach%C3%A4rztinFacharzt+mwd/34431/Marsberg"]')
 
     //     console.log(clickButton)
     
-    await page.screenshot({path : "lwl.png"});
+    // await page.screenshot({path : "lwl.png"});
     
     // await page.click( 'a[href=https://recruiting.lwl.org/r/z01tv1pjx0upx7w/Assistenz%C3%A4rztinAssistenzarzt+oder+Fach%C3%A4rztinFacharzt+mwd/34431/Marsberg]')
 
