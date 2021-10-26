@@ -4,7 +4,6 @@
 import puppeteer from "puppeteer";
 
 const florenceService = async () => {
-  let allPages = [];
   try {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
@@ -40,7 +39,7 @@ const florenceService = async () => {
           document.querySelectorAll("div.news-list-item.clearfix > h2 > a")
         ).map((el) => el.href);
       });
-      allJobs.push(jobs);
+      allJobs.push(...jobs);
       counter++;
     } while (counter < allLinks.length);
     console.log(allJobs);
@@ -48,7 +47,11 @@ const florenceService = async () => {
   } catch (err) {
     console.log(err);
   }
-  console.log(allPages);
+
+  //get data from every job post
+  // for (let job of allJobs) {
+
+  // }
 };
 
 export default florenceService;
