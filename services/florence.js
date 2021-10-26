@@ -13,28 +13,43 @@ const florenceService = async () => {
     await page.goto(url, { timeout: 0 });
 
     //scroll the page
-    await page.evaluate(() => {
-      const distance = 100;
-      const delay = 100;
-      const timer = setInterval(() => {
-        document.scrollingElement.scrollBy(0, distance);
-        if (
-          document.scrollingElement.scrollTop + window.innerHeight >=
-          document.scrollingElement.scrollHeight
-        ) {
-          clearInterval(timer);
-        }
-      }, delay);
-    });
-    //get all job links
-    let allJobs = [];
-    let jobs = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll("div.news-list-item.clearfix > h2 > a")
-      ).map((el) => el.href);
-    });
-    allJobs.push(jobs);
-    console.log(allJobs);
+    let pages = [];
+    let counter = 0;
+    do {
+      if (counter > 0) {
+        await page.click(pages[counter]);
+      }
+      await page.evaluate(() => {
+        const distance = 100;
+        const delay = 100;
+        const timer = setInterval(() => {
+          document.scrollingElement.scrollBy(0, distance);
+          if (
+            document.scrollingElement.scrollTop + window.innerHeight >=
+            document.scrollingElement.scrollHeight
+          ) {
+            clearInterval(timer);
+          }
+        }, delay);
+      });
+      //get all job links
+      let allJobs = [];
+      let jobs = await page.evaluate(() => {
+        return Array.from(
+          document.querySelectorAll("div.news-list-item.clearfix > h2 > a")
+        ).map((el) => el.href);
+      });
+      allJobs.push(jobs);
+      console.log(allJobs);
+      if (counter == 0) {
+        pages.push(
+          Array.from(
+            document.querySelectorAll("div.browseLinksWrap > span > font")
+          )
+        );
+      }
+      counter++;
+    } while (pages < 3);
   } catch (err) {
     console.log(err);
   }
