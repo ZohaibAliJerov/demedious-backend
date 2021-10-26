@@ -14,11 +14,11 @@ const florenceService = async () => {
 
     //scroll the page
     let allJobs = [];
-    let pages = [];
+    let allPages = [];
     let counter = 0;
     do {
       if (counter > 0) {
-        await page.click(pages[counter]);
+        await page.click(allPages[counter]);
       }
       await page.evaluate(() => {
         const distance = 100;
@@ -44,8 +44,12 @@ const florenceService = async () => {
       console.log(allJobs);
       if (counter == 0) {
         page.evaluate(() => {
-          [...document.querySelectorAll("div.browseLinksWrap > a")].map(
-            (el) => el.href
+          console.log(
+            allPages.push(
+              [...document.querySelectorAll("div.browseLinksWrap > a")].map(
+                (el) => el.href
+              )
+            )
           );
         });
       }
