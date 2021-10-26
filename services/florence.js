@@ -43,11 +43,13 @@ const florenceService = async () => {
       allJobs.push(jobs);
       console.log(allJobs);
       if (counter == 0) {
-        pages.push(
-          Array.from(
-            document.querySelectorAll("div.browseLinksWrap > span > font")
-          )
-        );
+        page.evaluate(() => {
+          pages.push(
+            Array.from(
+              document.querySelectorAll("div.browseLinksWrap > span > font")
+            )
+          );
+        });
       }
       counter++;
     } while (counter < 3);
