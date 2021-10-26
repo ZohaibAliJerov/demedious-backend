@@ -44,6 +44,7 @@ const florenceService = async () => {
       counter++;
     } while (counter < allLinks.length);
     console.log(allJobs);
+    await page.close();
   } catch (err) {
     console.log(err);
   }
