@@ -13,6 +13,7 @@ const florenceService = async () => {
     await page.goto(url, { timeout: 0 });
 
     //scroll the page
+    let allJobs = [];
     let pages = [];
     let counter = 0;
     do {
@@ -33,7 +34,7 @@ const florenceService = async () => {
         }, delay);
       });
       //get all job links
-      let allJobs = [];
+
       let jobs = await page.evaluate(() => {
         return Array.from(
           document.querySelectorAll("div.news-list-item.clearfix > h2 > a")
