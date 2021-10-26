@@ -3,6 +3,7 @@
  */
 import puppeteer from "puppeteer";
 
+let allPages = [];
 const florenceService = async () => {
   try {
     const browser = await puppeteer.launch({ headless: false });
@@ -14,7 +15,6 @@ const florenceService = async () => {
 
     //scroll the page
     let allJobs = [];
-    let allPages = [];
     let counter = 0;
     do {
       if (counter > 0) {
@@ -43,12 +43,10 @@ const florenceService = async () => {
       allJobs.push(jobs);
       console.log(allJobs);
       if (counter == 0) {
-        page.evaluate(() => {
-          console.log(
-            allPages.push(
-              [...document.querySelectorAll("div.browseLinksWrap > a")].map(
-                (el) => el.href
-              )
+        await page.evaluate(() => {
+          allPages.push(
+            [...document.querySelectorAll("div.browseLinksWrap > a")].map(
+              (el) => el.href
             )
           );
         });
