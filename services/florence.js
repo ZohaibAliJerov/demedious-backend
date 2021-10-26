@@ -50,7 +50,7 @@ const florenceService = async () => {
         );
       }
       counter++;
-    } while (pages < 3);
+    } while (counter < 3);
   } catch (err) {
     console.log(err);
   }
