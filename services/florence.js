@@ -19,19 +19,7 @@ const florenceService = async () => {
     let counter = 0;
     do {
       await page.goto(allLinks[counter], { timeout: 0 });
-      await page.evaluate(() => {
-        const distance = 100;
-        const delay = 100;
-        const timer = setInterval(() => {
-          document.scrollingElement.scrollBy(0, distance);
-          if (
-            document.scrollingElement.scrollTop + window.innerHeight >=
-            document.scrollingElement.scrollHeight
-          ) {
-            clearInterval(timer);
-          }
-        }, delay);
-      });
+      scroll(page);
       //get all job links
 
       let jobs = await page.evaluate(() => {
@@ -41,17 +29,75 @@ const florenceService = async () => {
       });
       allJobs.push(...jobs);
       counter++;
+      await page.waitForTimeout(3000);
     } while (counter < allLinks.length);
-    console.log(allJobs);
+    //console.log(allJobs);
+    let allJobDetails = [];
+    //get data from every job post
+    for (let i = 0; i < i; i++) {
+      await page.goto(allJobs[i]);
+      scroll(page);
+      await page.waitForSelector("h2");
+      let jobType = await page.evaluate(() => {
+        return document.querySelector("h2").innerText || null;
+      });
+      console.log(jobType);
+
+      // let address = await page.evaluate(() => {
+      //   let adrs = Array.from(document.querySelector("p > font")).slice(3, 8);
+      //   adrs = adrs.join(" ");
+      // });
+      // console.length(address);
+
+      let email = await page.evaluate(() => {
+        let mail = document.querySelector("a.mail");
+        return mail || null;
+      });
+      console.log(email);
+      let applyLink = await page.evaluate(() => {
+        return (
+          document.querySelector("a.internal-link.button-blau").href || null
+        );
+      });
+      console.log(applyLink);
+      //   let cell = document.querySelector(
+      //     "#c31836 > div > div.news-single-content.clearfix > p:nth-child(13) > font > font"
+      //   ).innerText;
+      //   let email = document.querySelector(
+      //     "#c31836 > div > div.news-single-content.clearfix > p:nth-child(12) > a > font > font"
+      //   );
+      //   let jobDetails = {
+      //     jobType,
+      //     location,
+      //     address,
+      //     cell,
+      //     email,
+      //   };
+      //   allJobDetails.push(jobDetails);
+      // });
+      await page.waitForTimeout(3000);
+    }
+    console.log(allJobDetails);
     await page.close();
+    return allJobDetails;
   } catch (err) {
     console.log(err);
   }
-
-  //get data from every job post
-  // for (let job of allJobs) {
-
-  // }
 };
 
+async function scroll(page) {
+  await page.evaluate(() => {
+    const distance = 100;
+    const delay = 100;
+    const timer = setInterval(() => {
+      document.scrollingElement.scrollBy(0, distance);
+      if (
+        document.scrollingElement.scrollTop + window.innerHeight >=
+        document.scrollingElement.scrollHeight
+      ) {
+        clearInterval(timer);
+      }
+    }, delay);
+  });
+}
 export default florenceService;
