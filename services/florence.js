@@ -46,13 +46,15 @@ const florenceService = async () => {
       job["title"] = title;
 
       let address = await page.evaluate(() => {
-        let paragraphs = Array.from(document.querySelector("p"));
-        for (let paragraph of paragraphs) {
-          // if (paragraphs[paragraph].childElementCount >= 10) {
-          //   return paragraphs[paragraph].innerText;
-          // }
-          console.log(paragraphs[paragraph].childElementCount);
+        let paragraphs = Array.from(document.querySelectorAll("p"));
+        let adrs = paragraphs[0];
+        for (let i = 0; i < paragraphs.length; i++) {
+          let maxChilds = paragraphs[i];
+          if (adrs.childElementCount < maxChilds.childElementCount) {
+            adrs = maxChilds;
+          }
         }
+        return adrs ? adrs.innerText : null;
       });
       job["address"] = address;
 
