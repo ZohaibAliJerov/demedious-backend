@@ -34,48 +34,41 @@ const florenceService = async () => {
     //console.log(allJobs);
     let allJobDetails = [];
     //get data from every job post
-    for (let i = 0; i < i; i++) {
+    for (let i = 0; i < allJobs.length; i++) {
+      let job = {};
       await page.goto(allJobs[i]);
       scroll(page);
       await page.waitForSelector("h2");
-      let jobType = await page.evaluate(() => {
-        return document.querySelector("h2").innerText || null;
+      let title = await page.evaluate(() => {
+        let title = document.querySelector("h2");
+        return title ? title.innerText : null;
       });
-      console.log(jobType);
+      job["title"] = title;
 
-      // let address = await page.evaluate(() => {
-      //   let adrs = Array.from(document.querySelector("p > font")).slice(3, 8);
-      //   adrs = adrs.join(" ");
-      // });
-      // console.length(address);
+      let address = await page.evaluate(() => {
+        let paragraphs = Array.from(document.querySelector("p"));
+        for (let paragraph of paragraphs) {
+          // if (paragraphs[paragraph].childElementCount >= 10) {
+          //   return paragraphs[paragraph].innerText;
+          // }
+          console.log(paragraphs[paragraph].childElementCount);
+        }
+      });
+      job["address"] = address;
 
       let email = await page.evaluate(() => {
         let mail = document.querySelector("a.mail");
-        return mail || null;
+        return mail ? mail.innerText : null;
       });
-      console.log(email);
+      job["email"] = email;
+
       let applyLink = await page.evaluate(() => {
-        return (
-          document.querySelector("a.internal-link.button-blau").href || null
-        );
+        let link = document.querySelector("a.internal-link.button-blau");
+        return link ? link.href : null;
       });
-      console.log(applyLink);
-      //   let cell = document.querySelector(
-      //     "#c31836 > div > div.news-single-content.clearfix > p:nth-child(13) > font > font"
-      //   ).innerText;
-      //   let email = document.querySelector(
-      //     "#c31836 > div > div.news-single-content.clearfix > p:nth-child(12) > a > font > font"
-      //   );
-      //   let jobDetails = {
-      //     jobType,
-      //     location,
-      //     address,
-      //     cell,
-      //     email,
-      //   };
-      //   allJobDetails.push(jobDetails);
-      // });
-      await page.waitForTimeout(3000);
+      job["applyLink"] = applyLink;
+
+      allJobDetails.push(job);
     }
     console.log(allJobDetails);
     await page.close();
