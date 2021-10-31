@@ -44,7 +44,7 @@ const florenceService = async () => {
         return title ? title.innerText : null;
       });
       job["title"] = title;
-
+      let text;
       let address = await page.evaluate(() => {
         let paragraphs = Array.from(document.querySelectorAll("p"));
         let adrs = paragraphs[0];
@@ -58,6 +58,17 @@ const florenceService = async () => {
       });
       job["address"] = address;
 
+      let cell = await page.evaluate(() => {
+        let text = Array.from(document.querySelectorAll("p")).map(
+          (el) => el.innerText
+        );
+        text = text.filter((el) => {
+          return el.match(/\d+\/\d+|\d+\/\d+-\d+/);
+        });
+        text = text.join(" ").match(/\d+\/\d+|\d+\/\d+-\d+/);
+        return text;
+      });
+      job["cell"] = cell;
       let email = await page.evaluate(() => {
         let mail = document.querySelector("a.mail");
         return mail ? mail.innerText : null;
@@ -68,6 +79,7 @@ const florenceService = async () => {
         let link = document.querySelector("a.internal-link.button-blau");
         return link ? link.href : null;
       });
+
       job["applyLink"] = applyLink;
 
       allJobDetails.push(job);
