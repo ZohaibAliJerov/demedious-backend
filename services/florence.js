@@ -66,12 +66,8 @@ const florenceService = async () => {
         let regex =
           /\+\d+\s+\W0\W\s+\d+\s+\/\s+\d+-\d+\s+\/\s+\d+|\d+\s+\/\s+\d+-\d+|\d+\/d+-\d+\/\d+|\d+\/\d+-\d+|\d+\s+\d+|\d+\s\d+-\d+/g;
         let cell = text.filter((el) => el.match(regex));
-        return cell
-          ? cell
-              .join(" ")
-              .match(regex)
-              .filter((cell) => cell.match(/\n/) == null)
-          : null;
+        cell = cell.join(",").match(regex);
+        return cell ? cell.filter((el) => el.includes("\n") == false) : null;
       });
       job["cell"] = cell;
       let email = await page.evaluate(() => {
