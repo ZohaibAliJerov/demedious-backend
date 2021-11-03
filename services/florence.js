@@ -62,11 +62,16 @@ const florenceService = async () => {
         let text = Array.from(document.querySelectorAll("p")).map(
           (el) => el.innerText
         );
-        text = text.filter((el) => {
-          return el.match(/\d+\/\d+|\d+\/\d+-\d+/);
-        });
-        text = text.join(" ").match(/\d+\/\d+|\d+\/\d+-\d+/);
-        return text;
+        // text = text.join(",");
+        let regex =
+          /\+\d+\s+\W0\W\s+\d+\s+\/\s+\d+-\d+\s+\/\s+\d+|\d+\s+\/\s+\d+-\d+|\d+\/d+-\d+\/\d+|\d+\/\d+-\d+|\d+\s+\d+|\d+\s\d+-\d+/g;
+        let cell = text.filter((el) => el.match(regex));
+        return cell
+          ? cell
+              .join(" ")
+              .match(regex)
+              .filter((cell) => cell.match(/\n/) == null)
+          : null;
       });
       job["cell"] = cell;
       let email = await page.evaluate(() => {
@@ -92,6 +97,7 @@ const florenceService = async () => {
   }
 };
 
+//
 async function scroll(page) {
   await page.evaluate(() => {
     const distance = 100;
