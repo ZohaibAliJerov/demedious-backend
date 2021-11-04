@@ -1,10 +1,4 @@
 
-
-
-
-// import puppeteer from "puppeteer";
-
-
 import puppeteer from "puppeteer";
 
 const celenusKerriere = async () => {
@@ -84,8 +78,7 @@ const celenusKerriere = async () => {
 
 
       let cell = await page.evaluate(() => {
-        let regex = /\d{4}.?\d{2}.?\d{2}.?\d{2}.?\d{2}/g;
-
+        let regex = /\d{5}.?\d{6}|\d{4}.?\d{3}.?\d{2}.?\d{3}|\d{5}.?\d{3}.?\d{4}|\d{5}.?\d{3}.?\d{3}|\d{6}.?\d{2}.?\d{3}|\d{4}.?\d{4}.?\d{3}|\d{5}.?\d{2}.?\d{3}|\d{3}.?\d{3}.?\d{2}.?\d{4}|\d{5}.?\d{4}.?\d{3}|\d{4}.?\d{5}.?\d{4}|\d{5}.?\d{4}|\d{4}.?\d{2}.?\d{2}.?\d{2}.?\d{2}/;
         let text = Array.from(document.querySelectorAll("div"));
         text = text.map(el => el.innerText);
         let str = text.join(" ");
@@ -116,5 +109,7 @@ const celenusKerriere = async () => {
   }
 }
 
-export default celenusKerriere;
+//export default celenusKerriere;
+
+celenusKerriere();
 
