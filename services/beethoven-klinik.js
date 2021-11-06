@@ -80,8 +80,10 @@ import puppeteer from "puppeteer";
       console.log(jobDetails);
     }
     await page.waitForTimeout(3000);
+
     // console.log(allJobDetails);
     await browser.close();
+    
     // return allJobDetails
   } catch (error) {
     console.log(error);
