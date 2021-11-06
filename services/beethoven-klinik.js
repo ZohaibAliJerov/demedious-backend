@@ -1,27 +1,89 @@
 import puppeteer from "puppeteer";
 
-(async () => {
-  const browser = await puppeteer.launch({ headless: false });
-  const page = await browser.newPage();
-  const url = "https://www.beethoven-klinik-koeln.de/?s=jobs";
-  await page.goto(url);
+(async function () {
+  try {
+    const browser = await puppeteer.launch({ headless: false });
+    const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(0);
+    let allJobs = [];
+    let allLinks = ["https://www.beethoven-klinik-koeln.de/karriere/"];
+    async function scroll(page) {
+      await page.evaluate(() => {
+        const distance = 100;
+        const delay = 100;
+        const timer = setInterval(() => {
+          document.scrollingElement.scrollBy(0, distance);
+          if (
+            document.scrollingElement.scrollTop + window.innerHeight >=
+            document.scrollingElement.scrollHeight
+          ) {
+            clearInterval(timer);
+          }
+        }, delay);
+      });
+    }
+    let counter = 0;
+    do {
+      await page.goto(allLinks[counter], { timeout: 0 });
+      scroll(page);
 
-  // extracting job titles from page
-  const jobTitles = await page.evaluate(() =>
-    Array.from(
-      document.querySelectorAll("header.entry-header h1.entry-title")
-    ).map((title) => title.innerText)
-  );
-  console.log(jobTitles);
+      // get all jobs links
+      let jobs = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll("h2.entry-title a")).map(
+          (el) => el.href
+        );
+      });
+      allJobs.push(...jobs);
+      counter++;
+      await page.waitForTimeout(3000);
+    } while (counter < allLinks.length);
+    console.log(allJobs);
 
-  // extracting job links from first page
+    // getting all the data from links
+    let allJobDetails = [];
+    for (const url of allJobs) {
+      await page.goto(url);
+      scroll(page);
+      await page.waitForSelector(".entry-title");
 
-  const jobLinks = await page.evaluate(() =>
-    Array.from(
-      document.querySelectorAll("header.entry-header h1.entry-title a")
-    ).map((link) => link.href)
-  );
-  console.log(jobLinks);
+      let jobTitles = await page.evaluate(() => {
+        let jobTitle = document.querySelector(".entry-title");
+        return jobTitle ? jobTitle.innerText : null;
+      });
 
-  await browser.close();
+      // console.log(jobTitles)
+      let postedDate = await page.evaluate(() => {
+        return document.querySelector("div.entry-meta").innerText;
+      });
+      // console.log(postedDate);
+
+      // get all job apply emails
+      let jobApplyEmail = await page.evaluate(() => {
+        let regex = /[\w-]+@([\w-]+\.)+[\w-]+/;
+        let text = Array.from(document.querySelectorAll("div.entry-content a"));
+        text = text.map((el) => el.href);
+        let str = text.join(" ");
+        str = str.match(regex);
+        return str;
+      });
+
+      //Job details
+      let jobDetails = {
+        jobTitles,
+        postedDate,
+        jobApplyEmail,
+      
+      };
+
+      //push job details
+      allJobDetails.push(jobDetails);
+      console.log(jobDetails);
+    }
+    await page.waitForTimeout(3000);
+    // console.log(allJobDetails);
+    await browser.close();
+    // return allJobDetails
+  } catch (error) {
+    console.log(error);
+  }
 })();
