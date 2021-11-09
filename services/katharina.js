@@ -50,6 +50,7 @@ const katharina = async () => {
 
     await page.close();
     await browser.close();
+    return allJobs;
   } catch (error) {
     console.log(error);
   }
