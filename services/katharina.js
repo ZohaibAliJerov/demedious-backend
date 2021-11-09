@@ -14,6 +14,7 @@ const katharina = async () => {
     await page.screenshot({ path: "katharina.png" });
     await scroll(page);
     //get all jobsLinks
+    await page.waitForSelector(".joboffer_title_text > a");
     let allJobLinks = await page.evaluate(() => {
       let jobLinks = document.querySelectorAll(".joboffer_title_text > a");
       return jobLinks ? jobLinks.map((link) => link.href) : [];
@@ -32,7 +33,7 @@ const katharina = async () => {
         let title = document.querySelectorAll("h1");
         return title ? [...title][1] : "";
       });
-
+      await page.waitForSelector(".content_text");
       newJob.address = await page.evaluate(() => {
         let address = document.querySelectorAll(".content_text");
         return address
