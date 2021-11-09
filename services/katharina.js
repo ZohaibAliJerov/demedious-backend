@@ -7,20 +7,25 @@ const katharina = async () => {
     });
     const page = await browser.newPage();
 
-    await page.goto("https://www.katharina.de/");
+    await page.goto(
+      "https://karriere.katharina-kasper-gruppe.de/stellenangebote.html?filter%5Borg_einheit%5D=3"
+    );
     await page.waitForNavigation();
     await page.screenshot({ path: "katharina.png" });
-
+    await scroll(page);
     //get all jobsLinks
     let allJobLinks = await page.evaluate(() => {
       let jobLinks = document.querySelectorAll(".joboffer_title_text > a");
       return jobLinks ? jobLinks.map((link) => link.href) : [];
     });
+
     //get all jobs
     let allJobs = [];
     for (let jobLink of allJobLinks) {
       await page.goto(jobLink, { waitUntil: "load", timeout: 0 });
       await page.waitForNavigation();
+      await page.waitForTimeout(1000);
+      await scroll(page);
       await page.waitForTimeout(1000);
       let newJob = {};
       newJob.title = await page.evaluate(() => {
