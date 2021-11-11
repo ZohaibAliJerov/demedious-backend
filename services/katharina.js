@@ -79,7 +79,4 @@ async function scroll(page) {
   });
 }
 
-(async () => {
-  let allJobs = await katharina();
-  console.log(allJobs);
-})();
+export default katharina;
