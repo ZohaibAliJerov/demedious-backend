@@ -1,8 +1,8 @@
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer';
 
 const stJosefPar = async () => {
     try {
-        const browser = await puppeteer.launch({headless : false});
+        const browser = await puppeteer.launch({ headless: false });
         const page = await browser.newPage();
         page.setDefaultNavigationTimeout(0);
 
@@ -44,12 +44,12 @@ const stJosefPar = async () => {
 
             counter++;
             await page.waitForTimeout(3000);
-        } while (counter < allLinks);
+        } while (counter < allLinks.length);
         console.log(allJobs);
 
-            const allJobDetails = [];
-         // get all the data from stored links 
-         for (const urls of allJobs) {
+        const allJobDetails = [];
+        // get all the data from stored links 
+        for (const urls of allJobs) {
             await page.goto(urls)
             scroll(page);
 
@@ -62,43 +62,43 @@ const stJosefPar = async () => {
 
             // getting apply links 
             const applyLink = await page.evaluate(() => {
-                let applink =  document.querySelector('.col.col1 > div > a');
+                let applink = document.querySelector('.col.col1 > div > a');
                 return applink ? applink.href : null;
             });
 
-             //     /// get all the address 
+            /// get all the address 
             const address = await page.evaluate(() => {
                 let adr = document.querySelector('.col.col2');
                 return adr ? adr.innerText : null;
             });
             // getting all the emails;  
             const email = await page.evaluate(() => {
-                let regex = /(\w+)(\.[a-z]+)@([a-z]+)?\.[a-z]{2,3}|(\w+)(-[a-z]+)@([a-z]+)?\.[a-z]{2,3}|(\w+)([a-z]+)@([a-z]+)?\.[a-z]{2,3}|([a-z]+)(-[a-z]+)(\.[a-z]+)@([a-z]+)(\.[a-z]{2})|(\w+)@([a-z]+)(-[a-z]+)(\.[a-z]{2})|([\.)([)@([a-z]+)(-[a-z]+)(\.[a-z]{2})|(\w+)(-[a-z]{3}) (\[[a-z]{2})(]) ([a-z]{4}\.[a-z]{2})/
-                let text = Array.from(document.querySelectorAll('.col.col2 > div > div > p')).map(el => el.innerText);
-                return text.filter(el => el.match(regex))
+                // let regex = /(\w+)(\.[a-z]+)@([a-z]+)?\.[a-z]{2,3}|(\w+)(-[a-z]+)@([a-z]+)?\.[a-z]{2,3}|(\w+)([a-z]+)@([a-z]+)?\.[a-z]{2,3}|([a-z]+)(-[a-z]+)(\.[a-z]+)@([a-z]+)(\.[a-z]{2})|(\w+)@([a-z]+)(-[a-z]+)(\.[a-z]{2})|([\.)([)@([a-z]+)(-[a-z]+)(\.[a-z]{2})|(\w+)(-[a-z]{3}) (\[[a-z]{2})(]) ([a-z]{4}\.[a-z]{2})/
+                let regex = /[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/;
+                let text = Array.from(document.querySelectorAll('.elementStandard.elementContent.elementText > p'))
+                text = text.map(el => el.innerText);
+                return text.filter(el => el.match(regex));
 
             });
-
-       
-
             // // getting all the cell no. 
-            // const cell = await page.evaluate(() => {
-            //     let regex = /\d+ [/] \d{3}-\d+/;
-            //     let text = Array.from(document.querySelectorAll('.col.col1')).map(el => el.innerText)
-            //     return text.filter(el => el.match(regex));
+            const cell = await page.evaluate(() => {
+                let regex = /\d+ [/] \d{3}-\d+|\d+ \d{3}-\d{4}|\d{5} \d{3} \d{4}|[(]\d+[)] \d+ \d+|\d{5}[/]\d{7}|\d{5}[/]\d{5} \d{4}|\d{5} \d{5}/;
+                let text = Array.from(document.querySelectorAll('.col.col1 p'));
+                text = text.map(el => el.innerText)
+                let str = text.join(" ");
+                str = str.match(regex);
+                return str;
 
-            // });
-
-       
+            });
 
             let jobDetails = {
                 title,
                 applyLink,
                 address,
-                // cell,
+                cell,
                 email,
-                
-  
+
+
 
             }
             allJobDetails.push(jobDetails);
