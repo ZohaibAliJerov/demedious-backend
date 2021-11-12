@@ -33,3 +33,13 @@ export const createJob = async (req, res) => {
     res.status(400).send(err);
   }
 };
+
+//update job
+export const updateJob = async (req, res) => {
+  try {
+    await Job.findByIdAndUpdate(req.params.id, req.body);
+    res.status(200).send("Job updated successfully!");
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
