@@ -13,3 +13,5 @@ router.put("/jobs:id", jobControllers.updateJob);
 
 //delete a job
 router.delete("/jobs:id", jobControllers.deleteJob);
+
+export default router;
