@@ -21,3 +21,15 @@ export const findJobById = async (req, res) => {
     res.send(err);
   }
 };
+
+//create job
+
+export const createJob = async (req, res) => {
+  let newJobs = new Job(req.body);
+  try {
+    let job = await newJobs.save();
+    res.status(201).send("Job adde successfully!");
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
