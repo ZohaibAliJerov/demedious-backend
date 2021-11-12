@@ -5,3 +5,6 @@ const router = express.Router();
 
 //get all jobs
 router.get("/jobs", jobControllers.findAllJobs);
+
+//get job by id
+router.get("/jobs:id", jobControllers.findJobById);
