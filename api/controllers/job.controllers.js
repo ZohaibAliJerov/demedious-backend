@@ -43,3 +43,13 @@ export const updateJob = async (req, res) => {
     res.status(400).send(err);
   }
 };
+
+//delete job
+export const deleteJob = async (req, res) => {
+  try {
+    await Job.findByIdAndRemove(req.params.id);
+    res.status(200).send("Job deleted successfully!");
+  } catch (err) {
+    res.status(400).send(err);
+  }
+};
