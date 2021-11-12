@@ -51,3 +51,12 @@ export const deleteJob = async (req, res) => {
     res.status(400).send(err);
   }
 };
+
+//export routes
+export default {
+  findAllJobs,
+  findJobById,
+  createJob,
+  updateJob,
+  deleteJob,
+};
