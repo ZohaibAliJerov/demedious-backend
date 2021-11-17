@@ -69,7 +69,7 @@ const stJosefPar = async () => {
             /// get all the address 
             const address = await page.evaluate(() => {
                 let adr = document.querySelector('.col.col2');
-                return adr ? adr.innerText : null;
+                return adr ? adr.innerText.match(/[a-zA-z]+ [A-Za-z]+. \d+[\n]\d+ [a-zA-Z]+|H[a-zA-z]+ [A-Za-z]+. \d+, \d+ [a-zA-Z]+/) : null;
             });
             // getting all the emails;  
             const email = await page.evaluate(() => {
@@ -77,7 +77,8 @@ const stJosefPar = async () => {
                 let regex = /[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/;
                 let text = Array.from(document.querySelectorAll('.elementStandard.elementContent.elementText > p'))
                 text = text.map(el => el.innerText);
-                return text.filter(el => el.match(regex));
+                let str = text.join(" ");
+                return str.match(regex);
 
             });
             // // getting all the cell no. 
