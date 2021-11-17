@@ -1,5 +1,4 @@
 
-import e from "express";
 import puppeteer from "puppeteer";
 
 const TosCarrer = async () => {
