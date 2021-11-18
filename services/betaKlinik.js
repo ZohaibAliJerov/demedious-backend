@@ -65,19 +65,12 @@ const betaKlinik = async () => {
             });
 
             // /// get all the address 
-            // const address = await page.evaluate(() => {
-            //     let adr = document.querySelector('.col.col2');
-            //     return adr ? adr.innerText : null;
-            // });
-            // // getting all the emails;  
-            // const email = await page.evaluate(() => {
-            //     // let regex = /(\w+)(\.[a-z]+)@([a-z]+)?\.[a-z]{2,3}|(\w+)(-[a-z]+)@([a-z]+)?\.[a-z]{2,3}|(\w+)([a-z]+)@([a-z]+)?\.[a-z]{2,3}|([a-z]+)(-[a-z]+)(\.[a-z]+)@([a-z]+)(\.[a-z]{2})|(\w+)@([a-z]+)(-[a-z]+)(\.[a-z]{2})|([\.)([)@([a-z]+)(-[a-z]+)(\.[a-z]{2})|(\w+)(-[a-z]{3}) (\[[a-z]{2})(]) ([a-z]{4}\.[a-z]{2})/
-            //     let regex = /[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/;
-            //     let text = Array.from(document.querySelectorAll('.elementStandard.elementContent.elementText > p'))
-            //     text = text.map(el => el.innerText);
-            //     return text.filter(el => el.match(regex));
+            const address = await page.evaluate(() => {
+                let regex = /[a-zA-Z]+-[a-zA-Z]+-[a-zA-Z]+ \d+[\n]\d+ [a-zA-Z]+/
+                let adr = document.querySelector('.content');
+                return adr ? adr.innerText.match(regex) : null;
+            });
 
-            // });
             // // // getting all the cell no. 
             // const cell = await page.evaluate(() => {
             //     let regex = /\d+ [/] \d{3}-\d+|\d+ \d{3}-\d{4}|\d{5} \d{3} \d{4}|[(]\d+[)] \d+ \d+|\d{5}[/]\d{7}|\d{5}[/]\d{5} \d{4}|\d{5} \d{5}/;
@@ -91,6 +84,7 @@ const betaKlinik = async () => {
 
             let jobDetails = {
                 title,
+                address,
                 email,
 
 
