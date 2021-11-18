@@ -64,8 +64,6 @@ const lwl = async () => {
 
             });
 
-
-
             /// get all the email
             const email = await page.evaluate(() => {
                 let Email = document.querySelector('.adressData > a')
