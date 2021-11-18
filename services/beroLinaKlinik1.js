@@ -66,7 +66,7 @@ const beraLinaKlinik = async () => {
             });
             // getting all the cell no. 
             const cell = await page.evaluate(() => {
-                let regex = /\d{1} \d{2} \d{2}[/]\d+ \d{2} - \d+ \d+|\d+ \d+-\d+/;
+                let regex = /\d{1} \d{2} \d{2}[/]\d+ \d{2} - \d+ \d+|\d+ \d+-\d+| \d+ \d+ \d+ [/] \d+ \d+ - \d+ \d+/;
                 let text = Array.from(document.querySelectorAll('.contentboxinner'))
                 text = text.map(el => el.innerText)
                 let str = text.join(" ");
