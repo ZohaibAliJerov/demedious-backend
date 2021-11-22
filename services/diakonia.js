@@ -54,9 +54,9 @@ const diakonia = async () => {
             });
 
             // get all the address;
-            const address = await page.evaluate(() => {
-                let regex = /[A-Za-z]+[ ,|.]\s[A-Za-z]+.\s[A-Za-z]+.\s[A-Za-z]+.\s[A-Za-z]+.[ /|]\s[A-Za-z]+.\s[A-Za-z]+.\s[A-Za-z]+.\s[A-Za-z]+.\s[A-Za-z]+.\s[A-Za-z]+.\n.[A-Za-z0-9]+.[A-Za-z0-9].\s[ |]\s[A-Za-z0-9]+.\s[A-Za-z]+./g;
-                let text = Array.from(document.querySelectorAll('#c16896'))
+            const location = await page.evaluate(() => {
+                let regex = /[a-zaA-Z]+ [a-zaA-Z]+. [a-zaA-Zö]+. [a-zA-Z]+ [a-zA-Z]+[\n][a-zA-Z]+.[a-zA-Z]+ \d+ [|] \d+ [a-zA-Z]+|[a-zaA-Z]+ [a-zaA-Z]+. [a-zaA-Zö]+. [a-zA-Z]+[\n][a-zA-Z]+.[a-zA-Z]+ \d+ [|] \d+ [a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+. [a-zA-Z]+ [a-zA-Z]+-[a-zA-Z]+, [a-zA-Z]+[\n][a-zA-Z]+.[a-zA-Z]+ \d+ [|] \d+ [a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+. [a-zA-Z]+. [a-zA-Z]+ [a-zA-Z]+.[a-zA-Z]+[\n][a-zA-Z]+.[a-zA-Z]+ \d+ [|] \d+ [a-zA-Z]+|[a-zA-Z]+ [|] [a-zA-Z]+-[a-zA-Z]+ [a-zA-Z]+ [|] [a-zA-Z]+.[a-zA-Z]+ \d+ [|] \d+ [a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+. [a-zA-Z]+-[a-zA-Z]+-[a-zA-Z]+ [a-zA-Z]+ [|] [a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+ [a-zA-Z]+ [a-zA-Z]+[\n][a-zA-Z]+.[a-zA-Z]+ \d+ [|] \d+ [a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+ [a-zA-Z]+[\n][a-zA-Z]+.[a-zA-Z]+ \d+ [|] \d+ [a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+ [a-zA-Z]+. [a-zA-Z]+.[a-zA-Z]+ [a-zA-Z]+ [|] [a-zA-Z]+.[a-zA-Z]+ \d+.[|] \d+ [a-zA-Z]+|[a-zA-Z]+.[a-zA-Z]+ \d+.[|] \d+ [a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+. [a-zA-Z]+.[a-zA-Z]+ [a-zA-Z]+ [|] [a-zA-Z]+.[a-zA-Z]+ \d+.[|] \d+ [a-zA-Z]+/
+                let text = Array.from(document.querySelectorAll('.news-single-item'))
                 text = text.map(el => el.innerText)
                 let str = text.join(" ");
                 return str.match(regex);
@@ -82,7 +82,7 @@ const diakonia = async () => {
             })
             const jobDetails = {
                 title,
-                address,
+                location,
                 cell,
                 email
             }
