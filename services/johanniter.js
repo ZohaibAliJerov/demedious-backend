@@ -7,6 +7,13 @@ const johanniter = async () => {
     let url =
       "https://www.johanniter.de/johanniter-kliniken/neurologisches-rehabilitationszentrum-godeshoehe/karriere/";
 
+    //get all pages
+    let pages = await page.evaluate(() => {
+      return Array.from(
+        document.querySelectorAll(".c-pagination__list > li > a")
+      );
+    });
+
     await page.goto(url);
   } catch (error) {
     console.log(error);
