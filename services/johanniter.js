@@ -9,18 +9,19 @@ const johanniter = async () => {
 
     await page.goto(url, { timeout: 0, waitUntil: "load" });
     //scroll the page
-    for (let i = 0; i < 100; i++) {
-      if (
-        document.scrollingElement.scrollTop + window.innerHeight >=
-        document.scrollingElement.scrollHeight
-      ) {
-        break;
-      }
-      await page.evaluate(() => {
+    await page.evaluate(() => {
+      for (let i = 0; i < 100; i++) {
+        if (
+          document.scrollingElement.scrollTop + window.innerHeight >=
+          document.scrollingElement.scrollHeight
+        ) {
+          break;
+        }
         document.scrollingElement.scrollBy(0, 100);
-      });
-      await page.waitForTimeout(1000);
-    }
+
+        await page.waitForTimeout(1000);
+      }
+    });
     //get all pages
     let pages = await page.evaluate(() => {
       return Array.from(
@@ -35,18 +36,19 @@ const johanniter = async () => {
       await page.goto(pg, { waitUntil: "load", timeout: 0 });
       //scroll the each page
       //scroll the page
-      for (let i = 0; i < 100; i++) {
-        if (
-          document.scrollingElement.scrollTop + window.innerHeight >=
-          document.scrollingElement.scrollHeight
-        ) {
-          break;
-        }
-        await page.evaluate(() => {
+      await page.evaluate(() => {
+        for (let i = 0; i < 100; i++) {
+          if (
+            document.scrollingElement.scrollTop + window.innerHeight >=
+            document.scrollingElement.scrollHeight
+          ) {
+            break;
+          }
           document.scrollingElement.scrollBy(0, 100);
-        });
-        await page.waitForTimeout(1000);
-      }
+
+          await page.waitForTimeout(1000);
+        }
+      });
 
       await page.evaluate(() => {
         allJobLinks.push(
@@ -64,19 +66,19 @@ const johanniter = async () => {
       await page.goto(link, { waitUntil: "load", timeout: 0 });
       await page.waitForTimeout(3000);
       //scroll the page
-      for (let i = 0; i < 100; i++) {
-        if (
-          document.scrollingElement.scrollTop + window.innerHeight >=
-          document.scrollingElement.scrollHeight
-        ) {
-          break;
-        }
-        await page.evaluate(() => {
+      await page.evaluate(() => {
+        for (let i = 0; i < 100; i++) {
+          if (
+            document.scrollingElement.scrollTop + window.innerHeight >=
+            document.scrollingElement.scrollHeight
+          ) {
+            break;
+          }
           document.scrollingElement.scrollBy(0, 100);
-        });
-        await page.waitForTimeout(1000);
-      }
 
+          await page.waitForTimeout(1000);
+        }
+      });
       let title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
@@ -101,3 +103,8 @@ const johanniter = async () => {
     console.log(error);
   }
 };
+
+(async () => {
+  let data = await johanniter();
+  console.log(data);
+})();
