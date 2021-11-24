@@ -28,8 +28,8 @@ const johanniter = async () => {
       );
     });
 
-    //get all jobs
-    let allJobs = [];
+    //get all job links
+    let allJobLinks = [];
     for (let pg of pages) {
       //visit each page
       await page.goto(pg, { waitUntil: "load", timeout: 0 });
@@ -49,18 +49,54 @@ const johanniter = async () => {
       }
 
       await page.evaluate(() => {
-        allJobs.push(
+        allJobLinks.push(
           Array.from(
             document.querySelectorAll("div.c-content-list__text > h3 > a")
           )
         );
       });
     }
-    //visit all jobs
-    for (let job of allJobs) {
-      await page.goto(job, { waitUntil: "load", timeout: 0 });
+
+    // get all job details
+    let allJobs = [];
+    //visit all job links
+    for (let link of allJobLinks) {
+      await page.goto(link, { waitUntil: "load", timeout: 0 });
       await page.waitForTimeout(3000);
+      //scroll the page
+      for (let i = 0; i < 100; i++) {
+        if (
+          document.scrollingElement.scrollTop + window.innerHeight >=
+          document.scrollingElement.scrollHeight
+        ) {
+          break;
+        }
+        await page.evaluate(() => {
+          document.scrollingElement.scrollBy(0, 100);
+        });
+        await page.waitForTimeout(1000);
+      }
+
+      let title = await page.evaluate(() => {
+        return document.querySelector("h1").innerText;
+      });
+
+      let location = await page.evaluate(() => {
+        return document.querySelector(".c-inline-list__list  > li");
+      });
+
+      let cell = await page.evaluate(() => {
+        return document.body.innerText.match(/\d+\s\d+-\d+/);
+      });
+      let email = await page.evaluate(() => {
+        return document.body.innerText.match(/\w+@\w+\.\w+/);
+      });
+
+      let applyLink = email;
+
+      allJobs.push({ title, location, cell, email, applyLink });
     }
+    return allJobs;
   } catch (error) {
     console.log(error);
   }
