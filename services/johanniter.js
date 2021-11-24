@@ -19,7 +19,7 @@ const johanniter = async () => {
         }
         document.scrollingElement.scrollBy(0, 100);
 
-        await page.waitForTimeout(1000);
+          setTimeout(1000);
       }
     });
     //get all pages
@@ -46,7 +46,7 @@ const johanniter = async () => {
           }
           document.scrollingElement.scrollBy(0, 100);
 
-          await page.waitForTimeout(1000);
+            setTimeout(1000);
         }
       });
 
@@ -75,8 +75,7 @@ const johanniter = async () => {
             break;
           }
           document.scrollingElement.scrollBy(0, 100);
-
-          await page.waitForTimeout(1000);
+            setTimeout(1000);
         }
       });
       let title = await page.evaluate(() => {
