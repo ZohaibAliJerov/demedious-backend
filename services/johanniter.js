@@ -29,9 +29,32 @@ const johanniter = async () => {
     });
 
     //get all jobs
+    let allJobs = [];
     for (let pg of pages) {
       //visit each page
       await page.goto(pg, { waitUntil: "load", timeout: 0 });
+      //scroll the each page
+      //scroll the page
+      for (let i = 0; i < 100; i++) {
+        if (
+          document.scrollingElement.scrollTop + window.innerHeight >=
+          document.scrollingElement.scrollHeight
+        ) {
+          break;
+        }
+        await page.evaluate(() => {
+          document.scrollingElement.scrollBy(0, 100);
+        });
+        await page.waitForTimeout(1000);
+      }
+
+      await page.evaluate(() => {
+        allJobs.push(
+          Array.from(
+            document.querySelectorAll("div.c-content-list__text > h3 > a")
+          )
+        );
+      });
     }
   } catch (error) {
     console.log(error);
