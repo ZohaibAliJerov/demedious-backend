@@ -56,6 +56,11 @@ const johanniter = async () => {
         );
       });
     }
+    //visit all jobs
+    for (let job of allJobs) {
+      await page.goto(job, { waitUntil: "load", timeout: 0 });
+      await page.waitForTimeout(3000);
+    }
   } catch (error) {
     console.log(error);
   }
