@@ -13,6 +13,7 @@ const johanniter = async () => {
     await page.waitForTimeout("#uc-btn-accept-banner");
     await page.click("#uc-btn-accept-banner");
 
+    await page.waitForTimeout(1000);
     //scroll the page
     await page.evaluate(() => {
       for (let i = 0; i < 100; i++) {
