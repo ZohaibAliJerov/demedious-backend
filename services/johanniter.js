@@ -7,6 +7,7 @@ const johanniter = async () => {
     let url =
       "https://www.johanniter.de/johanniter-kliniken/neurologisches-rehabilitationszentrum-godeshoehe/karriere/";
 
+    await page.goto(url, { timeout: 0, waitUntil: "load" });
     //scroll the page
     for (let i = 0; i < 100; i++) {
       if (
@@ -32,7 +33,6 @@ const johanniter = async () => {
       //visit each page
       await page.goto(pg, { waitUntil: "load", timeout: 0 });
     }
-    await page.goto(url);
   } catch (error) {
     console.log(error);
   }
