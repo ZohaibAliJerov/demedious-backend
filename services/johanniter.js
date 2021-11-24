@@ -9,6 +9,9 @@ const johanniter = async () => {
 
     await page.goto(url, { timeout: 0, waitUntil: "load" });
     await page.waitForTimeout(3000);
+    //remove the dialog box
+    await page.waitForTimeout("#uc-btn-accept-banner");
+    await page.click("#uc-btn-accept-banner");
 
     //scroll the page
     await page.evaluate(() => {
