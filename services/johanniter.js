@@ -27,6 +27,11 @@ const johanniter = async () => {
       );
     });
 
+    //get all jobs
+    for (let pg of pages) {
+      //visit each page
+      await page.goto(pg, { waitUntil: "load", timeout: 0 });
+    }
     await page.goto(url);
   } catch (error) {
     console.log(error);
