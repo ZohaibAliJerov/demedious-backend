@@ -107,7 +107,4 @@ const johanniter = async () => {
   }
 };
 
-(async () => {
-  let data = await johanniter();
-  console.log(data);
-})();
+export default johanniter;
