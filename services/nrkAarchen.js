@@ -48,13 +48,15 @@ const nrkAarchecn = async () => {
       }
     });
     let title = await page.evaluate(() => {
-      return document.querySelector("div.dt-sc-callout-box.type1 > h4")
-        .innerText;
+      let _title = document.querySelector("div.dt-sc-callout-box.type1 > h4");
+      return _title ? _title.innerText : "";
     });
 
     let location = await page.evaluate(() => {
-      return document.querySelector("div.dt-sc-callout-box.type1 > h5")
-        .innerText;
+      let _location = document.querySelector(
+        "div.dt-sc-callout-box.type1 > h5"
+      );
+      return _location ? _location.innerText : "";
     });
 
     let cell = "";
@@ -65,4 +67,7 @@ const nrkAarchecn = async () => {
     let applyLink = email;
     allJobs.push({ title, location, cell, email, applyLink });
   }
+  return allJobs;
 };
+
+export default nrkAarchecn;
