@@ -10,7 +10,7 @@ const johanniter = async () => {
     await page.goto(url, { timeout: 0, waitUntil: "load" });
     await page.waitForTimeout(3000);
     //remove the dialog box
-    await page.waitForTimeout("#uc-btn-accept-banner");
+    await page.waitForSelector("#uc-btn-accept-banner");
     await page.click("#uc-btn-accept-banner");
 
     await page.waitForTimeout(1000);
@@ -24,22 +24,21 @@ const johanniter = async () => {
           break;
         }
         document.scrollingElement.scrollBy(0, 100);
-
-        setTimeout(1000);
+        setTimeout(10000);
       }
     });
     //get all pages
     let pages = await page.evaluate(() => {
       return Array.from(
         document.querySelectorAll(".c-pagination__list > li > a")
-      );
+      ).map((el) => el.href);
     });
 
     //get all job links
     let allJobLinks = [];
     for (let pg of pages) {
       //visit each page
-      await page.goto(pg, { waitUntil: "load", timeout: 0 });
+      await page.goto(`${pg}`, { timeout: 0, waitUntil: "load" });
       //scroll the each page
       //scroll the page
       await page.evaluate(() => {
@@ -56,15 +55,14 @@ const johanniter = async () => {
         }
       });
 
-      await page.evaluate(() => {
-        allJobLinks.push(
-          Array.from(
-            document.querySelectorAll("div.c-content-list__text > h3 > a")
-          )
-        );
+      let jobLinks = await page.evaluate(() => {
+        return Array.from(
+          document.querySelectorAll("div.c-content-list__text > h3 > a")
+        ).map((el) => el.href);
       });
+      allJobLinks.push(...jobLinks);
     }
-
+    console.log(allJobLinks);
     // get all job details
     let allJobs = [];
     //visit all job links
@@ -89,7 +87,7 @@ const johanniter = async () => {
       });
 
       let location = await page.evaluate(() => {
-        return document.querySelector(".c-inline-list__list  > li");
+        return document.querySelector(".c-inline-list__list  > li").innerText;
       });
 
       let cell = await page.evaluate(() => {
