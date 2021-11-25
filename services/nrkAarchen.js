@@ -7,11 +7,33 @@ const nrkAarchecn = async () => {
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
+  //scroll the page
+  await page.evaluate(() => {
+    for (let i = 0; i < 100; i++) {
+      if (
+        document.scrollingElement.scrollTop + window.innerHeight >=
+        document.scrollingElement.scrollHeight
+      ) {
+        break;
+      }
+      document.scrollingElement.scrollBy(0, 100);
+      setTimeout(1000);
+    }
+  });
+
   let jobs = await page.evaluate(() => {
     return Array.from(
       document.querySelectorAll(
         "div.column.dt-sc-full-width.first > ul > li > a"
       )
-    ).map((el) => el.innerText);
+    ).map((el) => el.href);
   });
+
+  //visit all jobs
+  for (let job of jobs) {
+    await page.goto(job, { timeout: 0, waitUntil: "load" });
+    await page.waitForTimeout(1000);
+
+    let title = await page.evaluate(() => {});
+  }
 };
