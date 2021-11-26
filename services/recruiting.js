@@ -36,7 +36,7 @@ const recruiting = () => {
           document.querySelectorAll(".HSTableLinkSubTitle")
         ).map((el) => el.href);
       });
-
+      allJobLinks.push(...jobLinks);
       await page.waitForTimeout(3000);
       let bottomNextLink = await page.evaluate(() => {
         return document.querySelector("a#tablenav_bottom_nextlink_66856");
