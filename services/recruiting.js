@@ -94,3 +94,5 @@ const recruiting = () => {
     console.log(error);
   }
 };
+
+export default recruiting;
