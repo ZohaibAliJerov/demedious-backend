@@ -42,6 +42,7 @@ const lymphklinik = async () => {
     for (let job of jobs) {
       allJobs.push({ job, location, cell, email, applyLink });
     }
+    return allJobs;
   } catch (error) {
     console.log(error);
   }
