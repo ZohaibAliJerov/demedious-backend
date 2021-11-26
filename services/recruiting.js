@@ -1,4 +1,4 @@
-import puppeteer, { TimeoutError } from "puppeteer";
+import puppeteer, { PageEmittedEvents, TimeoutError } from "puppeteer";
 
 const recruiting = () => {
   try {
@@ -56,10 +56,25 @@ const recruiting = () => {
       await waitForTimeout(1000);
 
       //TODO:get title
+      let title = await page.evaluate(() => {
+        return document.querySelector("h1").innerText;
+      });
       //TODO:get location
+      let location = await page.evaluate(() => {
+        return document.querySelector();
+      });
       //TODO:get email
+      let email = await page.evaluate(() => {
+        return document.querySelector();
+      });
       //TODO:get cell
+      let cell = await page.evaluate(() => {
+        return document.querySelector();
+      });
       //TODO:get applyLink
+      let applyLink = await page.evaluate(() => {
+        return document.querySelector();
+      });
     }
   } catch (error) {
     console.log(error);
