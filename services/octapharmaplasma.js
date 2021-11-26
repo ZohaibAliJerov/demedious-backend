@@ -33,18 +33,18 @@ const octapharmaplasma = async () => {
         (el) => el.innerText
       );
     });
-
+    console.log(allLocations);
     //get all jobLinks
     let jobLinks = await page.evaluate(() => {
       let links = Array.from(
         document.querySelectorAll("div.card-body > p > a")
       );
-      return links ? links.map((el) => el.href) : "";
+      return links ? links.map((el) => el.href).slice(1, links.length - 1) : "";
     });
-
+    console.log(jobLinks);
     let allJobs = [];
     for (let jobLink of jobLinks) {
-      await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
+      await page.goto(jobLink, { waitUntil: "load", timeout: 0 });
       await page.waitForTimeout(1000);
 
       //scroll the page
@@ -88,12 +88,12 @@ const octapharmaplasma = async () => {
 
       allJobs.push({ title, location, cell, email, applyLink });
     }
-    return allJobs;
+    // return allJobs;
   } catch (error) {
     console.log(error);
   }
 };
 
 (async () => {
-  octapharmaplasma();
+  await octapharmaplasma();
 })();
