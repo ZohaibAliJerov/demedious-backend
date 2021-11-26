@@ -11,6 +11,8 @@ const recruiting = () => {
       waitUntil: "load",
       timeout: 0,
     });
+    //wait for a while
+    await page.waitForTimeout(1000);
   } catch (error) {
     console.log(error);
   }
