@@ -52,6 +52,8 @@ const recruiting = () => {
     //visit each job link
     for (let jobLink of allJobLinks) {
       await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
+
+      await waitForTimeout(1000);
     }
   } catch (error) {
     console.log(error);
