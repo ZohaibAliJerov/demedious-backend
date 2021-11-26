@@ -33,6 +33,10 @@ const lymphklinik = async () => {
     let cell = await page.evaluate(() => {
       return document.body.innerText.match(/.\d+\s\d+\s\d+.\s\d+-\d+/);
     });
+
+    let email = await page.evaluate(() => {
+      return document.body.innerText.match(/\w+@\w+\.\w+/);
+    });
   } catch (error) {
     console.log(error);
   }
