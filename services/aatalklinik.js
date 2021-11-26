@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let aatalklinik = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
     });
 
     let page = await browser.newPage();

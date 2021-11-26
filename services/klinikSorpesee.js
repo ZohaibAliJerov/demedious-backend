@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 const klinikSorpesee = async () => {
-  let browser = await puppeteer.launch({ headless: false });
+  let browser = await puppeteer.launch({ headless: true });
   let page = await browser.newPage();
 
   const url = "https://www.klinik-sorpesee.de/karriere/stellenangebote/";

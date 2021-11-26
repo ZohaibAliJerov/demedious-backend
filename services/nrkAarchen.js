@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 const nrkAarchecn = async () => {
-  let browser = await puppeteer.launch({ headless: false });
+  let browser = await puppeteer.launch({ headless: true });
   let page = await browser.newPage();
   let url = "http://nrk-aachen.de/nrk-aachen-jobs/";
 

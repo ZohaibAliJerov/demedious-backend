@@ -2,7 +2,7 @@ import puppeteer from "puppeteer";
 
 const octapharmaplasma = async () => {
   try {
-    let browser = await puppeteer.launch({ headless: false });
+    let browser = await puppeteer.launch({ headless: true });
     let page = await browser.newPage();
     let url = "https://www.octapharmaplasma.de/jobs";
     let locations = [];
