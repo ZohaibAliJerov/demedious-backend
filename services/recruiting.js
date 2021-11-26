@@ -61,11 +61,11 @@ const recruiting = () => {
       });
       //TODO:get location
       let location = await page.evaluate(() => {
-        return document.querySelector();
+        return document.querySelector(".inserat-short-info > font").innerText;
       });
       //TODO:get email
       let email = await page.evaluate(() => {
-        return document.querySelector();
+        return "";
       });
       //TODO:get cell
       let cell = await page.evaluate(() => {
