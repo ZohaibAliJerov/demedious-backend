@@ -14,6 +14,10 @@ const recruiting = () => {
     //wait for a while
     await page.waitForTimeout(1000);
 
+    let nexPage = await page.evaluate(() => {
+      return document.querySelector("a#tablenav_top_nextlink_66856");
+    });
+
     //scroll the page
     await page.evaluate(() => {
       for (let i = 0; i < 100; i++) {
