@@ -27,6 +27,13 @@ const recruiting = () => {
         setTimeout(1000);
       }
     });
+
+    //get all jobLinks
+    let jobLinks = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll(".HSTableLinkSubTitle")).map(
+        (el) => el.href
+      );
+    });
   } catch (error) {
     console.log(error);
   }
