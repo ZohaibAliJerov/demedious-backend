@@ -15,7 +15,7 @@ const recruiting = () => {
     await page.waitForTimeout(1000);
 
     let nextPage = true;
-
+    let allJobLinks = [];
     while (nextPage) {
       //scroll the page
       await page.evaluate(() => {
