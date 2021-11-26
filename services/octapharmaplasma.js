@@ -91,7 +91,3 @@ const octapharmaplasma = async () => {
     console.log(error);
   }
 };
-
-(async () => {
-  console.log(await octapharmaplasma());
-})();
