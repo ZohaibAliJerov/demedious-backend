@@ -14,30 +14,36 @@ const recruiting = () => {
     //wait for a while
     await page.waitForTimeout(1000);
 
-    let nexPage = await page.evaluate(() => {
+    let nextPage = await page.evaluate(() => {
       return document.querySelector("a#tablenav_top_nextlink_66856");
     });
 
-    //scroll the page
-    await page.evaluate(() => {
-      for (let i = 0; i < 100; i++) {
-        if (
-          document.scrollingElement.scrollTop + window.innerHeight >=
-          document.scrollingElement.scrollHeight
-        ) {
-          break;
+    while (nextPage) {
+      //scroll the page
+      await page.evaluate(() => {
+        for (let i = 0; i < 100; i++) {
+          if (
+            document.scrollingElement.scrollTop + window.innerHeight >=
+            document.scrollingElement.scrollHeight
+          ) {
+            break;
+          }
+          document.scrollingElement.scrollBy(0, 100);
+          setTimeout(1000);
         }
-        document.scrollingElement.scrollBy(0, 100);
-        setTimeout(1000);
-      }
-    });
+      });
+      //get all jobLinks
+      let jobLinks = await page.evaluate(() => {
+        return Array.from(
+          document.querySelectorAll(".HSTableLinkSubTitle")
+        ).map((el) => el.href);
+      });
 
-    //get all jobLinks
-    let jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".HSTableLinkSubTitle")).map(
-        (el) => el.href
-      );
-    });
+      await page.waitForTimeout(3000);
+      let bottomNextLink = await page.evaluate(() => {
+        return document.querySelector("a#tablenav_bottom_nextlink_66856");
+      });
+    } //end of while loop
   } catch (error) {
     console.log(error);
   }
