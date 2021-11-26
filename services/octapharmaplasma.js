@@ -11,8 +11,8 @@ const octapharmaplasma = async () => {
 
     await page.waitForTimeout(3000);
     //remove the dialogue box
-    await page.waitForSelector("button.consent-give");
-    await page.click("button.consent-give");
+    await page.waitForSelector("div.ccm__cheading__close");
+    await page.click("div.ccm__cheading__close");
     await page.waitForTimeout(1000);
     //scroll the page
     await page.evaluate(() => {
