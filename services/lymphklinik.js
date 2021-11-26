@@ -19,13 +19,8 @@ const lymphklinik = async () => {
         document.scrollingElement.scrollBy(0, 100);
       }
     });
-
+    let allJobs = [];
     //get all jobs
-    let jobs = await page.evaluate(() => {
-      return Array.from(document.querySelctor("tm-article > ul > li")).map(
-        (el) => el.innerText
-      );
-    });
     let location = await page.evaluate(() => {
       return Array.from(document.querySelectorAll(".tm-article > p"))[4];
     });
@@ -36,6 +31,12 @@ const lymphklinik = async () => {
 
     let email = await page.evaluate(() => {
       return document.body.innerText.match(/\w+@\w+\.\w+/);
+    });
+
+    let jobs = await page.evaluate(() => {
+      return Array.from(document.querySelctor("tm-article > ul > li")).map(
+        (el) => el.innerText
+      );
     });
   } catch (error) {
     console.log(error);
