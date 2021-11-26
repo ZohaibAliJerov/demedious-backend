@@ -76,6 +76,7 @@ const octapharmaplasma = async () => {
       let email = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
+      let applyLink = email;
     }
   } catch (error) {
     console.log(error);
