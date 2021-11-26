@@ -2,7 +2,7 @@ import puppeteer, { PageEmittedEvents, TimeoutError } from "puppeteer";
 
 const recruiting = () => {
   try {
-    let browser = await puppeteer.launch({ headless: false });
+    let browser = await puppeteer.launch({ headless: true });
     let page = await browser.newPage();
 
     let url = "https://recruitingapp-4181.de.umantis.com/Jobs/1?lang=ger";
