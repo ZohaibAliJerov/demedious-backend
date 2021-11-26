@@ -109,5 +109,3 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-johanneiter();
