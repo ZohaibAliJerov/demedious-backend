@@ -29,6 +29,10 @@ const lymphklinik = async () => {
     let location = await page.evaluate(() => {
       return Array.from(document.querySelectorAll(".tm-article > p"))[4];
     });
+
+    let cell = await page.evaluate(() => {
+      return document.body.innerText.match(/.\d+\s\d+\s\d+.\s\d+-\d+/);
+    });
   } catch (error) {
     console.log(error);
   }
