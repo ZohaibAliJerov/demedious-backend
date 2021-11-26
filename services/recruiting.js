@@ -48,6 +48,11 @@ const recruiting = () => {
         nextPage = false;
       }
     } //end of while loop
+
+    //visit each job link
+    for (let jobLink of allJobLinks) {
+      await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
+    }
   } catch (error) {
     console.log(error);
   }
