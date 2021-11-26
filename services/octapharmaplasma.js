@@ -5,7 +5,7 @@ const octapharmaplasma = async () => {
     let browser = await puppeteer.launch({ headless: false });
     let page = await browser.newPage();
     let url = "https://www.octapharmaplasma.de/jobs";
-
+    let locations = [];
     //visit the site
     await page.goto(url, { waitUntil: "load", timeout: 0 });
 
@@ -28,17 +28,16 @@ const octapharmaplasma = async () => {
       }
     });
     //get all locations
-    let allLocations = await page.evaluate(() => {
+    locations = await page.evaluate(() => {
       return Array.from(document.querySelectorAll(".card-header > h3")).map(
         (el) => el.innerText
       );
     });
-    console.log(allLocations);
     //get all jobLinks
     let jobLinks = await page.evaluate(() => {
-      let links = Array.from(
-        document.querySelectorAll("div.card-body > p > a")
-      );
+      let links = Array.from(document.querySelectorAll("div.card-body > p > a"))
+        .map((el) => el.href)
+        .filter((el) => !el.includes("@"));
       return links ? links.map((el) => el.href).slice(1, links.length - 1) : "";
     });
     console.log(jobLinks);
@@ -67,17 +66,17 @@ const octapharmaplasma = async () => {
       });
 
       let location = await page.evaluate(() => {
-        let text = document.body.innerText
+        return document.body.innerText
           .split(",")
           .map((el) => el.split(" "))
           .flat(1);
-
-        for (let lctn in allLocations) {
-          if (text.contains(lctn)) {
-            return lctn;
-          }
-        }
       });
+      for (let lctn of locations) {
+        if (location.includes(lctn)) {
+          location = lctn;
+          break;
+        }
+      }
       let cell = await page.evaluate(() => {
         return "";
       });
@@ -88,7 +87,7 @@ const octapharmaplasma = async () => {
 
       allJobs.push({ title, location, cell, email, applyLink });
     }
-    // return allJobs;
+    return allJobs;
   } catch (error) {
     console.log(error);
   }
