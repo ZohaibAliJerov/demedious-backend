@@ -47,3 +47,5 @@ const lymphklinik = async () => {
     console.log(error);
   }
 };
+
+export default lymphklinik;
