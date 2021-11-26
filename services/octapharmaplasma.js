@@ -22,6 +22,13 @@ const octapharmaplasma = async () => {
         setTimeout(1000);
       }
 
+      //get all locations
+      let allLocations = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll(".card-header > h3")).map(
+          (el) => el.innerText
+        );
+      });
+
       //get all jobLinks
       let jobLinks = await page.evaluate(() => {
         let links = document.querySelectorAll("div.card-body > p > a");
