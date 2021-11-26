@@ -75,6 +75,7 @@ const recruiting = () => {
       let applyLink = await page.evaluate(() => {
         return document.querySelector("a.button.apply-link").href;
       });
+      allJobLinks.push({ title, location, cell, email, applyLink });
     }
   } catch (error) {
     console.log(error);
