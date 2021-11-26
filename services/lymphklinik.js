@@ -22,7 +22,12 @@ const lymphklinik = async () => {
 
     //get all jobs
     let jobs = await page.evaluate(() => {
-      return Array.from(document.querySelctor("tm-article > ul > li"));
+      return Array.from(document.querySelctor("tm-article > ul > li")).map(
+        (el) => el.innerText
+      );
+    });
+    let location = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll(".tm-article > p"))[4];
     });
   } catch (error) {
     console.log(error);
