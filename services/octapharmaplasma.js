@@ -35,6 +35,7 @@ const octapharmaplasma = async () => {
       return links ? links.map((el) => el.href) : "";
     });
 
+    let allJobs = [];
     for (let jobLink of jobLinks) {
       await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
       await page.waitForTimeout(1000);
