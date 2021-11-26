@@ -19,6 +19,11 @@ const lymphklinik = async () => {
         document.scrollingElement.scrollBy(0, 100);
       }
     });
+
+    //get all jobs
+    let jobs = await page.evaluate(() => {
+      return Array.from(document.querySelctor("tm-article > ul > li"));
+    });
   } catch (error) {
     console.log(error);
   }
