@@ -78,6 +78,8 @@ const octapharmaplasma = async () => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
       let applyLink = email;
+
+      allJobs.push({ title, location, cell, email, applyLink });
     }
   } catch (error) {
     console.log(error);
