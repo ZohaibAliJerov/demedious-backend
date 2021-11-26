@@ -6,6 +6,11 @@ const recruiting = () => {
     let page = await browser.newPage();
 
     let url = "https://recruitingapp-4181.de.umantis.com/Jobs/1?lang=ger";
+
+    await page.goto(url, {
+      waitUntil: "load",
+      timeout: 0,
+    });
   } catch (error) {
     console.log(error);
   }
