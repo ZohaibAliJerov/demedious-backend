@@ -57,6 +57,19 @@ const octapharmaplasma = async () => {
       let title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
+
+      let location = await page.evaluate(() => {
+        let text = document.body.innerText
+          .split(",")
+          .map((el) => el.split(" "))
+          .flat(1);
+
+        for (let lctn in allLocations) {
+          if (text.contains(lctn)) {
+            return lctn;
+          }
+        }
+      });
     }
   } catch (error) {
     console.log(error);
