@@ -14,9 +14,7 @@ const recruiting = () => {
     //wait for a while
     await page.waitForTimeout(1000);
 
-    let nextPage = await page.evaluate(() => {
-      return document.querySelector("a#tablenav_top_nextlink_66856");
-    });
+    let nextPage = true;
 
     while (nextPage) {
       //scroll the page
@@ -43,6 +41,12 @@ const recruiting = () => {
       let bottomNextLink = await page.evaluate(() => {
         return document.querySelector("a#tablenav_bottom_nextlink_66856");
       });
+      if (bottomNextLink) {
+        await page.click("a#tablenav_bottom_nextlink_66856");
+        nextPage = true;
+      } else {
+        nextPage = false;
+      }
     } //end of while loop
   } catch (error) {
     console.log(error);
