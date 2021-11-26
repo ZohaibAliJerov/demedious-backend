@@ -9,6 +9,8 @@ const octapharmaplasma = async () => {
     //visit the site
     await page.goto(url, { waitUntil: "load", timeout: 0 });
 
+    await page.waitForTimeout(3000);
+
     //scroll the page
     await page.evaluate(() => {
       for (let i = 0; i < 100; i++) {
