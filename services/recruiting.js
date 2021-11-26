@@ -54,6 +54,12 @@ const recruiting = () => {
       await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
 
       await waitForTimeout(1000);
+
+      //TODO:get title
+      //TODO:get location
+      //TODO:get email
+      //TODO:get cell
+      //TODO:get applyLink
     }
   } catch (error) {
     console.log(error);
