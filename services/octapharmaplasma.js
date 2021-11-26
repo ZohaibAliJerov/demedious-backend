@@ -81,6 +81,7 @@ const octapharmaplasma = async () => {
 
       allJobs.push({ title, location, cell, email, applyLink });
     }
+    return allJobs;
   } catch (error) {
     console.log(error);
   }
