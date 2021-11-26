@@ -73,7 +73,7 @@ const recruiting = () => {
       });
       //TODO:get applyLink
       let applyLink = await page.evaluate(() => {
-        return document.querySelector();
+        return document.querySelector("a.button.apply-link").href;
       });
     }
   } catch (error) {
