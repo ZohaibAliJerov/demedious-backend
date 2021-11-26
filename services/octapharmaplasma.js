@@ -37,7 +37,22 @@ const octapharmaplasma = async () => {
 
       for (let jobLink of jobLinks) {
         await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
-        await page.waitForTimeout(1000);
+          await page.waitForTimeout(1000);
+          
+          
+    //scroll the page
+    await page.evaluate(() => {
+      for (let i = 0; i < 100; i++) {
+        if (
+          document.scrollingElement.scrollTop + window.innerHeight >=
+          document.scrollingElement.scrollHeight
+        ) {
+          break;
+        }
+        document.scrollingElement.scrollBy(0, 100);
+        setTimeout(1000);
+      }
+          
       }
     });
   } catch (error) {
