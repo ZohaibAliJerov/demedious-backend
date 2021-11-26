@@ -69,7 +69,7 @@ const recruiting = () => {
       });
       //TODO:get cell
       let cell = await page.evaluate(() => {
-        return document.querySelector();
+        return document.body.innerText.match(/\d+\s\d+\s\d+\s\d+/);
       });
       //TODO:get applyLink
       let applyLink = await page.evaluate(() => {
