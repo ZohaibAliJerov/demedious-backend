@@ -86,3 +86,7 @@ const octapharmaplasma = async () => {
     console.log(error);
   }
 };
+
+(async () => {
+  octapharmaplasma();
+})();
