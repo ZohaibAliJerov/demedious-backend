@@ -31,7 +31,9 @@ const octapharmaplasma = async () => {
 
     //get all jobLinks
     let jobLinks = await page.evaluate(() => {
-      let links = document.querySelectorAll("div.card-body > p > a");
+      let links = Array.from(
+        document.querySelectorAll("div.card-body > p > a")
+      );
       return links ? links.map((el) => el.href) : "";
     });
 
