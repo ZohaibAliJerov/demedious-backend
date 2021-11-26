@@ -52,6 +52,11 @@ const octapharmaplasma = async () => {
           setTimeout(1000);
         }
       });
+
+      //get title
+      let title = await page.evaluate(() => {
+        return document.querySelector("h1").innerText;
+      });
     }
   } catch (error) {
     console.log(error);
