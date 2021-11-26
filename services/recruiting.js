@@ -55,23 +55,23 @@ const recruiting = () => {
 
       await waitForTimeout(1000);
 
-      //TODO:get title
+      //get title
       let title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
-      //TODO:get location
+      //get location
       let location = await page.evaluate(() => {
         return document.querySelector(".inserat-short-info > font").innerText;
       });
-      //TODO:get email
+      //get email
       let email = await page.evaluate(() => {
         return "";
       });
-      //TODO:get cell
+      //get cell
       let cell = await page.evaluate(() => {
         return document.body.innerText.match(/\d+\s\d+\s\d+\s\d+/);
       });
-      //TODO:get applyLink
+      //get applyLink
       let applyLink = await page.evaluate(() => {
         return document.querySelector("a.button.apply-link").href;
       });
