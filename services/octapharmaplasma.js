@@ -70,6 +70,12 @@ const octapharmaplasma = async () => {
           }
         }
       });
+      let cell = await page.evaluate(() => {
+        return "";
+      });
+      let email = await page.evaluate(() => {
+        return document.body.innerText.match(/\w+@\w+\.\w+/);
+      });
     }
   } catch (error) {
     console.log(error);
