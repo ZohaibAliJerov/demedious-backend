@@ -91,3 +91,4 @@ const octapharmaplasma = async () => {
     console.log(error);
   }
 };
+export default octapharmaplasma;
