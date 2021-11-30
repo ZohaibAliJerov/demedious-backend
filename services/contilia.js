@@ -67,9 +67,9 @@ const contila = async () => {
             const jobDetails = {
                 title,
                 cell,
-                applyLink
+                applyLink,
                 // location,
-                // email,
+                email
 
             };
             allJobDetails.push(jobDetails);
