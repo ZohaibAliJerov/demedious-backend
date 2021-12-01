@@ -47,11 +47,8 @@ const helios = async () => {
       //     // get email
       await page.waitForSelector(".content-block-list");
       let email = await page.evaluate(() => {
-
-        let text = Array.from(document.querySelector(".content-block-list"));
-        text = text.map(el => el.innerText);
-      
-        return text = text.filter(el=>el.match(/[a-z.]+\s\[at]\s[a-z-.]+/))
+        let text =document.querySelector(".content-block-list");  
+       return  text ? text.innerText.match(/[a-zA-Z0-9-+.]+.\[[A-Za-z]+\].[a-zA-Z0-9-+.]+\.[a-zA-Z0-9]+/g) :null
       });
 
       // get location

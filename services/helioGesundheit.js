@@ -46,7 +46,7 @@ const helioGesundheit = async () => {
       await page.waitForSelector(".content-block-list");
       let cell = await page.evaluate(() => {
         let num = document.querySelector(".content-block-list");
-        return num ? num.innerText.match(/[+\d]+\s[\d]+\s[\d-]+/) : null;
+        return num ? num.innerText.match(/\([0-9]+\).[0-9]+.[0-9]+/g) : null;
       });
       //     // get email
       await page.waitForSelector(".content-block-list__container");
