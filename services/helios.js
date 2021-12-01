@@ -69,7 +69,7 @@ const helios = async () => {
         cell,
         email,
         location,
-        // applyLink,
+        applyLink,
       };
       allJobDetails.push(jobDetails);
       await page.waitForTimeout(3000);
