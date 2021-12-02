@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 
-const Karrer_wit = async () => {
+const carrerPortal = async () => {
     try {
 
         const browser = await puppeteer.launch({ headless: false });
@@ -9,7 +9,7 @@ const Karrer_wit = async () => {
 
 
         let allJobs = []
-        let link = ['https://karriere-wittekindshof.de/'];
+        let link = ['https://karriere.katharina-kasper-gruppe.de/stellenangebote.html?filter%5Borg_einheit%5D=16'];
 
         let counter = 0;
 
@@ -44,7 +44,7 @@ const Karrer_wit = async () => {
             /// getting all the location 
 
             const location = await page.evaluate(() => {
-                let regex = /[a-zaA-Z]+ - [a-zaA-Z]+[\n][a-zaA-Z]+ [a-zaA-Z]+ \d+, \d+ [a-zaA-Z]+ [a-zaA-Z]+/
+                let regex = /[a-zA-Z0-9]+. [a-zA-Z0-9]+ [a-zA-Z0-9]+ [a-zA-Z0-9ö]+[\n][a-zA-Z0-9 ]+ \d+[-|/]\d+ [a-zA-Z0-9 ö]+|[a-zA-Z0-9ß]+[ ]\d+[\n]\d+ [a-zA-Z0-9]+.|[a-zA-Z0-9]+. [a-zA-Z0-9]+ [a-zA-Z0-9]+ [a-zA-Z0-9]+[\n][a-zA-Z0-9 ]+ \d+|[a-zA-Z0-9]+. [a-zA-Z0-9]+ [a-zA-Z0-9]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+[\n][a-zA-Z0-9]+|[a-zA-Z0-9]+. [a-zA-Z0-9]+ [a-zA-Z0-9]+ [a-zA-Z0-9]+.[a-zA-Z0-9]+[\n][a-zA-Z0-9]+/
                 let text = document.querySelector('.scheme-display')
                 return text ? text.innerText.match(regex) : null;
 
@@ -53,14 +53,14 @@ const Karrer_wit = async () => {
             /// getting all the cell no 
 
             const cell = await page.evaluate(() => {
-                let regex = /[(]\d+[)] \d+[ -]\d+ \d+/
+                let regex = /[+]\d+ \d+ \d+-\d+/
                 let text = document.querySelector(".scheme-display");
                 return text ? text.innerText.match(regex) : null;
             });
 
             // getting all the emails 
             const email = await page.evaluate(() => {
-                let regex = /[a-zA-Z0-9]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+/
+                let regex = /[a-zA-Z]+.[a-zA-Z-]+[a-zA-Z]+@[a-zA-Z]+.[a-zA-Z]+/
                 let text = document.querySelector(".scheme-display");
                 return text ? text.innerText.match(regex) : null;
             });
@@ -106,4 +106,4 @@ async function scroll(page) {
     });
 }
 
-Karrer_wit()
+carrerPortal()
