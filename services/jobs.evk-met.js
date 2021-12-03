@@ -45,7 +45,7 @@ const jobsEvkMet = async () => {
             /// getting all the cell no.
             const cell = await page.evaluate(() => {
                 let text = document.querySelector('.scheme-display');
-                return text ? text.innerText.match(/\d+[/]\d+.\d+|\d+[/] \d+.\d+/) : null;
+                return text ? text.innerText.match(/\d+[/]\d+.\d+|\d+[/] \d+.\d+|\d+ \d+.\d+/) : null;
             });
 
             // getting all the links
@@ -57,7 +57,7 @@ const jobsEvkMet = async () => {
             // getting all the location from the links 
             const location = await page.evaluate(() => {
                 let text = document.querySelector('.scheme-display');
-                return text ? text.innerText.match(/[a-zA-Z]+ [|] [a-zA-Z]+. \d+.\d+ [|]. \d+ [a-zA-Z]+|[a-zA-Z]+. \d+-\d+  \d+ [a-zA-Z]+|[a-zA-Z]+. \d+.\d+ [|] \d+ [a-zA-Z]+|[a-zA-Z]+. \d+ [|] \d+ [a-zA-Z]+/) : null;
+                return text ? text.innerText.match(/[a-zA-Z]+ [|] [a-zA-Z]+. \d+.\d+ [|]. \d+ [a-zA-Z]+|[a-zA-Z]+. \d+-\d+  \d+ [a-zA-Z]+|[a-zA-Z]+. \d+.\d+ [|] \d+ [a-zA-Z]+|[a-zA-Z]+. \d+ [|] \d+ [a-zA-Z]+|[a-zA-Z]+. \d+-\d+ \d+ [a-zA-Z]+/) : null;
             });
 
             // /// getting all the emails 
