@@ -40,18 +40,18 @@ const warburg = async () => {
         return text ? text.innerText : null;
       });
 
-    //   //get contacts
-    //   await page.waitForSelector(".content-block-list");
-    //   let cell = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(
-    //           /(\+\d{2}).\d{4}.\d{6}|\d{5}\-\d{6}|\d{5}.\d{2}.\d{4}|[\(\d{5}\)]+.\d{2}\-\d{4}|\d{5}.\d{6}/g
-    //         )
-    //       : null;
-    //   });
+      //get contacts
+      await page.waitForSelector(".content-block-list");
+      let cell = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(
+              /(\+\d{2}).\d{4}.\d{6}|\d{5}\-\d{6}|\d{5}.\d{2}.\d{4}|[\(\d{5}\)]+.\d{2}\-\d{4}|\d{5}.\d{6}/g
+            )
+          : null;
+      });
     //       // get email
     //   let email = await page.evaluate(() => {
     //     let text = document
@@ -78,7 +78,7 @@ const warburg = async () => {
     //     });
       const jobDetails = {
         title,
-        // cell,
+        cell,
         // email,
         // location,
         // applyLink,
