@@ -10,6 +10,7 @@ const Lengerich = async () => {
     let allJobs = [];
     let allLinks = [
       "https://www.helios-gesundheit.de/kliniken/lengerich/unser-haus/karriere/stellenangebote/",
+      "https://www.helios-gesundheit.de/kliniken/lengerich/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=2&cHash=e3cff9e348ebb480dd7f42f9f7457ccf",
     ];
     let counter = 0;
     do {
