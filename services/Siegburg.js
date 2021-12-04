@@ -71,17 +71,17 @@ const Siegburg = async () => {
         });
 
         //get apply link
-        // await page.waitForSelector(".dialog__content");
-        // let applyLink = await page.evaluate(() => {
-        //   let text = document.querySelector(".dialog__content >a");
-        //   return text ? text.href : null;
-        // });
+        await page.waitForSelector(".dialog__content");
+        let applyLink = await page.evaluate(() => {
+          let text = document.querySelector(".dialog__content >a");
+          return text ? text.href : null;
+        });
       const jobDetails = {
         title,
         cell,
         email,
         location,
-        // applyLink,
+        applyLink,
       };
       allJobDetails.push(jobDetails);
       await page.waitForTimeout(4000);
