@@ -48,7 +48,7 @@ const schwelm = async () => {
         )[4];
         return text
           ? text.innerText.match(
-              /\d{4}\/\d{2}.\d{2}.\d{3}|\d{5}.\d{3}.\d{4}|\d{5}\-\d{3}.\/.\d{4}|\d{5}.\d{7}|\d{5}\-\d{9}/g
+              /(\+\d{2}).\d{4}.\d{2}\-\d{4}/g
             )
           : null;
       });
