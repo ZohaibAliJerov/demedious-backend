@@ -10,7 +10,6 @@ const schwelm = async () => {
     let allJobs = [];
     let allLinks = [
       "https://www.helios-gesundheit.de/kliniken/schwelm/unser-haus/karriere/stellenangebote/",
-
     ];
     let counter = 0;
     do {
@@ -41,19 +40,27 @@ const schwelm = async () => {
         return text ? text.innerText : null;
       });
 
-        //get contacts
-        await page.waitForSelector(".content-block-list");
-        let cell = await page.evaluate(() => {
-            let text = document.getElementsByClassName("content-block-list__item")[4]
-            return text ? text.innerText.match(/\d{4}\/\d{2}.\d{2}.\d{3}|\d{5}.\d{3}.\d{4}|\d{5}\-\d{3}.\/.\d{4}|\d{5}.\d{7}|\d{5}\-\d{9}/g) : null;
-        });
+      //get contacts
+      await page.waitForSelector(".content-block-list");
+      let cell = await page.evaluate(() => {
+        let text = document.getElementsByClassName(
+          "content-block-list__item"
+        )[4];
+        return text
+          ? text.innerText.match(
+              /\d{4}\/\d{2}.\d{2}.\d{3}|\d{5}.\d{3}.\d{4}|\d{5}\-\d{3}.\/.\d{4}|\d{5}.\d{7}|\d{5}\-\d{9}/g
+            )
+          : null;
+      });
       //     // get email
       let email = await page.evaluate(() => {
         let text = document
           .querySelector(".content-block-list__container")
           .getElementsByTagName("article")[4];
         return text
-          ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g)
+          ? text.innerText.match(
+              /[a-zA-Z]+.[a-zA-Z]+.(\[at\]).[a-zA-Z-]+.[a-zA-Z]+|[a-zA-Z-]+.[a-zA-Z]+.[a-zA-Z]+.(\[at\]).[a-zA-Z-]+[a-zA-Z]+.[a-zA-Z]+/g
+            )
           : null;
       });
 
@@ -65,8 +72,8 @@ const schwelm = async () => {
           .getElementsByTagName("article")[4];
         return text
           ? text.innerText.match(
-            /[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d{6}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z]+\W{1}\w{1}.\d+\,.\d{5}.[a-zA-Z]+.|[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+\n\s\d{5}.[a-zA-Z]+./g
-          )
+              /[A-Za-z]+.[A-Za-z]+.[A-Za-z,]+..[A-Za-z.-]+.[A-Za-z-]+.[A-Za-z.]+.\d{2}\,.\d+.[A-Za-z]+.|[A-Za-z.]+[A-Za-z-]+.[A-Za-z-.]+.\d{2}\,.\d+.[A-Za-z]+./g
+            )
           : null;
       });
 
