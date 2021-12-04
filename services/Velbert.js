@@ -9,7 +9,8 @@ const Velbert = async () => {
     //scroll the page
     let allJobs = [];
     let allLinks = [
-      "https://www.helios-gesundheit.de/kliniken/niederberg/unser-haus/karriere/stellenangebote/detail/koch-mwd-2/",
+      "https://www.helios-gesundheit.de/kliniken/niederberg/unser-haus/karriere/stellenangebote/",
+
     ];
     let counter = 0;
     do {
@@ -19,9 +20,9 @@ const Velbert = async () => {
       scroll(page);
       //  get all job links
       let jobs = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll(".tabular-list__link")).map(
-          (el) => el.href
-        );
+        return Array.from(
+          document.querySelectorAll(".tabular-list__item > a")
+        ).map((el) => el.href);
       });
       console.log(jobs);
       allJobs.push(...jobs);
@@ -40,14 +41,12 @@ const Velbert = async () => {
         return text ? text.innerText : null;
       });
 
-      //get contacts
-      await page.waitForSelector(".content-block-list");
-      let cell = await page.evaluate(() => {
-        let text = document
-          .querySelector(".content-block-list__container")
-          .getElementsByTagName("article")[4];
-        return text ? text.innerText.match(/\(\d{5}\).\d{3}.\d{3}/g) : null;
-      });
+        //get contacts
+        await page.waitForSelector(".content-block-list");
+        let cell = await page.evaluate(() => {
+            let text = document.getElementsByClassName("content-block-list__item")[4]
+            return text ? text.innerText.match(/\d{4}\/\d{2}.\d{2}.\d{3}|\d{5}.\d{3}.\d{4}|\d{5}\-\d{3}.\/.\d{4}|\d{5}.\d{7}|\d{5}\-\d{9}/g) : null;
+        });
       //     // get email
       let email = await page.evaluate(() => {
         let text = document
@@ -66,8 +65,8 @@ const Velbert = async () => {
           .getElementsByTagName("article")[4];
         return text
           ? text.innerText.match(
-              /[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+.\n\s\d+.[a-zA-Z]+.|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-][a-zA-Z]\W{1}[a-zA-Z].\d+\,.\d+.[a-zA-Z.]+/g
-            )
+            /[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d{6}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z]+\W{1}\w{1}.\d+\,.\d{5}.[a-zA-Z]+.|[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+\n\s\d{5}.[a-zA-Z]+./g
+          )
           : null;
       });
 
