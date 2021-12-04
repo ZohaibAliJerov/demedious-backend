@@ -70,16 +70,16 @@ const Siegburg = async () => {
          return text ? text.innerText.match(/[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z,]+.[a-zA-Z.]+.|[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z,]+.[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z.]+./g) : null;
         });
 
-    //     //get apply link
-    //     await page.waitForSelector(".dialog__content");
-    //     let applyLink = await page.evaluate(() => {
-    //       let text = document.querySelector(".dialog__content >a");
-    //       return text ? text.href : null;
-    //     });
+        //get apply link
+        // await page.waitForSelector(".dialog__content");
+        // let applyLink = await page.evaluate(() => {
+        //   let text = document.querySelector(".dialog__content >a");
+        //   return text ? text.href : null;
+        // });
       const jobDetails = {
         title,
         cell,
-        // email,
+        email,
         location,
         // applyLink,
       };
