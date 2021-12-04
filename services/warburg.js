@@ -52,15 +52,15 @@ const warburg = async () => {
             )
           : null;
       });
-    //       // get email
-    //   let email = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g)
-    //       : null;
-    //   });
+          // get email
+      let email = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g)
+          : null;
+      });
 
     //     // get location
     //     await page.waitForSelector(".content-block-list");
@@ -79,7 +79,7 @@ const warburg = async () => {
       const jobDetails = {
         title,
         cell,
-        // email,
+        email,
         // location,
         // applyLink,
       };
