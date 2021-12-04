@@ -55,7 +55,7 @@ const Velbert = async () => {
           .querySelector(".content-block-list__container")
           .getElementsByTagName("article")[4];
         return text
-          ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g)
+          ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+|[a-zA-Z.]+[a-zA-Z-]+[a-zA-Z-]+\@[a-z-]+[a-z.]+[a-z]+/g)
           : null;
       });
 
