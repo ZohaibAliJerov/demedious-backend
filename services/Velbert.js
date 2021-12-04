@@ -10,7 +10,10 @@ const Velbert = async () => {
     let allJobs = [];
     let allLinks = [
       "https://www.helios-gesundheit.de/kliniken/niederberg/unser-haus/karriere/stellenangebote/",
-
+      "https://www.helios-gesundheit.de/kliniken/schwelm/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=2&cHash=4ceac929807966a53c64c0c5bd8233fb",
+      "https://www.helios-gesundheit.de/kliniken/schwelm/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=3&cHash=176567fc2e2248f6ed8315cfc89a1da8",
+      "https://www.helios-gesundheit.de/kliniken/schwelm/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=4&cHash=3db6266aedaa665a2ab37de51c7c6f8f", 
+      
     ];
     let counter = 0;
     do {
