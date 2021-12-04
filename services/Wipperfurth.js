@@ -10,6 +10,7 @@ const Wipperfurth = async () => {
     let allJobs = [];
     let allLinks = [
       "https://www.helios-gesundheit.de/kliniken/wipperfuerth/unser-haus/karriere/stellenangebote/",
+      "https://www.helios-gesundheit.de/kliniken/wipperfuerth/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=2&cHash=ad9943a5575a14b8de7eadcebdbf090c",
     ];
     let counter = 0;
     do {
@@ -46,9 +47,9 @@ const Wipperfurth = async () => {
         let text = document
           .querySelector(".content-block-list__container")
           .getElementsByTagName("article")[4];
-        return text ? text.innerText.match(/\(\d{5}\).\d{3}.\d{3}/g) : null;
+        return text ? text.innerText.match(/\+\d+.\(\d+\).\d+\-\d+\-\d+|\(\d+\).\d+.\d+/g) : null;
       });
-      //     // get email
+          // get email
       let email = await page.evaluate(() => {
         let text = document
           .querySelector(".content-block-list__container")
@@ -66,12 +67,12 @@ const Wipperfurth = async () => {
           .getElementsByTagName("article")[4];
         return text
           ? text.innerText.match(
-              /[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+.\n\s\d+.[a-zA-Z]+.|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-][a-zA-Z]\W{1}[a-zA-Z].\d+\,.\d+.[a-zA-Z.]+/g
+              /\w{4}\-\w{1}\W{1}\w{4}\-\w{4}\W{1}\w{1}.\d+\,.\d+.\w{7}\W{1}\w{3}|[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\W{1}[a-zA-Z,]+.[a-zA-Z]+.[a-zA-Z]+\W{1}[a-zA-Z]+.[a-zA-Z]+\W{1}[a-zA-Z]+.\d+,.\d+.[a-zA-Z]+\W{1}[a-zA-Z]+.|[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z,]+.[a-zA-Z.-]+.[a-zA-Z-]+.[a-zA-Z.]+.\d+\,.\d+.[a-zA-Z]+.|[a-zA-Z]+.[a-zA-Z]+.\d+\,.\d+.[a-zA-Z]+./g
             )
           : null;
       });
 
-      //get apply link
+      // get apply link
       await page.waitForSelector(".dialog__content");
       let applyLink = await page.evaluate(() => {
         let text = document.querySelector(".dialog__content >a");
