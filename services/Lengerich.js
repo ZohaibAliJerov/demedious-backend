@@ -68,7 +68,7 @@ const Lengerich = async () => {
         let location = await page.evaluate(() => {
           let text = document.querySelector(".content-block-list")
       .getElementsByTagName("article")[4];
-         return text ? text.innerText.match(/[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+.\n\s\d+.[a-zA-Z]+.|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-][a-zA-Z]\W{1}[a-zA-Z].\d+\,.\d+.[a-zA-Z.]+/g) : null;
+         return text ? text.innerText.match(/[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+.\n\s\d+.[a-zA-Z]+.|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-][a-zA-Z]\W{1}[a-zA-Z].\d+\,.\d+.[a-zA-Z.]+|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z-]+\W{1}[a-zA-Z-]+.\d{2}\,.\d{5}.[a-zA-Z-]+/g) : null;
         });
 
         //get apply link
