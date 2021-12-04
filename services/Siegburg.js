@@ -52,7 +52,7 @@ const Siegburg = async () => {
             )
           : null;
       });
-    //   //     // get email
+      //     // get email
     //   let email = await page.evaluate(() => {
     //     let text = document
     //       .querySelector(".content-block-list__container")
@@ -62,13 +62,13 @@ const Siegburg = async () => {
     //       : null;
     //   });
 
-    //     // get location
-    //     await page.waitForSelector(".content-block-list");
-    //     let location = await page.evaluate(() => {
-    //       let text = document.querySelector(".content-block-list")
-    //   .getElementsByTagName("article")[4];
-    //      return text ? text.innerText.match(/[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+.\n\s\d+.[a-zA-Z]+.|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-][a-zA-Z]\W{1}[a-zA-Z].\d+\,.\d+.[a-zA-Z.]+/g) : null;
-    //     });
+        // get location
+        await page.waitForSelector(".content-block-list");
+        let location = await page.evaluate(() => {
+          let text = document.querySelector(".content-block-list")
+      .getElementsByTagName("article")[4];
+         return text ? text.innerText.match(/[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z,]+.[a-zA-Z.]+.|[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z,]+.[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z.]+./g) : null;
+        });
 
     //     //get apply link
     //     await page.waitForSelector(".dialog__content");
@@ -80,7 +80,7 @@ const Siegburg = async () => {
         title,
         cell,
         // email,
-        // location,
+        location,
         // applyLink,
       };
       allJobDetails.push(jobDetails);
