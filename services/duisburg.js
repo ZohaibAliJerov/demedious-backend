@@ -36,14 +36,14 @@ const duisburg = async () => {
     } while (counter < allLinks.length);
     let allJobDetails = [];
     // get data from every job post
-    // for (const url of allJobs) {
-    //   await page.goto(url);
-    //   scroll(page);
+    for (const url of allJobs) {
+      await page.goto(url);
+      scroll(page);
 
-    //   const title = await page.evaluate(() => {
-    //     let text = document.querySelector(".billboard-panel__body > h2");
-    //     return text ? text.innerText : null;
-    //   });
+      const title = await page.evaluate(() => {
+        let text = document.querySelector(".billboard-panel__body > h2");
+        return text ? text.innerText : null;
+      });
 
     //   //get contacts
     //   let cell = await page.evaluate(() => {
@@ -79,19 +79,19 @@ const duisburg = async () => {
     //     let text = document.querySelector(".dialog__content >a");
     //     return text ? text.href : null;
     //   });
-    //   const jobDetails = {
-    //     title,
-    //     cell,
-    //     email,
-    //     location,
-    //     applyLink,
-    //   };
-    //   allJobDetails.push(jobDetails);
-    //   await page.waitForTimeout(4000);
-    // }
-    // console.log(allJobDetails);
-    // await page.close();
-    // return allJobDetails;
+      const jobDetails = {
+        title,
+        // cell,
+        // email,
+        // location,
+        // applyLink,
+      };
+      allJobDetails.push(jobDetails);
+      await page.waitForTimeout(4000);
+    }
+    console.log(allJobDetails);
+    await page.close();
+    return allJobDetails;
   } catch (err) {
     console.log(err);
   }
