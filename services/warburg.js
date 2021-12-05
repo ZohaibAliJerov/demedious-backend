@@ -9,11 +9,9 @@ const warburg = async () => {
     //scroll the page
     let allJobs = [];
     let allLinks = [
-        "https://www.helios-gesundheit.de/kliniken/siegburg/unser-haus/karriere/stellenangebote/?tx_heliosuwsjoboffers_joboffers%5Bclinic%5D=60&tx_heliosuwsjoboffers_joboffers%5Bareas%5D=&tx_heliosuwsjoboffers_joboffers%5Bsearch%5D=",
-        "https://www.helios-gesundheit.de/kliniken/siegburg/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=2&cHash=ed114279e3b723f4be1c3351b0e60f88",
-        "https://www.helios-gesundheit.de/kliniken/siegburg/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=3&cHash=29bd0c67216768947331d79ed8ce3b39",
-        "https://www.helios-gesundheit.de/kliniken/siegburg/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=4&cHash=862cab72f3d37077f3d22a4d79e82bfe"
-        ];
+      "https://www.helios-gesundheit.de/kliniken/warburg/unser-haus/karriere/stellenangebote//",
+      "https://www.helios-gesundheit.de/kliniken/warburg/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=2&cHash=6ff29ba436dff093b32c89423cc9fe2a",
+    ];
     let counter = 0;
     do {
       await page.goto(allLinks[counter], {
@@ -32,62 +30,60 @@ const warburg = async () => {
       await page.waitForTimeout(3000);
     } while (counter < allLinks.length);
     let allJobDetails = [];
-    // // get data from every job post
-    // for (const url of allJobs) {
-    //   await page.goto(url);
-    //   scroll(page);
+    // get data from every job post
+    for (const url of allJobs) {
+      await page.goto(url);
+      scroll(page);
 
-    //   await page.waitForSelector(".billboard-panel__body > h2");
-    //   const title = await page.evaluate(() => {
-    //     let text = document.querySelector(".billboard-panel__body > h2");
-    //     return text ? text.innerText : null;
-    //   });
+      const title = await page.evaluate(() => {
+        let text = document.querySelector(".billboard-panel__body > h2");
+        return text ? text.innerText : null;
+      });
 
-    //   //get contacts
-    //   await page.waitForSelector(".content-block-list");
-    //   let cell = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(
-    //           /(\+\d{2}).\d{4}.\d{6}|\d{5}\-\d{6}|\d{5}.\d{2}.\d{4}|[\(\d{5}\)]+.\d{2}\-\d{4}|\d{5}.\d{6}|\d{5}.\d{7/g
-    //         )
-    //       : null;
-    //   });
-    //       // get email
-    //   let email = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g)
-    //       : null;
-    //   });
+      //get contacts
+      let cell = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text ? text.innerText.match(/\+\d{2}.\(\d{1}\).\d{4}.\d{2}.\d{4}|\(\d{5}\).\d{2}.\d{4}|\d{5}\/\d{6}|\d{5}.\d{7}/g) : null;
+      });
+      //     // get email
+      let email = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g)
+          : null;
+      });
 
-        // get location
-        let location = await page.evaluate(() => {
-        let text = document.querySelector(".content-block-list")
-            .getElementsByTagName("article")[4];
-         return text ? text.innerText.match(/[a-zA-Z].+[a-zA-Z].[a-zA-Z].[a-zA-Z].\n\s[a-zA-Z]\W{1}[a-zA-Z]+.\d{2}\n\s\d{5}.[a-zA-Z]+/g) : null;
-        });
+      // get location
+      let location = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(
+              /[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+.\n\s\d+.[a-zA-Z]+.|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-][a-zA-Z]\W{1}[a-zA-Z].\d+\,.\d+.[a-zA-Z.]+/g
+            )
+          : null;
+      });
 
-    //     //get apply link
-    //     await page.waitForSelector(".dialog__content");
-    //     let applyLink = await page.evaluate(() => {
-    //       let text = document.querySelector(".dialog__content >a");
-    //       return text ? text.href : null;
-    //     });
+      //get apply link
+      let applyLink = await page.evaluate(() => {
+        let text = document.querySelector(".dialog__content >a");
+        return text ? text.href : null;
+      });
       const jobDetails = {
-        // title,
-        // cell,
-        // email,
+        title,
+        cell,
+        email,
         location,
-        // applyLink,
+        applyLink,
       };
       allJobDetails.push(jobDetails);
-      await page.waitForTimeout(3000);
-    
+      await page.waitForTimeout(4000);
+    }
     console.log(allJobDetails);
     await page.close();
     return allJobDetails;
@@ -111,4 +107,4 @@ async function scroll(page) {
   });
 }
 warburg();
-export default warburg;    
+export default warburg
