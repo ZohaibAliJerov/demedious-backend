@@ -1,6 +1,6 @@
-import puppeteer, { PageEmittedEvents, TimeoutError } from "puppeteer";
+import puppeteer from "puppeteer";
 
-const recruiting = () => {
+const recruiting = async () => {
   try {
     let browser = await puppeteer.launch({ headless: true });
     let page = await browser.newPage();
