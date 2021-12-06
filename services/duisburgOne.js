@@ -104,6 +104,7 @@ async function scroll(page) {
       }
     }, delay);
   });
+  await browser.close()
 }
 warburg();
 export default warburg
