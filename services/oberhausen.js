@@ -68,17 +68,17 @@ const oberhausen = async () => {
           : null;
       });
 
-    //   //get apply link
-    //   let applyLink = await page.evaluate(() => {
-    //     let text = document.querySelector(".dialog__content >a");
-    //     return text ? text.href : null;
-    //   });
+      //get apply link
+      let applyLink = await page.evaluate(() => {
+        let text = document.querySelector(".dialog__content >a");
+        return text ? text.href : null;
+      });
       const jobDetails = {
         title,
         cell,
         email,
-    //     location,
-    //     // applyLink,
+        location,
+        applyLink,
       };
       allJobDetails.push(jobDetails);
       await page.waitForTimeout(4000);
