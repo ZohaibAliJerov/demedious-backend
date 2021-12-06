@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-const warburg = async () => {
+const duisburgOne = async () => {
   try {
     const browser = await puppeteer.launch({
       headless: false,
@@ -39,13 +39,13 @@ const warburg = async () => {
         return text ? text.innerText : null;
       });
 
-    //   //get contacts
-    //   let cell = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container")
-    //       .getElementsByTagName("article")[4];
-    //     return text ? text.innerText.match(/\+\d{2}.\(\d{1}\).\d{4}.\d{2}.\d{4}|\(\d{5}\).\d{2}.\d{4}|\d{5}\/\d{6}|\d{5}.\d{7}/g) : null;
-    //   });
+      //get contacts
+      let cell = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text ? text.innerText.match(/(\d+.\d+.[ -/].\s\d+)|(\d+[ /-]\d+.[ -/].\d+)|(\d+[ /-]\d+)/g) : null;
+      });
     //   //     // get email
     //   let email = await page.evaluate(() => {
     //     let text = document
@@ -75,7 +75,7 @@ const warburg = async () => {
     //   });
       const jobDetails = {
         title,
-        // cell,
+        cell,
         // email,
         // location,
         // applyLink,
@@ -105,5 +105,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-warburg();
-export default warburg
+duisburgOne();
+export default duisburgOne
