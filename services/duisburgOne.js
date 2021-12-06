@@ -42,8 +42,7 @@ const duisburgOne = async () => {
       //get contacts
       let cell = await page.evaluate(() => {
         let text = document
-          .querySelector(".content-block-list__container")
-          .getElementsByTagName("article")[4];
+          .querySelector(".content-block-list__container").getElementsByTagName("article")[4];
         return text ? text.innerText.match(/(\d+.\d+.[ -/].\s\d+)|(\d+[ /-]\d+.[ -/].\d+)|(\d+[ /-]\d+)/g) : null;
       });
       //     // get email
@@ -56,17 +55,17 @@ const duisburgOne = async () => {
           : null;
       });
 
-    //   // get location
-    //   let location = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(
-    //           /[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+.\n\s\d+.[a-zA-Z]+.|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-][a-zA-Z]\W{1}[a-zA-Z].\d+\,.\d+.[a-zA-Z.]+/g
-    //         )
-    //       : null;
-    //   });
+      // get location
+      let location = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(
+              /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[A-Za-z]+.\d+\,.\d+.[A-Za-z]+/g
+            )
+          : null;
+      });
 
     //   //get apply link
     //   let applyLink = await page.evaluate(() => {
@@ -77,7 +76,7 @@ const duisburgOne = async () => {
         title,
         cell,
         email,
-        // location,
+        location,
         // applyLink,
       };
       allJobDetails.push(jobDetails);
