@@ -50,7 +50,7 @@ const marienborn_jobs = async () => {
             // getting all the location from the links 
             const location = await page.evaluate(() => {
                 let text = document.querySelector('.tx-test');
-                return text ? text.innerText.match(/[a-zA-Z-.]+ [a-zA-Z-.]+[\n][a-zA-Z-.]+ [a-zA-Z-.]+.\d+ . \d+ [a-zA-Z-.]+.[a-zA-Z-.]+|[a-zA-Z]+ [a-zA-Z]+. \d+[\n]\d+ [a-zA-Z]+.[a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+. \d+[\n][\n]\d+ [a-zA-Z]+.[a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+. \d+.[\n]\d+ [a-zA-Z]+.[a-zA-Z]+/) : null;
+                return text ? text.innerText.match(/[a-zA-Z-.]+ [a-zA-Z-.]+[\n][a-zA-Z-.]+ [a-zA-Z-.]+.\d+ . \d+ [a-zA-Z-.]+.[a-zA-Z-.]+|[a-zA-Z]+ [a-zA-Z]+. \d+[\n]\d+ [a-zA-Z]+.[a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+. \d+[\n][\n]\d+ [a-zA-Z]+.[a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+. \d+.[\n]\d+ [a-zA-Z]+.[a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+[\n][a-zA-Z]+ [a-zA-Z. ]+\d+. \d+ [a-zA-Z]+.[a-zA-Z]+|[a-zA-Z]+ [a-zA-Z]+[\n][a-zA-Z. ß]+\d+ . \d+ [a-zA-Z]+.[a-zA-Z. ]+/) : null;
             });
 
             /// getting all the emails 
