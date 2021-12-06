@@ -46,17 +46,17 @@ const oberhausen = async () => {
           .querySelector(".content-block-list__container").getElementsByTagName("article")[4];
         return text ? text.innerText.match(/\(\d+\).\d+.\d+[-/]\d+.\d+/g) : null;
       });
-    //   //     // get email
-    //   let email = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(/[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+./g)
-    //       : null;
-    //   });
+      //     // get email
+      let email = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(/[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+./g)
+          : null;
+      });
 
-    //   // get location
+      // get location
     //   let location = await page.evaluate(() => {
     //     let text = document
     //       .querySelector(".content-block-list")
@@ -68,15 +68,15 @@ const oberhausen = async () => {
     //       : null;
     //   });
 
-    // //   //get apply link
-    // //   let applyLink = await page.evaluate(() => {
-    // //     let text = document.querySelector(".dialog__content >a");
-    // //     return text ? text.href : null;
-    // //   });
+    //   //get apply link
+    //   let applyLink = await page.evaluate(() => {
+    //     let text = document.querySelector(".dialog__content >a");
+    //     return text ? text.href : null;
+    //   });
       const jobDetails = {
         title,
         cell,
-    //     email,
+        email,
     //     location,
     //     // applyLink,
       };
