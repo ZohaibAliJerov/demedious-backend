@@ -46,15 +46,15 @@ const duisburgOne = async () => {
           .getElementsByTagName("article")[4];
         return text ? text.innerText.match(/(\d+.\d+.[ -/].\s\d+)|(\d+[ /-]\d+.[ -/].\d+)|(\d+[ /-]\d+)/g) : null;
       });
-    //   //     // get email
-    //   let email = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g)
-    //       : null;
-    //   });
+      //     // get email
+      let email = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(/[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+./g)
+          : null;
+      });
 
     //   // get location
     //   let location = await page.evaluate(() => {
@@ -76,7 +76,7 @@ const duisburgOne = async () => {
       const jobDetails = {
         title,
         cell,
-        // email,
+        email,
         // location,
         // applyLink,
       };
