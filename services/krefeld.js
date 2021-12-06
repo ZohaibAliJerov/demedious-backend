@@ -45,15 +45,15 @@ const krefeld = async () => {
           .querySelector(".content-block-list__container").getElementsByTagName("article")[4];
         return text ? text.innerText.match(/\(\d+\).\d+.\d+[-/]\d+.\d+|\d{5}.\d{3}.\d{4}|\(\d+\).\d+.[-/].\d+.\d+|\(\d+\)/g) : null;
       });
-    //   //     // get email
-    //   let email = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(/[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+./g)
-    //       : null;
-    //   });
+         // get email
+      let email = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(/[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+./g)
+          : null;
+      });
 
     // //   get location
     //   let location = await page.evaluate(() => {
@@ -75,7 +75,7 @@ const krefeld = async () => {
       const jobDetails = {
         title,
         cell,
-        // email,
+        email,
         // location,
         // applyLink,
       };
