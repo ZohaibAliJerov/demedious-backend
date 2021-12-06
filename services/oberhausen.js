@@ -56,17 +56,17 @@ const oberhausen = async () => {
           : null;
       });
 
-      // get location
-    //   let location = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(
-    //           /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[A-Za-z]+.\d+\,.\d+.[A-Za-z]+/g
-    //         )
-    //       : null;
-    //   });
+    //   get location
+      let location = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(
+              /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[A-Za-z]+.\d+\,.\d+.[A-Za-z]+/g
+            )
+          : null;
+      });
 
     //   //get apply link
     //   let applyLink = await page.evaluate(() => {
