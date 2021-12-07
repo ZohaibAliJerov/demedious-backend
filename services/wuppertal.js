@@ -37,14 +37,14 @@ const wuppertal = async () => {
     } while (counter < allLinks.length);
     let allJobDetails = [];
     // get data from every job post
-    // for (const url of allJobs) {
-    //   await page.goto(url);
-    //   scroll(page);
+    for (const url of allJobs) {
+      await page.goto(url);
+      scroll(page);
 
-    //   const title = await page.evaluate(() => {
-    //     let text = document.querySelector(".billboard-panel__body > h2");
-    //     return text ? text.innerText : null;
-    //   });
+      const title = await page.evaluate(() => {
+        let text = document.querySelector(".billboard-panel__body > h2");
+        return text ? text.innerText : null;
+      });
 
     //   //get contacts
     //   let cell = await page.evaluate(() => {
