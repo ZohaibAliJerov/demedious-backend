@@ -86,19 +86,19 @@ const wuppertal = async () => {
     //       let text = document.querySelector(".dialog__content >a");
     //       return text ? text.href : null;
     //     });
-    //   const jobDetails = {
-    //     title,
-    //     cell,
-    //     email,
-    //     location,
-    //     applyLink,
-    //   };
-    //   allJobDetails.push(jobDetails);
-    //   await page.waitForTimeout(4000);
-    // }
-    // console.log(allJobDetails);
-    // await page.close();
-    // return allJobDetails;
+      const jobDetails = {
+        title,
+        // cell,
+        // email,
+        // location,
+        // applyLink,
+      };
+      allJobDetails.push(jobDetails);
+      await page.waitForTimeout(4000);
+    }
+    console.log(allJobDetails);
+    await page.close();
+    return allJobDetails;
   } catch (err) {
     console.log(err);
   }
