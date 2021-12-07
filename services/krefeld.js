@@ -9,7 +9,7 @@ const krefeld = async () => {
     //scroll the page
     let allJobs = [];
     let allLinks = [
-      "https://www.helios-gesundheit.de/kliniken/krefeld-uerdingen/unser-haus/karriere/stellenangebote/"
+      "https://www.helios-gesundheit.de/kliniken/krefeld-uerdingen/unser-haus/karriere/stellenangebote/",
     ];
     let counter = 0;
     do {
@@ -42,41 +42,48 @@ const krefeld = async () => {
       //get contacts
       let cell = await page.evaluate(() => {
         let text = document
-          .querySelector(".content-block-list__container").getElementsByTagName("article")[4];
-        return text ? text.innerText.match(/\(\d+\).\d+.\d+[-/]\d+.\d+|\d{5}.\d{3}.\d{4}|\(\d+\).\d+.[-/].\d+.\d+|\(\d+\)/g) : null;
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(
+              /\(\d+\).\d+.\d+[-/]\d+.\d+|\d{5}.\d{3}.\d{4}|\(\d+\).\d+.[-/].\d+.\d+|\(\d+\)/g
+            )
+          : null;
       });
-         // get email
+      // get email
       let email = await page.evaluate(() => {
         let text = document
           .querySelector(".content-block-list__container")
           .getElementsByTagName("article")[4];
         return text
-          ? text.innerText.match(/[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+./g)
+          ? text.innerText.match(
+              /[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+./g
+            )
           : null;
       });
 
-    // //   get location
-    //   let location = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(
-    //           /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[A-Za-z]+.\d+\,.\d+.[A-Za-z]+/g
-    //         )
-    //       : null;
-    //   });
+      //   get location
+      let location = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(
+              /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[a-zA-Z]+\W{1}[a-zA-Z]+\W{1}[a-zA-Z]+.\d+[,/].\d+.[a-zA-Z]+/g
+            )
+          : null;
+      });
 
-    //   //get apply link
-    //   let applyLink = await page.evaluate(() => {
-    //     let text = document.querySelector(".dialog__content >a");
-    //     return text ? text.href : null;
-    //   });
+      //   //get apply link
+      //   let applyLink = await page.evaluate(() => {
+      //     let text = document.querySelector(".dialog__content >a");
+      //     return text ? text.href : null;
+      //   });
       const jobDetails = {
         title,
         cell,
         email,
-        // location,
+        location,
         // applyLink,
       };
       allJobDetails.push(jobDetails);
@@ -105,4 +112,4 @@ async function scroll(page) {
   });
 }
 krefeld();
-export default krefeld
+export default krefeld;
