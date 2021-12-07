@@ -46,17 +46,17 @@ const wuppertal = async () => {
         return text ? text.innerText : null;
       });
 
-    //   //get contacts
-    //   let cell = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(
-    //           /\(\d+\).\d+.\d+[-/]\d+.\d+|\d{5}.\d{3}.\d{4}|\(\d+\).\d+.[-/].\d+.\d+|\(\d+\)/g
-    //         )
-    //       : null;
-    //   });
+      //get contacts
+      let cell = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(
+            /\+\d+.\d+.\d+|\d+.\/.\d+[-/]\d+/g
+            )
+          : null;
+      });
     //   // get email
     //   let email = await page.evaluate(() => {
     //     let text = document
@@ -88,7 +88,7 @@ const wuppertal = async () => {
     //     });
       const jobDetails = {
         title,
-        // cell,
+        cell,
         // email,
         // location,
         // applyLink,
