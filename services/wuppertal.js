@@ -58,38 +58,38 @@ const wuppertal = async () => {
       //     : null;
       // });
     //   // get email
-      let email = await page.evaluate(() => {
-        let text = document
-          .querySelector(".content-block-list__container")
-          .getElementsByTagName("article")[4];
-        return text
-          ? text.innerText.match(
-              /[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+.|[a-zA-z.]+[a-zA-z]+[-/][a-zA-z]+\@[a-zA-z]+[-/][a-zA-z.]+[a-zA-z]+/g
-            )
-          : null;
-      });
-      //   get location
-      // let location = await page.evaluate(() => {
+      // let email = await page.evaluate(() => {
       //   let text = document
-      //     .querySelector(".content-block-list")
+      //     .querySelector(".content-block-list__container")
       //     .getElementsByTagName("article")[4];
       //   return text
       //     ? text.innerText.match(
-      //         /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[a-zA-Z]+\W{1}[a-zA-Z]+\W{1}[a-zA-Z]+.\d+[,/].\d+.[a-zA-Z]+/g
+      //         /[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+.|[a-zA-z.]+[a-zA-z]+[-/][a-zA-z]+\@[a-zA-z]+[-/][a-zA-z.]+[a-zA-z]+/g
       //       )
       //     : null;
       // });
-    //     //get apply link
-    //     let applyLink = await page.evaluate(() => {
-    //       let text = document.querySelector(".dialog__content >a");
-    //       return text ? text.href : null;
-    //     });
+      //   get location
+      // let location = await page.evaluate(() => {
+      //     let text = document
+      //       .querySelector(".content-block-list")
+      //       .getElementsByTagName("article")[4];
+      //     return text
+      //       ? text.innerText.match(
+      //           /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[a-zA-Z]+\W{1}[a-zA-Z]+\W{1}[a-zA-Z]+.\d+[,/].\d+.[a-zA-Z]+/g
+      //       )
+      //     : null;
+      // });
+        //get apply link
+        let applyLink = await page.evaluate(() => {
+          let text = document.querySelector(".dialog__content >a");
+          return text ? text.href : null;
+        });
       const jobDetails = {
         // title,
         // cell,
-        email,
+        // email,
         // location,
-        // applyLink,
+        applyLink,
       };
       allJobDetails.push(jobDetails);
       await page.waitForTimeout(4000);
