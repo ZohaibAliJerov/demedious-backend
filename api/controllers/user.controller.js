@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import User from "../models/User.model.js";
-import { validate } from "../models/User.model.js";
 
 //register controller
 export const register = async (req, res) => {
