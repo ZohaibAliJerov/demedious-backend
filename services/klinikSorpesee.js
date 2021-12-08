@@ -6,7 +6,7 @@ const klinikSorpesee = async () => {
 
   const url = "https://www.klinik-sorpesee.de/karriere/stellenangebote/";
 
-  await page.goto(url);
+  await page.goto(url, { timeout: 0, waitUntil: "load" });
 
   page.waitForTimeout(3000);
 
@@ -34,7 +34,12 @@ const klinikSorpesee = async () => {
         .innerText.split("\n")[0];
       let cell = document.querySelector(
         ".elementText.elementText_var0.elementTextListStyle_var0.first-child.last-child > p > strong > a"
-      );
+      ).innerText;
+      if (typeof cell == "object" && cell == null) {
+        cell = cell[0];
+      } else if (cell == null) {
+        cell = "";
+      }
 
       let email = "";
       let applyLink = document

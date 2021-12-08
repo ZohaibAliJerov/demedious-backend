@@ -1,22 +1,22 @@
-import Job from "../models/job.model";
+import Job from "../models/Job.model.js";
 
 //get all jobs
 export const findAllJobs = async (req, res) => {
-  let jobs = await Job.find();
+  let jobs = await Job.find({});
   try {
-    res.json(jobs);
+    res.status(200).send(jobs);
   } catch (err) {
-    res.send(err);
+    res.status(500).send({ message: err });
   }
 };
 
 //get job by id
 export const findJobById = async (req, res) => {
-  let job = await Job.findById(req.params.id);
+  let job = await Job.findById({ _id: req.body._id });
   try {
-    res.status(200).json(job);
+    res.status(200).send(job);
   } catch (err) {
-    res.send(err);
+    res.status(500).send({ message: err });
   }
 };
 
@@ -25,7 +25,7 @@ export const findJobById = async (req, res) => {
 export const createJob = async (req, res) => {
   let newJobs = new Job(req.body);
   try {
-    let job = await newJobs.save();
+    await newJobs.save();
     res.status(201).send("Job adde successfully!");
   } catch (err) {
     res.status(400).send(err);
@@ -50,13 +50,4 @@ export const deleteJob = async (req, res) => {
   } catch (err) {
     res.status(400).send(err);
   }
-};
-
-//export routes
-export default {
-  findAllJobs,
-  findJobById,
-  createJob,
-  updateJob,
-  deleteJob,
 };

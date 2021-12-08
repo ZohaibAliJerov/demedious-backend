@@ -62,7 +62,7 @@ const johanniter = async () => {
       });
       allJobLinks.push(...jobLinks);
     }
-    console.log(allJobLinks);
+
     // get all job details
     let allJobs = [];
     //visit all job links
@@ -93,14 +93,25 @@ const johanniter = async () => {
       let cell = await page.evaluate(() => {
         return document.body.innerText.match(/\d+\s\d+-\d+/);
       });
+      if (typeof cell == "object" && cell != null) {
+        cell = cell[0];
+      } else if (cell == null) {
+        cell = "";
+      }
       let email = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
-
+      if (typeof email == "object" && email != null) {
+        email = email[0];
+      } else if (email == null) {
+        email = "";
+      }
       let applyLink = email;
 
       allJobs.push({ title, location, cell, email, applyLink });
     }
+    await page.close();
+    await browser.close();
     return allJobs;
   } catch (error) {
     console.log(error);

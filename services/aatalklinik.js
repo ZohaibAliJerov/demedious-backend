@@ -40,22 +40,43 @@ let aatalklinik = async () => {
       });
       newJob.title = title;
 
-      let { address, cell, email } = await page.evaluate(() => {
-        let adrs = Array.from(
+      let { location, cell, email } = await page.evaluate(() => {
+        let loc = Array.from(
           document.querySelectorAll("div.sidebar-widget > p")
         ).map((el) => el.innerText);
-        adrs = adrs.join("");
+        loc = loc.join("");
 
-        let cellNo = adrs.match(/\d+\/\d+-\d+/);
-        let mail = adrs.match(/\w+@\w+\.\w+/);
-        adrs = adrs.split(",");
-        adrs = adrs.map((el) => el.replace(/\w+@\w\.\w+|\d+\/\d+-\d+|\n/g, ""));
-        return { address: adrs, cell: cellNo, email: mail };
+        let cellNo = loc.match(/\d+\/\d+-\d+/);
+        let mail = loc.match(/\w+@\w+\.\w+/);
+        loc = loc.split(",");
+        loc = loc.map((el) => el.replace(/\w+@\w\.\w+|\d+\/\d+-\d+|\n/g, ""));
+        return { location: loc, cell: cellNo, email: mail };
       });
+      if (typeof location == "object" && location != null) {
+        location = location[0];
+      } else if (location == null) {
+        location = "";
+      }
+      newJob.location = location;
+      if (typeof cell == "object" && cell != null) {
+        cell = cell[0];
+      } else if (cell == null) {
+        cell = "";
+      }
 
-      newJob.address = address;
       newJob.cell = cell;
+      if (typeof email == "object" && email != null) {
+        email = email[0];
+      } else if (email == null) {
+        email = "";
+      }
       newJob.email = email;
+
+      if (typeof jobLink == "object" && email != null) {
+        jobLink = jobLink[0];
+      } else if (jobLink == null) {
+        jobLink = "";
+      }
       newJob.applyLink = jobLink;
 
       allJobs.push(newJob);

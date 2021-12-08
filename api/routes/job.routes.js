@@ -1,17 +1,23 @@
 import express from "express";
-import jobControllers from "../controllers/job.controllers.js";
+import verifyToken from "../middlewares/authJwt.js";
+import {
+  findAllJobs,
+  findJobById,
+  updateJob,
+  deleteJob,
+} from "../controllers/job.controllers.js";
 const router = express.Router();
 
 //get all jobs
-router.get("/jobs", jobControllers.findAllJobs);
+router.get("/all", [verifyToken], findAllJobs);
 
 //get job by id
-router.get("/jobs:id", jobControllers.findJobById);
+router.get("/:id", [verifyToken], findJobById);
 
 //update a job
-router.put("/jobs:id", jobControllers.updateJob);
+router.put("/:id", [verifyToken], updateJob);
 
 //delete a job
-router.delete("/jobs:id", jobControllers.deleteJob);
+router.delete("/:id", [verifyToken], deleteJob);
 
 export default router;
