@@ -1,11 +1,17 @@
 import johanniter from "./johanniter.js";
-import katherina from "./katharina.js";
-import klinikSorpesee from "./klinikSorpesee";
-import recruiting from "./recruiting.js";
-
+import aatalklinik from "./aatalklinik.js";
+//import katherina from "./katharina.js";
+import florence from "./florence.js";
+import klinikSorpesee from "./klinikSorpesee.js";
 const mainService = async () => {
-  let jobCollection1 = await katherina();
-  let jobCollection2 = await johanniter();
-  let jobCollection3 = await klinikSorpesee();
-  let jobCollection4 = await recruiting();
+  return Promise.all([
+    johanniter(),
+    aatalklinik(),
+    florence(),
+    klinikSorpesee(),
+  ]).then((results) => {
+    return results.flat(1);
+  });
 };
+
+export default mainService;
