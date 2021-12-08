@@ -9,8 +9,12 @@ const Siegburg = async () => {
     //scroll the page
     let allJobs = [];
     let allLinks = [
-        "https://www.helios-gesundheit.de/kliniken/siegburg/unser-haus/karriere/stellenangebote/?tx_heliosuwsjoboffers_joboffers%5Bclinic%5D=60&tx_heliosuwsjoboffers_joboffers%5Bareas%5D=&tx_heliosuwsjoboffers_joboffers%5Bsearch%5D="
-        ];
+        "https://www.helios-gesundheit.de/kliniken/siegburg/unser-haus/karriere/stellenangebote/?tx_heliosuwsjoboffers_joboffers%5Bclinic%5D=60&tx_heliosuwsjoboffers_joboffers%5Bareas%5D=&tx_heliosuwsjoboffers_joboffers%5Bsearch%5D=",
+        "https://www.helios-gesundheit.de/kliniken/siegburg/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=2&cHash=ed114279e3b723f4be1c3351b0e60f88",
+        "https://www.helios-gesundheit.de/kliniken/siegburg/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=3&cHash=29bd0c67216768947331d79ed8ce3b39",
+        "https://www.helios-gesundheit.de/kliniken/siegburg/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=4&cHash=862cab72f3d37077f3d22a4d79e82bfe",
+        ]
+        ;
     let counter = 0;
     do {
       await page.goto(allLinks[counter], {
@@ -58,7 +62,7 @@ const Siegburg = async () => {
           .querySelector(".content-block-list__container")
           .getElementsByTagName("article")[4];
         return text
-          ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g)
+          ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+|[a-z.]+\@[a-z-]+[a-z.]+[a-z]+/g)
           : null;
       });
 
