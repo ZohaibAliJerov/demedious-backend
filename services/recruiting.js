@@ -2,7 +2,7 @@ import puppeteer from "puppeteer";
 
 const recruiting = async () => {
   try {
-    let browser = await puppeteer.launch({ headless: true });
+    let browser = await puppeteer.launch({ headless: false });
     let page = await browser.newPage();
 
     let url = "https://recruitingapp-4181.de.umantis.com/Jobs/1?lang=ger";
@@ -95,4 +95,8 @@ const recruiting = async () => {
   }
 };
 
-export default recruiting;
+//export default recruiting;
+(async () => {
+  let res = await recruiting();
+  console.log(res);
+})();
