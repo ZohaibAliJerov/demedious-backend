@@ -34,18 +34,18 @@ const erkelenz = async () => {
       await page.goto(url);
       scroll(page);
 
-    //   const title = await page.evaluate(() => {
-    //     let text = document.querySelector("h1");
-    //     return text ? text.innerText : null;
-    //   });
+      const title = await page.evaluate(() => {
+        let text = document.querySelector("h1");
+        return text ? text.innerText : null;
+      });
 
-      //get contacts
-    //   let cell = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".col-md-3.contactperson");
-    //       return text ? text.innerText.match(/\d+.\d+-\d+/g) : null;
-    //   });
-      //     // get email
+    //   get contacts
+      let cell = await page.evaluate(() => {
+        let text = document
+          .querySelector(".col-md-3.contactperson");
+          return text ? text.innerText.match(/\d+.\d+-\d+/g) : null;
+      });
+          // get email
       let email = await page.evaluate(() => {
         let text = document
           .querySelector(".spamspan")
@@ -53,29 +53,29 @@ const erkelenz = async () => {
           ? text.innerText : null;
       });
 
-    // //   get location
-    //   let location = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(
-    //           /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[A-Za-z]+.\d+\,.\d+.[A-Za-z]+/g
-    //         )
-    //       : null;
-    //   });
+    //   get location
+      let location = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(
+              /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[A-Za-z]+.\d+\,.\d+.[A-Za-z]+/g
+            )
+          : null;
+      });
 
-    //   //get apply link
-    //   let applyLink = await page.evaluate(() => {
-    //     let text = document.querySelector(".dialog__content >a");
-    //     return text ? text.href : null;
-    //   });
+      //get apply link
+      let applyLink = await page.evaluate(() => {
+        let text = document.querySelector(".col-md-12.pt-20.mb-50 > a");
+        return text ? text.href : null;
+      });
       const jobDetails = {
-        // title,
-        // cell,
+        title,
+        cell,
         email,
-    //     location,
-    //     applyLink,
+        location,
+        applyLink,
       };
       allJobDetails.push(jobDetails);
       await page.waitForTimeout(4000);
