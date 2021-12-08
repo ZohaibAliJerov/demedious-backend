@@ -34,17 +34,17 @@ const erkelenz = async () => {
       await page.goto(url);
       scroll(page);
 
-      const title = await page.evaluate(() => {
-        let text = document.querySelector("h1");
-        return text ? text.innerText : null;
-      });
-
-    //   //get contacts
-    //   let cell = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container").getElementsByTagName("article")[4];
-    //     return text ? text.innerText.match(/\(\d+\).\d+.\d+[-/]\d+.\d+/g) : null;
+    //   const title = await page.evaluate(() => {
+    //     let text = document.querySelector("h1");
+    //     return text ? text.innerText : null;
     //   });
+
+      //get contacts
+      let cell = await page.evaluate(() => {
+        let text = document
+          .querySelector(".col-md-3.contactperson");
+          return text ? text.innerText.match(/\d+.\d+-\d+/g) : null;
+      });
     //   //     // get email
     //   let email = await page.evaluate(() => {
     //     let text = document
@@ -73,8 +73,8 @@ const erkelenz = async () => {
     //     return text ? text.href : null;
     //   });
       const jobDetails = {
-        title,
-    //     cell,
+        // title,
+        cell,
     //     email,
     //     location,
     //     applyLink,
