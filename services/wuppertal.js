@@ -41,44 +41,44 @@ const wuppertal = async () => {
       await page.goto(url);
       scroll(page);
 
-      // const title = await page.evaluate(() => {
-      //   let text = document.querySelector(".billboard-panel__body > h2");
-      //   return text ? text.innerText : null;
-      // });
+      const title = await page.evaluate(() => {
+        let text = document.querySelector(".billboard-panel__body > h2");
+        return text ? text.innerText : null;
+      });
 
-      //get contacts
-      // let cell = await page.evaluate(() => {
-      //   let text = document
-      //     .querySelector(".content-block-list__container")
-      //     .getElementsByTagName("article")[4];
-      //   return text
-      //     ? text.innerText.match(
-      //       /\+\d+.\d+.\d+|\d+.\/.\d+[-/]\d+/g
-      //       )
-      //     : null;
-      // });
-    //   // get email
-      // let email = await page.evaluate(() => {
-      //   let text = document
-      //     .querySelector(".content-block-list__container")
-      //     .getElementsByTagName("article")[4];
-      //   return text
-      //     ? text.innerText.match(
-      //         /[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+.|[a-zA-z.]+[a-zA-z]+[-/][a-zA-z]+\@[a-zA-z]+[-/][a-zA-z.]+[a-zA-z]+/g
-      //       )
-      //     : null;
-      // });
-      //   get location
-      // let location = await page.evaluate(() => {
-      //     let text = document
-      //       .querySelector(".content-block-list")
-      //       .getElementsByTagName("article")[4];
-      //     return text
-      //       ? text.innerText.match(
-      //           /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[a-zA-Z]+\W{1}[a-zA-Z]+\W{1}[a-zA-Z]+.\d+[,/].\d+.[a-zA-Z]+/g
-      //       )
-      //     : null;
-      // });
+      get contacts
+      let cell = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(
+            /\+\d+.\d+.\d+|\d+.\/.\d+[-/]\d+/g
+            )
+          : null;
+      });
+      // get email
+      let email = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text
+          ? text.innerText.match(
+              /[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+.|[a-zA-z.]+[a-zA-z]+[-/][a-zA-z]+\@[a-zA-z]+[-/][a-zA-z.]+[a-zA-z]+/g
+            )
+          : null;
+      });
+        get location
+      let location = await page.evaluate(() => {
+          let text = document
+            .querySelector(".content-block-list")
+            .getElementsByTagName("article")[4];
+          return text
+            ? text.innerText.match(
+                /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[a-zA-Z]+\W{1}[a-zA-Z]+\W{1}[a-zA-Z]+.\d+[,/].\d+.[a-zA-Z]+/g
+            )
+          : null;
+      });
         //get apply link
         let applyLink = await page.evaluate(() => {
           let text = document.querySelector(".dialog__content >a");
