@@ -42,22 +42,34 @@ const katharina = async () => {
           .join(",")
           .replace(/\+\d+\s+\d+\s\d+-\d+|,,/g, " ");
       });
-      newJob.cell = await page.evaluate(() => {
-        let cell = Array.from(document.querySelectorAll(".content_text"));
-        return cell ? cell[4].innerText.match(/\+\d+\s+\d+\s\d+-\d+/) : "";
+      let cell = await page.evaluate(() => {
+        let cellNo = Array.from(document.querySelectorAll(".content_text"));
+        return cellNo ? cellNo[4].innerText.match(/\+\d+\s+\d+\s\d+-\d+/) : "";
       });
-      newJob.email = null;
+      if (typeof cell == "object" && cell != null) {
+        cell = cell[0];
+      } else if (cell == null) {
+        cell = "";
+      }
+      newJob.cell = cell;
+      newJob.email = "";
 
-      newJob.applyLink = await page.evaluate(() => {
-        let applyLink = document.querySelector("#btn_online_application > a");
-        return applyLink ? applyLink.href : "";
+      let applyLink = await page.evaluate(() => {
+        let link = document.querySelector("#btn_online_application > a");
+        return link ? applyLink.href : "";
       });
 
+      if (typeof applyLink == "object" && applyLink != null) {
+        applyLink = applyLink[0];
+      } else if (applyLink == null) {
+        applyLink = "";
+      }
+      newJob.applyLink = applyLink;
       allJobs.push(newJob);
     }
 
-    // await page.close();
-    // await browser.close();
+    await page.close();
+    await browser.close();
     return allJobs;
   } catch (error) {
     console.log(error);

@@ -11,12 +11,18 @@
   "author": "shoaib ur rehman",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "crypto": "^1.0.1",
     "dotenv": "^10.0.0",
     "es6-set": "^0.1.5",
     "express": "^4.17.1",
+    "joi": "^17.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.2.1",
     "mongoose": "^6.0.12",
     "node-apidoc": "^0.1.0",
     "node-cron": "^3.0.0",
+    "nodemailer": "^6.7.2",
     "puppeteer": "^11.0.0"
   },
   "devDependencies": {

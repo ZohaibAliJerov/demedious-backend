@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-const Velbert = async () => {
+const warburg = async () => {
   try {
     const browser = await puppeteer.launch({
       headless: false,
@@ -9,10 +9,8 @@ const Velbert = async () => {
     //scroll the page
     let allJobs = [];
     let allLinks = [
-      "https://www.helios-gesundheit.de/kliniken/niederberg/unser-haus/karriere/stellenangebote/",
-      "https://www.helios-gesundheit.de/kliniken/schwelm/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=2&cHash=4ceac929807966a53c64c0c5bd8233fb",
-      "https://www.helios-gesundheit.de/kliniken/schwelm/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=3&cHash=176567fc2e2248f6ed8315cfc89a1da8",
-      "https://www.helios-gesundheit.de/kliniken/schwelm/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=4&cHash=3db6266aedaa665a2ab37de51c7c6f8f", 
+      "https://www.helios-gesundheit.de/kliniken/warburg/unser-haus/karriere/stellenangebote//",
+      "https://www.helios-gesundheit.de/kliniken/warburg/unser-haus/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=2&cHash=6ff29ba436dff093b32c89423cc9fe2a",
     ];
     let counter = 0;
     do {
@@ -22,9 +20,9 @@ const Velbert = async () => {
       scroll(page);
       //  get all job links
       let jobs = await page.evaluate(() => {
-        return Array.from(
-          document.querySelectorAll(".tabular-list__item > a")
-        ).map((el) => el.href);
+        return Array.from(document.querySelectorAll(".tabular-list__link")).map(
+          (el) => el.href
+        );
       });
       console.log(jobs);
       allJobs.push(...jobs);
@@ -37,43 +35,41 @@ const Velbert = async () => {
       await page.goto(url);
       scroll(page);
 
-      await page.waitForSelector(".billboard-panel__body > h2");
       const title = await page.evaluate(() => {
         let text = document.querySelector(".billboard-panel__body > h2");
         return text ? text.innerText : null;
       });
 
-        //get contacts
-        await page.waitForSelector(".content-block-list");
-        let cell = await page.evaluate(() => {
-            let text = document.getElementsByClassName("content-block-list__item")[4]
-            return text ? text.innerText.match(/\d{4}\/\d{2}.\d{2}.\d{3}|\d{5}.\d{3}.\d{4}|\d{5}\-\d{3}.\/.\d{4}|\d{5}.\d{7}|\d{5}\-\d{9}/g) : null;
-        });
+      //get contacts
+      let cell = await page.evaluate(() => {
+        let text = document
+          .querySelector(".content-block-list__container")
+          .getElementsByTagName("article")[4];
+        return text ? text.innerText.match(/\+\d{2}.\(\d{1}\).\d{4}.\d{2}.\d{4}|\(\d{5}\).\d{2}.\d{4}|\d{5}\/\d{6}|\d{5}.\d{7}/g) : null;
+      });
       //     // get email
       let email = await page.evaluate(() => {
         let text = document
           .querySelector(".content-block-list__container")
           .getElementsByTagName("article")[4];
         return text
-          ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+|[a-zA-Z.]+[a-zA-Z-]+[a-zA-Z-]+\@[a-z-]+[a-z.]+[a-z]+/g)
+          ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g)
           : null;
       });
 
       // get location
-      await page.waitForSelector(".content-block-list");
       let location = await page.evaluate(() => {
         let text = document
           .querySelector(".content-block-list")
           .getElementsByTagName("article")[4];
         return text
           ? text.innerText.match(
-            /[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d{6}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z]+\W{1}\w{1}.\d+\,.\d{5}.[a-zA-Z]+.|[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+\n\s\d{5}.[a-zA-Z]+./g
-          )
+              /[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+.\n\s\d+.[a-zA-Z]+.|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-][a-zA-Z]\W{1}[a-zA-Z].\d+\,.\d+.[a-zA-Z.]+/g
+            )
           : null;
       });
 
       //get apply link
-      await page.waitForSelector(".dialog__content");
       let applyLink = await page.evaluate(() => {
         let text = document.querySelector(".dialog__content >a");
         return text ? text.href : null;
@@ -110,5 +106,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-Velbert();
-export default Velbert;
+warburg();
+export default warburg

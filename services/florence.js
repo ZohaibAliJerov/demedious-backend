@@ -45,18 +45,19 @@ const florenceService = async () => {
       });
       job["title"] = title;
       let text;
-      let address = await page.evaluate(() => {
+      let location = await page.evaluate(() => {
         let paragraphs = Array.from(document.querySelectorAll("p"));
-        let adrs = paragraphs[0];
+        let loc = paragraphs[0];
         for (let i = 0; i < paragraphs.length; i++) {
           let maxChilds = paragraphs[i];
-          if (adrs.childElementCount < maxChilds.childElementCount) {
-            adrs = maxChilds;
+          if (loc.childElementCount < maxChilds.childElementCount) {
+            loc = maxChilds;
           }
         }
-        return adrs ? adrs.innerText : null;
+        return loc ? loc.innerText : null;
       });
-      job["address"] = address;
+
+      job["location"] = location;
 
       let cell = await page.evaluate(() => {
         let text = Array.from(document.querySelectorAll("p")).map(
@@ -67,25 +68,39 @@ const florenceService = async () => {
           /\+\d+\s+\W0\W\s+\d+\s+\/\s+\d+-\d+\s+\/\s+\d+|\d+\s+\/\s+\d+-\d+|\d+\/d+-\d+\/\d+|\d+\/\d+-\d+|\d+\s+\d+|\d+\s\d+-\d+/g;
         let cell = text.filter((el) => el.match(regex));
         cell = cell.join(",").match(regex);
-        return cell ? cell.filter((el) => el.includes("\n") == false) : null;
+        return cell ? cell.filter((el) => el.includes("\n") == false) : "";
       });
+      if (typeof cell == "object" && cell != null) {
+        cell = cell[0];
+      } else if (cell == null) {
+        cell = "";
+      }
       job["cell"] = cell;
       let email = await page.evaluate(() => {
         let mail = document.querySelector("a.mail");
-        return mail ? mail.innerText : null;
+        return mail ? mail.innerText : "";
       });
+      if (typeof email == "object") {
+        email = email[0];
+      } else if (email == null) {
+        email = "";
+      }
       job["email"] = email;
 
       let applyLink = await page.evaluate(() => {
         let link = document.querySelector("a.internal-link.button-blau");
-        return link ? link.href : null;
+        return link ? link.href : "";
       });
-
+      if (typeof applyLink == "object" && cell != null) {
+        applyLink = applyLink[0];
+      } else if (applyLink == null) {
+        applyLink = "";
+      }
       job["applyLink"] = applyLink;
 
       allJobDetails.push(job);
     }
-    console.log(allJobDetails);
+    //    console.log(allJobDetails);
     await page.close();
     return allJobDetails;
   } catch (err) {
@@ -109,4 +124,5 @@ async function scroll(page) {
     }, delay);
   });
 }
+
 export default florenceService;
