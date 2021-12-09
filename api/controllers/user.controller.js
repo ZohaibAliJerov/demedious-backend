@@ -1,14 +1,14 @@
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import User from "../models/User.model.js";
-import { validate } from "../models/User.model.js";
 
 //register controller
 export const register = async (req, res) => {
+  let salt = bcryptjs.genSaltSync(10);
   let newUser = new User({
     username: req.body.username,
-    email: req.body.username,
-    password: bcryptjs.hashSync(req.body.password, 10),
+    email: req.body.email,
+    password: bcryptjs.hashSync(req.body.password, salt),
   });
   try {
     newUser.save().then((user) => {
@@ -20,27 +20,26 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  let user = User.find({ email: req.body.email });
+  let user = await User.findOne({ username: req.body.username });
   if (!user) {
     res.status(404).send("User Not Found!");
-  }
-
-  let passwordIsValid = bcryptjs.compareSync(req.body.password, user.password);
-  if (!passwordIsValid) {
-    res.status(401).send({
-      accessToken: null,
-      message: "Invalid emial or password",
+  } else {
+    bcryptjs.compare(req.body.password, user.password, (err, result) => {
+      if (err) {
+        res.status(401).send({
+          accessToken: null,
+          message: "Invalid email or password",
+        });
+      }
+      let token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
+        expiresIn: 86400,
+      });
+      res.status(200).send({
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        accessToken: token,
+      });
     });
   }
-
-  let token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
-    expiresIn: 86400,
-  });
-
-  res.status(200).send({
-    id: user._id,
-    username: user.username,
-    email: user.email,
-    accessToken: token,
-  });
 };
