@@ -47,25 +47,19 @@ const munster = async () => {
       //     return text ? text.innerText.match(/\d+.\d+.\d+.\/.\d+.[-/]\d+|\(\d+\).\d+[-/]\d+|\(\d+\).\d+/|\+\d+.\d+.\d+[-/]\d+g) : null;
       // });
           // get email
-      let email = await page.evaluate(() => {
+      // let email = await page.evaluate(() => {
+      //   let text = document
+      //     .querySelector(".article")
+      //   return text
+      //     ? text.innerText.match(/[a-zA-Z]+\@[a-zA-Z]+[-/][a-zA-Z.]+[a-zA-Z]+|[a-zA-Z.]+[a-zA-Z]+\@[a-zA-Z]+[-/][a-zA-Z.]+[a-zA-Z]+[a-zA-Z.]+/g) : null;
+      // });
+
+    //   get location
+      let location = await page.evaluate(() => {
         let text = document
           .querySelector(".article")
-        return text
-          ? text.innerText.match(/[a-zA-Z]+\@[a-zA-Z]+[-/][a-zA-Z.]+[a-zA-Z]+|[a-zA-Z.]+[a-zA-Z]+\@[a-zA-Z]+[-/][a-zA-Z.]+[a-zA-Z]+[a-zA-Z.]+/g) : null;
+        return text? text.innerText.match(/[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n[a-zA-Z].+\n[a-zA-Z]+.\d+\n\d+.[a-zA-Z]+\W{1}[a-zA-Z]+/g): null;
       });
-
-    // //   get location
-    //   let location = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(
-    //           /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[A-Za-z]+.\d+\,.\d+.[A-Za-z]+/g
-    //         )
-    //       : null;
-    //   });
-
     //   //get apply link
     //   let applyLink = await page.evaluate(() => {
     //     let text = document.querySelector(".col-md-12.pt-20.mb-50 > a");
@@ -74,8 +68,8 @@ const munster = async () => {
       const jobDetails = {
         // title,
         // cell,
-        email,
-        // location,
+//        email,
+        location,
         // applyLink,
       };
       allJobDetails.push(jobDetails);
