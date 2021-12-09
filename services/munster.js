@@ -41,17 +41,17 @@ const munster = async () => {
       // });
 
     //   get contacts
-      let cell = await page.evaluate(() => {
-        let text = document
-          .querySelector(".article");
-          return text ? text.innerText.match(/\d+.\d+.\d+.\/.\d+.[-/]\d+|\(\d+\).\d+[-/]\d+|\(\d+\).\d+/g) : null;
-      });
+      // let cell = await page.evaluate(() => {
+      //   let text = document
+      //     .querySelector(".article");
+      //     return text ? text.innerText.match(/\d+.\d+.\d+.\/.\d+.[-/]\d+|\(\d+\).\d+[-/]\d+|\(\d+\).\d+/|\+\d+.\d+.\d+[-/]\d+g) : null;
+      // });
           // get email
       let email = await page.evaluate(() => {
         let text = document
-          .querySelector(".spamspan")
+          .querySelector(".article")
         return text
-          ? text.innerText.match(/[a-zA-Z]+\@[a-zA-Z]+[-/][a-zA-Z.]+[a-zA-Z]+/g) : null;
+          ? text.innerText.match(/[a-zA-Z]+\@[a-zA-Z]+[-/][a-zA-Z.]+[a-zA-Z]+|[a-zA-Z.]+[a-zA-Z]+\@[a-zA-Z]+[-/][a-zA-Z.]+[a-zA-Z]+[a-zA-Z.]+/g) : null;
       });
 
     // //   get location
