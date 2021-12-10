@@ -5,23 +5,22 @@ const checkUsernameOrEmailExists = (req, res, next) => {
     username: req.body.username,
   }).exec((err, user) => {
     if (err) {
-      res.status(500).send(err);
+      return res.status(500).send(err);
     }
     if (user) {
-      res.status(400).send({ message: "username already exists!" });
+      return res.status(400).send({ message: "username already exists!" });
     }
-  });
+    User.findOne({ email: req.body.email }).exec((err, user) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
 
-  User.findOne({ email: req.body.email }).exec((err, user) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-
-    if (user) {
-      res.status(400).send({ message: "email alreay exists!" });
-    }
+      if (user) {
+        return res.status(400).send({ message: "email alreay exists!" });
+      }
+      next();
+    });
   });
-  next();
 };
 
 export default checkUsernameOrEmailExists;
