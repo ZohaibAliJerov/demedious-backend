@@ -6,10 +6,10 @@ const bethel = async () => {
     });
     const page = await browser.newPage();
     page.setDefaultNavigationTimeout(0);
-    //scroll the page
+    //scroll the pageFollow link (ctrl + click)
     let allJobs = [];
     let allLinks = [
-      "https://karriere.bethel.de/bethelregional.html/",
+      "https://karriere.bethel.de/bethelregional.html",
       "https://karriere.bethel.de/go/0000_Gesundheitsberufe/5101501/", 
       "https://karriere.bethel.de/go/0000_Gesundheitsberufe/5101501/100/?q=&sortColumn=referencedate&sortDirection=desc",
       "https://karriere.bethel.de/go/0000_Gesundheitsberufe/5101501/200/?q=&sortColumn=referencedate&sortDirection=desc",
@@ -22,7 +22,11 @@ const bethel = async () => {
       });
       scroll(page);
       //  get all job links
-      
+      if (await page.click("#content > div > div.threeimagecaption.threeimagecaption6edb76a16629c77a.center.unmodified.backgroundimage.displayDTM.backgroundcolor72228158 > div.column.column1 > div > div.imagelink > div > a")){
+        continue;
+      }else{
+        break;
+      }
       let jobs = await page.evaluate(() => {
         return Array.from(document.querySelectorAll(".jobTitle-link")).map(el=>el.href)
       });
@@ -31,16 +35,16 @@ const bethel = async () => {
       counter++;
       await page.waitForTimeout(3000);
     } while (counter < allLinks.length);
-    let allJobDetails = [];
-    // get data from every job post
-    for (const url of allJobs) {
-      await page.goto(url);
-      scroll(page);
+    // let allJobDetails = [];
+    // // get data from every job post
+    // for (const url of allJobs) {
+    //   await page.goto(url);
+    //   scroll(page);
 
-      const title = await page.evaluate(() => {
-        let text = document.querySelector(".jobTitle.hidden-phone");
-        return text ? text.innerText : null;
-      });
+    //   const title = await page.evaluate(() => {
+    //     let text = document.querySelector(".searchResultsShell > table > tbody .jobTitle.hidden-phone");
+    //     return text ? text.innerText : null;
+    //   });
 
     //     //get contacts
     //     await page.waitForSelector(".content-block-list");
@@ -78,18 +82,18 @@ const bethel = async () => {
     //     return text ? text.href : null;
     //   });
     //   const jobDetails = {
-        title,
-    //     cell,
-    //     email,
-    //     location,
-    //     applyLink,
+    //     title,
+    // //     cell,
+    // //     email,
+    // //     location,
+    // //     applyLink,
     //   };
-      allJobDetails.push(jobDetails);
-      await page.waitForTimeout(4000);
-    }
-    console.log(allJobDetails);
-    await page.close();
-    return allJobDetails;
+    //   allJobDetails.push(jobDetails);
+    //   await page.waitForTimeout(4000);
+    // }
+    // console.log(allJobDetails);
+    // await page.close();
+    // return allJobDetails;
   } catch (err) {
     console.log(err);
   }
