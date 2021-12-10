@@ -32,15 +32,14 @@ const minden = async () => {
     } while (counter < allLinks.length);
     let allJobDetails = [];
     // get data from every job post
-    // for (const url of allJobs) {
-    //   await page.goto(url);
-    //   scroll(page);
+    for (const url of allJobs) {
+      await page.goto(url);
+      scroll(page);
 
-    //   await page.waitForSelector(".billboard-panel__body > h2");
-    //   const title = await page.evaluate(() => {
-    //     let text = document.querySelector(".billboard-panel__body > h2");
-    //     return text ? text.innerText : null;
-    //   });
+      const title = await page.evaluate(() => {
+        let text = document.querySelector("h2")
+        return text ? text.innerText : null;
+      });
 
     //   //get contacts
     //   await page.waitForSelector(".content-block-list");
@@ -71,6 +70,7 @@ const minden = async () => {
     //           /[a-zA-Z]+.[a-zA-Z]+.[a-zA-Z]+.\n\s[a-zA-Z-]+.[a-zA-Z-]+.[a-zA-Z]+.\d+.\n\s\d+.[a-zA-Z]+.|[a-zA-Z-]+[a-zA-Z-]+[a-zA-Z.]+.\d{2}\,.\d{5}.[a-zA-Z]+|[a-zA-Z-]+[a-zA-Z-][a-zA-Z]\W{1}[a-zA-Z].\d+\,.\d+.[a-zA-Z.]+/g
     //         )
     //       : null;
+
     //   });
 
     //   //get apply link
@@ -79,19 +79,19 @@ const minden = async () => {
     //     let text = document.querySelector(".dialog__content >a");
     //     return text ? text.href : null;
     //   });
-    //   const jobDetails = {
-    //     title,
+      const jobDetails = {
+        title,
     //     cell,
     //     email,
     //     location,
     //     applyLink,
-    //   };
-    //   allJobDetails.push(jobDetails);
-    //   await page.waitForTimeout(4000);
-    // }
-    // console.log(allJobDetails);
-    // await page.close();
-    // return allJobDetails;
+      };
+      allJobDetails.push(jobDetails);
+      await page.waitForTimeout(3000);
+    }
+    console.log(allJobDetails);
+    await page.close();
+    return allJobDetails;
   } catch (err) {
     console.log(err);
   }
