@@ -41,20 +41,20 @@ const minden = async () => {
     //     return text ? text.innerText : null;
     //   });
 
-      //get contacts
-    //   let cell = await page.evaluate(() => {
-    //     let text = document.querySelector('#page').getElementsByTagName("p")[3]
-    //     return text ? text.innerText.match(/\d+.\d+.\d+\-\d+.\d+.\d+.\d+/g) : null;
-    //   });
-    //   //     // get email
-      let email = await page.evaluate(() => {
-        let text = document
-          .querySelector("#page")
-          .getElementsByTagName("p")[2];
-        return text
-          ? text.innerText.match(/[a-zA-Z]+.\(at\).[a-zA-Z]+.[a-zA-Z]+/g)
-          : null;
+    //   get contacts
+      let cell = await page.evaluate(() => {
+        let text = document.querySelector('#page').getElementsByTagName("p")[3]
+        return text ? text.innerText.match(/^[+]*[(]{0,1}[0-9]{1,3}[)]{0,1}[-\s\./0-9]*$/g) : null;
       });
+    //   //     // get email
+    //   let email = await page.evaluate(() => {
+    //     let text = document
+    //       .querySelector("#page")
+    //       .getElementsByTagName("p")[2];
+    //     return text
+    //       ? text.innerText.match(/[a-zA-Z]+.\(at\).[a-zA-Z]+.[a-zA-Z]+/g)
+    //       : null;
+    //   });
 
       // get location
       let location = await page.evaluate(() => {
@@ -75,9 +75,9 @@ const minden = async () => {
     //   });
       const jobDetails = {
         // title,
-        // cell,
+        cell,
         // email,
-        location,
+        // location,
     //     applyLink,
       };
       allJobDetails.push(jobDetails);
