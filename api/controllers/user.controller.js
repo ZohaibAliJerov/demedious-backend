@@ -11,22 +11,29 @@ export const register = async (req, res) => {
     password: bcryptjs.hashSync(req.body.password, salt),
   });
   try {
-    newUser.save().then((user) => {
-      res.status(200).send("Registered successfully!");
+    newUser.save().then((ueaser) => {
+      return res.status(200).send("Registered successfully!");
     });
   } catch (err) {
-    res.status(500).send(err);
+    return res.status(500).send({ message: err.message });
   }
 };
 
 export const login = async (req, res) => {
-  let user = await User.findOne({ username: req.body.username });
+  let user;
+
+  if (Object.keys(req.body).includes("username")) {
+    user = await User.findOne({ username: req.body.username });
+  } else if (Object.keys(req.body).includes("email")) {
+    user = await User.findOne({ email: req.body.email });
+  }
+
   if (!user) {
-    res.status(404).send("User Not Found!");
+    return res.status(404).send("User Not Found!");
   } else {
     bcryptjs.compare(req.body.password, user.password, (err, result) => {
       if (err) {
-        res.status(401).send({
+        return res.status(401).send({
           accessToken: null,
           message: "Invalid email or password",
         });
@@ -34,7 +41,7 @@ export const login = async (req, res) => {
       let token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
         expiresIn: 86400,
       });
-      res.status(200).send({
+      return res.status(200).send({
         id: user._id,
         username: user.username,
         email: user.email,
