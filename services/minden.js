@@ -9,7 +9,7 @@ const minden = async () => {
     //scroll the page
     let allJobs = [];
     let allLinks = [
-      "https://www.huettenhospital.de/stellenangebote.html/",
+      "https://www.muehlenkreiskliniken.de/muehlenkreiskliniken/karriere/stellenangebote",
     ];
     let counter = 0;
     do {
@@ -20,7 +20,7 @@ const minden = async () => {
       scroll(page);
       //  get all job links
       let jobs = await page.evaluate(() => {
-        let links = Array.from(document.querySelectorAll(".col-12.col-lg-8.col-left > a")).map(
+        let links = Array.from(document.querySelectorAll(".career-overview-item")).map(
             (el) => el.href
         );
         return links;
