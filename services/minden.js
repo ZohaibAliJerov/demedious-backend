@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-const dortmund = async () => {
+const minden = async () => {
   try {
     const browser = await puppeteer.launch({
       headless: false,
@@ -111,5 +111,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-dortmund();
-export default dortmund;
+minden();
+export default minden;
