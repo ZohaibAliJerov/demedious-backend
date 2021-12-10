@@ -18,7 +18,7 @@ const minden = async () => {
         
       });
       scroll(page);
-      //  get all job links
+    //    get all job links
       let jobs = await page.evaluate(() => {
         let links = Array.from(document.querySelectorAll(".career-overview-item")).map(
             (el) => el.href
@@ -41,23 +41,20 @@ const minden = async () => {
         return text ? text.innerText : null;
       });
 
-    //   //get contacts
-    //   await page.waitForSelector(".content-block-list");
+      //get contacts
     //   let cell = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container")
-    //       .getElementsByTagName("article")[4];
-    //     return text ? text.innerText.match(/\(\d{5}\).\d{3}.\d{3}/g) : null;
+    //     let text = document.querySelector('#page').getElementsByTagName("p")[3]
+    //     return text ? text.innerText.match(/\d+.\d+.\d+\-\d+.\d+.\d+.\d+/g) : null;
     //   });
     //   //     // get email
-    //   let email = await page.evaluate(() => {
-    //     let text = document
-    //       .querySelector(".content-block-list__container")
-    //       .getElementsByTagName("article")[4];
-    //     return text
-    //       ? text.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g)
-    //       : null;
-    //   });
+      let email = await page.evaluate(() => {
+        let text = document
+          .querySelector("#page")
+          .getElementsByTagName("p")[2];
+        return text
+          ? text.innerText.match(/[a-zA-Z]+.\(at\).[a-zA-Z]+.[a-zA-Z]+/g)
+          : null;
+      });
 
     //   // get location
     //   await page.waitForSelector(".content-block-list");
@@ -81,9 +78,9 @@ const minden = async () => {
     //   });
       const jobDetails = {
         title,
-    //     cell,
-    //     email,
-    //     location,
+        // cell,
+        email,
+        // location,
     //     applyLink,
       };
       allJobDetails.push(jobDetails);
