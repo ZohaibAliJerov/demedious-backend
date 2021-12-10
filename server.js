@@ -7,11 +7,14 @@ import jobRoutes from "./api/routes/job.routes.js";
 import resetRoutes from "./api/routes/resetPassword.routes.js";
 import connect from "./api/config/db.js";
 import Job from "./api/models/Job.model.js";
+import cors from "cors";
+
 //env config
 config();
 
 //app config
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //port config
@@ -48,11 +51,11 @@ app.use(function (req, res, next) {
   );
   next();
 });
-app.use("/api/users", userRoutes);
+app.use("/api/v1/users", userRoutes);
 //job routes
-app.use("/api/jobs", jobRoutes);
+app.use("/api/v1/jobs", jobRoutes);
 //reset password routes
-app.use("/api/reset", resetRoutes);
+app.use("/api/v1/reset", resetRoutes);
 
 const job = cron.schedule(" 0 35 * * * *", () => {
   run().catch(console.dir);
