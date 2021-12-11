@@ -40,28 +40,27 @@ const schmallenberg = async () => {
             });
 
               //get contacts
-        //       let cell = await page.evaluate(() => {
-        //      let text =  document.querySelector(".content-container").getElementsByTagName("p")[17];
-        //        text ? text.innerText.match(/\d+.\d+.\d+([-])\d+/g): null
-        //    });
-            //   //     // get email
+              let cell = await page.evaluate(() => {
+             let text =  document.querySelector(".content-container");
+               text ? text.innerText.match(/\d+.\d+.\d+([-])\d+/g): null
+           });
+              // get email
               let email = await page.evaluate(() => {
                 let text = document.querySelector('.content-container')
                 return text ? text.innerText.match(/[a-z]+([@])[a-z]+([.])[a-z]+/g)
                   : null;
               });
 
-            // //   get location
-            //   let location = await page.evaluate(() => {
-            //     let text = document
-            //       .querySelector(".content-block-list")
-            //       .getElementsByTagName("article")[4];
-            //     return text
-            //       ? text.innerText.match(
-            //           /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[A-Za-z]+.\d+\,.\d+.[A-Za-z]+/g
-            //         )
-            //       : null;
-            //   });
+            //   get location
+              let location = await page.evaluate(() => {
+                let text = document
+                  .querySelector(".content-container")
+                return text
+                  ? text.innerText.match(
+                      /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[A-Za-z]+.\d+\,.\d+.[A-Za-z]+/g
+                    )
+                  : null;
+              });
 
               //get apply link
               let applyLink = await page.evaluate(() => {
@@ -69,10 +68,10 @@ const schmallenberg = async () => {
                 return text ? text.href : null;
               });
             const jobDetails = {
-                // title,
-                // cell,
-                // email,
-                // location,
+                title,
+                cell,
+                email,
+                location,
                 applyLink,
             };
             allJobDetails.push(jobDetails);
