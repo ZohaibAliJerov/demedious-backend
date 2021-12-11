@@ -39,19 +39,17 @@ const schmallenberg = async () => {
                 return text ? text.innerText : null;
             });
 
-            //   //get contacts
-            //   let cell = await page.evaluate(() => {
-            //    document.querySelector(".content-container").getElementsByTagName("p")[17].innerText.slice(5,19)
-            //   });
+              //get contacts
+        //       let cell = await page.evaluate(() => {
+        //      let text =  document.querySelector(".content-container").getElementsByTagName("p")[17];
+        //        text ? text.innerText.match(/\d+.\d+.\d+([-])\d+/g): null
+        //    });
             //   //     // get email
-            //   let email = await page.evaluate(() => {
-            //     let text = document
-            //       .querySelector(".content-block-list__container")
-            //       .getElementsByTagName("article")[4];
-            //     return text
-            //       ? text.innerText.match(/[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+./g)
-            //       : null;
-            //   });
+              let email = await page.evaluate(() => {
+                let text = document.querySelector('.content-container')
+                return text ? text.innerText.match(/[a-z]+([@])[a-z]+([.])[a-z]+/g)
+                  : null;
+              });
 
             // //   get location
             //   let location = await page.evaluate(() => {
@@ -71,9 +69,9 @@ const schmallenberg = async () => {
             //     return text ? text.href : null;
             //   });
             const jobDetails = {
-                title,
+                // title,
                 // cell,
-                // email,
+                email,
                 // location,
                 // applyLink,
             };
