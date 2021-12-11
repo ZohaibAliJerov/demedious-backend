@@ -63,17 +63,17 @@ const schmallenberg = async () => {
             //       : null;
             //   });
 
-            //   //get apply link
-            //   let applyLink = await page.evaluate(() => {
-            //     let text = document.querySelector(".dialog__content >a");
-            //     return text ? text.href : null;
-            //   });
+              //get apply link
+              let applyLink = await page.evaluate(() => {
+                let text = document.querySelector("#ctl01_cphInhalt_hBewerben1");
+                return text ? text.href : null;
+              });
             const jobDetails = {
                 // title,
                 // cell,
-                email,
+                // email,
                 // location,
-                // applyLink,
+                applyLink,
             };
             allJobDetails.push(jobDetails);
             await page.waitForTimeout(4000);
