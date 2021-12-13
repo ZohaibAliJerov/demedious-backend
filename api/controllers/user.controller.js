@@ -11,7 +11,7 @@ export const register = async (req, res) => {
     password: bcryptjs.hashSync(req.body.password, salt),
   });
   try {
-    newUser.save().then((ueaser) => {
+    newUser.save().then((user) => {
       return res.status(200).send("Registered successfully!");
     });
   } catch (err) {
