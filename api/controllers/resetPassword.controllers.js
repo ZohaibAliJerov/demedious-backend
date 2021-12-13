@@ -3,7 +3,7 @@ import Joi from "joi";
 import User from "../models/User.model.js";
 import Token from "../models/Token.js";
 import sendEmail from "../utils/sendEmail.js";
-
+import bcrypjs from "bcryptjs";
 export const checkUserExists = async (req, res) => {
   try {
     const schema = Joi.object({ email: Joi.string().email().required() });
@@ -46,11 +46,10 @@ export const resetPassword = async (req, res) => {
       token: req.params.token,
     });
     if (!token) return res.status(400).send("Invalid link or expired");
-
-    user.password = req.body.password;
+    let salt = bcryptjs.genSaltSync(10);
+    user.password = bcryptjs.hashSync(req.body.password, salt);
     await user.save();
     await token.delete();
-
     res.send("password reset sucessfully.");
   } catch (error) {
     res.send("An error occured");
