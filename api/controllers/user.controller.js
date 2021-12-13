@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import User from "../models/User.model.js";
-
+import Token from "../models/Token.js";
 //register controller
 export const register = async (req, res) => {
   let salt = bcryptjs.genSaltSync(10);
@@ -41,11 +41,20 @@ export const login = async (req, res) => {
       let token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
         expiresIn: 86400,
       });
-      return res.status(200).send({
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        accessToken: token,
+      //save token
+      let newToken = new Token({
+        userId: user._id,
+        token: token,
+      });
+      newToken.save().then((token) => {
+        try {
+          return res.status(200).send({
+            accessToken: token.token,
+            message: "Login successfully!",
+          });
+        } catch (err) {
+          return res.status(500).send({ message: err.message });
+        }
       });
     });
   }
