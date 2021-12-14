@@ -18,8 +18,8 @@ const sendEmail = async (email, subject, text) => {
         text: text,
       },
       (err, info) => {
-        if (error) {
-          console.log(error);
+        if (err) {
+          console.log(err);
         } else {
           console.log(info);
         }
