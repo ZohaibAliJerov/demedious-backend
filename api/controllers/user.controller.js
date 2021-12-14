@@ -79,7 +79,7 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    let token = req.headers["x-access-token"];
+    let token = req.header("auth-token");
     let decoded = jwt.verify(token, process.env.TOKEN_SECRET);
     let userId = decoded._id;
     await Token.findOneAndDelete({ userId: userId });
