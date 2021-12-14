@@ -76,3 +76,15 @@ export const login = async (req, res) => {
     });
   }
 };
+
+export const logout = async (req, res) => {
+  try {
+    let token = req.headers.authorization.split(" ")[1];
+    let decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+    let userId = decoded._id;
+    await Token.findOneAndDelete({ userId: userId });
+    return res.status(200).send({ message: "Logout successfully!" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message });
+  }
+};
