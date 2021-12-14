@@ -61,7 +61,7 @@ const job = cron.schedule(" 0 35 * * * *", () => {
   run().catch(console.dir);
 });
 
-job.start();
+//job.start();
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
