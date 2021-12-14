@@ -47,24 +47,32 @@ export const login = async (req, res) => {
           message: "Invalid email or password",
         });
       }
-      let token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
-        expiresIn: 86400,
-      });
-      //save token
-      let newToken = new Token({
-        userId: user._id,
-        token: token,
-      });
-      newToken.save().then((token) => {
-        try {
-          return res.status(200).send({
-            accessToken: token.token,
-            message: "Login successfully!",
-          });
-        } catch (err) {
-          return res.status(500).send({ message: err.message });
-        }
-      });
+
+      if (result) {
+        let token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
+          expiresIn: 86400,
+        });
+        //save token
+        let newToken = new Token({
+          userId: user._id,
+          token: token,
+        });
+        newToken.save().then((token) => {
+          try {
+            return res.status(200).send({
+              accessToken: token.token,
+              message: "Login successfully!",
+            });
+          } catch (err) {
+            return res.status(500).send({ message: err.message });
+          }
+        });
+      } else {
+        return res.status(401).send({
+          accessToken: null,
+          message: "Invalid email or password",
+        });
+      }
     });
   }
 };
