@@ -55,7 +55,7 @@ app.use("/api/v1/users", userRoutes);
 //job routes
 app.use("/api/v1/jobs", jobRoutes);
 //reset password routes
-app.use("/api/v1/reset", resetRoutes);
+app.use("/api/v1/resetpassword", resetRoutes);
 
 const job = cron.schedule(" 0 35 * * * *", () => {
   run().catch(console.dir);
