@@ -2,8 +2,14 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import User from "../models/User.model.js";
 import Token from "../models/Token.js";
+import { registerValidation, loginValidation } from "../validation.js";
+
 //register controller
 export const register = async (req, res) => {
+  //validate user data
+  const { error } = registerValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
   let salt = bcryptjs.genSaltSync(10);
   let newUser = new User({
     username: req.body.username,
