@@ -50,13 +50,10 @@ const jobSchema = new mongoose.Schema({
   location: {
     type: String,
   },
-  email: {
+  hospital: {
     type: String,
   },
-  cell: {
-    type: String,
-  },
-  applyLink: {
+  link: {
     type: String,
   },
   level: {
