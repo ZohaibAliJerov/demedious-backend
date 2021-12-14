@@ -1,11 +1,11 @@
 import express from "express";
 import {
-  checkUserExists,
+  requestResetLink,
   resetPassword,
 } from "../controllers/resetPassword.controllers.js";
 const router = express.Router();
 
-router.post("/", checkUserExists);
+router.post("/", requestResetLink);
 
 router.post("/:userId/:token", resetPassword);
 
