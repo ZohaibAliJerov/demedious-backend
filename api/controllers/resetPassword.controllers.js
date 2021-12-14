@@ -3,8 +3,8 @@ import Joi from "joi";
 import User from "../models/User.model.js";
 import Token from "../models/Token.js";
 import sendEmail from "../utils/sendEmail.js";
-import bcrypjs from "bcryptjs";
-export const checkUserExists = async (req, res) => {
+import bcryptjs from "bcryptjs";
+export const requestResetLink = async (req, res) => {
   try {
     const schema = Joi.object({ email: Joi.string().email().required() });
     const { error } = schema.validate(req.body);
