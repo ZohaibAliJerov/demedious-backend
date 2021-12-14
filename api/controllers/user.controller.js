@@ -26,6 +26,9 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
+  //validate user data
+  const { error } = loginValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
   let user;
 
   if (Object.keys(req.body).includes("username")) {
