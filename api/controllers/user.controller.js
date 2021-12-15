@@ -29,13 +29,8 @@ export const login = async (req, res) => {
   //validate user data
   const { error } = loginValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-  let user;
 
-  if (Object.keys(req.body).includes("username")) {
-    user = await User.findOne({ username: req.body.username });
-  } else if (Object.keys(req.body).includes("email")) {
-    user = await User.findOne({ email: req.body.email });
-  }
+  let user = await User.findOne({ email: req.body.email });
 
   if (!user) {
     return res.status(404).send("User Not Found!");

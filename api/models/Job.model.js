@@ -62,9 +62,9 @@ const jobSchema = new mongoose.Schema({
   position: {
     type: String,
   },
-  month: {
+  date: {
     type: Date,
-    default: month,
+    default: Date.now,
   },
 });
 
