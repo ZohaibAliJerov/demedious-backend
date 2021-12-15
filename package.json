@@ -28,5 +28,27 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.14"
-  }
+  },
+  "contributors": [
+    {
+      "name":"Kamal Hussain",
+      "gitHub":"gitHub.com/KamalHunzai"
+    },
+    {
+      "name":"Shoaib ur Rehman",
+      "gitHub":"gitHub.com/shoaibur-rehman"
+    },
+    {
+      "name":"Zuhaib Ali",
+      "gitHub":"ZohaibAliJerov"
+    },
+    {
+      "name":"Burhan Ahmad Barcha",
+      "gitHub":"gitHub.com/BurhanAhmadBarcha"
+    },
+    {
+     "name" :"Sher Karim",
+     "gitHub":"sher-karim05"
+    }
+  ]
 }
