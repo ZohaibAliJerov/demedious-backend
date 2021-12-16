@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["artz", "pflege"];
 let levels = ["specialist", "head doctor", "assistant doctor"];
 
-let jobObject = {
+let job = {
   title: "",
   location: "Sundern (Sauerland)",
   hospital: "Neurologische Klinik Sorpe",
@@ -44,7 +44,7 @@ let aatalklinik = async () => {
       });
 
       await page.waitForTimeout(1000);
-      let newJob = {};
+
       let title = await page.evaluate(() => {
         let ttitle = document.querySelector("h1#page-title");
         return ttitle ? ttitle.innerText : "";
