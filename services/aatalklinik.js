@@ -24,7 +24,6 @@ let aatalklinik = async () => {
       timeout: 0,
     });
 
-    await page.screenshot({ path: "aatalklinik.png" });
     await scroll(page);
 
     //get all jobLinks
