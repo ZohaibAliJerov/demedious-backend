@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 
 let positions = ["artz", "pflege"];
+let levels = ["specialist", "head doctor", "assistant doctor"];
 
 let jobObject = {
   title: "",
