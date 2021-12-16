@@ -51,13 +51,6 @@ let aatalklinik = async () => {
       });
       jobObject.title = title;
 
-      if (typeof jobLink == "object" && email != null) {
-        jobLink = jobLink[0];
-      } else if (jobLink == null) {
-        jobLink = "";
-      }
-      newJob.applyLink = jobLink;
-
       allJobs.push(newJob);
     }
     return allJobs;
