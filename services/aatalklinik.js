@@ -48,8 +48,10 @@ let aatalklinik = async () => {
         let ttitle = document.querySelector("h1#page-title");
         return ttitle ? ttitle.innerText : "";
       });
-      jobObject.title = title;
-
+      job.title = title;
+      //TODO: get position
+      //TODO: get level
+      //TODO: get link
       allJobs.push(newJob);
     }
     return allJobs;
