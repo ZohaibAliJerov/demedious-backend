@@ -1,5 +1,7 @@
 import puppeteer from "puppeteer";
 
+let positions = ["artz", "pflege"];
+
 let jobObject = {
   title: "",
   location: "Sundern (Sauerland)",
