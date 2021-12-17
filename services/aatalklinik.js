@@ -49,6 +49,8 @@ let aatalklinik = async () => {
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
+
+      //position
       if (job.title.search(positions[0])) {
         job.position = positions[0];
       } else if (job.title.search([positions[1]])) {
@@ -56,13 +58,6 @@ let aatalklinik = async () => {
       } else {
         continue;
       }
-      //TODO: get position
-      // object.position = await page.evaluate(() => {
-      //   let text = document.body.innerText;
-      //   if () {
-
-      //   }
-      // })
       //TODO: get level
       //TODO: get link
       console.log(job);
