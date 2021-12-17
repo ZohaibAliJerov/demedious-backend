@@ -52,20 +52,20 @@ let aatalklinik = async () => {
       job.title = title;
 
       //position
-      if (job.title.search(positions[0])) {
-        job.position = positions[0];
-      } else if (job.title.search([positions[1]])) {
-        job.position = positions[1];
+      if (job.title.toLocaleLowerCase.match(/artz/)) {
+        job.position = "Artz";
+      } else if (job.title.toLocaleLowerCase().match(/pflege/)) {
+        job.position = "Pflege";
       } else {
         continue;
       }
       //TODO: get level
-      if (job.title.search(levels[0])) {
-        job.level = levels[0];
-      } else if (job.title.search[levels[1]]) {
-        job.level = levels[1];
-      } else if (job.title.search[levels[2]]) {
-        job.level = levels[2];
+      if (job.title.match(/Fachartz/)) {
+        job.level = "Fachartz";
+      } else if (job.title.match(/Assistenzarzt/)) {
+        job.level = "Assistenzarzt";
+      } else if (job.title.match(/Chefarzt/)) {
+        job.level = "Chefarzt";
       }
       //TODO: get link
 
