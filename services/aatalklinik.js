@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 let positions = ["artz", "pflege"];
-let levels = ["specialist", "head doctor", "assistant doctor"];
+let levels = ["Fachartz", "Chefarzt", "Assistenzarzt"];
 
 let job = {
   title: "",
@@ -14,7 +14,7 @@ let job = {
 let aatalklinik = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
     });
 
     let page = await browser.newPage();
@@ -49,10 +49,25 @@ let aatalklinik = async () => {
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
+      if (job.title.search(positions[0])) {
+        job.position = positions[0];
+      } else if (job.title.search([positions[1]])) {
+        job.position = positions[1];
+      } else {
+        continue;
+      }
       //TODO: get position
+      // object.position = await page.evaluate(() => {
+      //   let text = document.body.innerText;
+      //   if () {
+
+      //   }
+      // })
       //TODO: get level
       //TODO: get link
-      allJobs.push(newJob);
+      console.log(job);
+      allJobs.push(job);
+      break;
     }
     return allJobs;
   } catch (e) {
@@ -76,4 +91,8 @@ async function scroll(page) {
   });
 }
 
-export default aatalklinik;
+// export default aatalklinik;
+
+(async () => {
+  await aatalklinik();
+})();
