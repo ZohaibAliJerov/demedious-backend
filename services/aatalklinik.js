@@ -69,7 +69,7 @@ let aatalklinik = async () => {
       //TODO: get link
 
       job.link = await page.evaluate(() => {
-        return document.body.innerText.match(/\w+@\w+\.\w/);
+        return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
       console.log(job);
       allJobs.push(job);
