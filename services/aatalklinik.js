@@ -59,7 +59,7 @@ let aatalklinik = async () => {
       } else {
         continue;
       }
-      //TODO: get level
+      //get level
       if (job.title.match(/Fachartz/)) {
         job.level = "Fachartz";
       } else if (job.title.match(/Assistenzarzt/)) {
@@ -67,8 +67,7 @@ let aatalklinik = async () => {
       } else if (job.title.match(/Chefarzt/)) {
         job.level = "Chefarzt";
       }
-      //TODO: get link
-
+      //get link
       job.link = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
