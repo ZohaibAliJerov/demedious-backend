@@ -67,6 +67,10 @@ let aatalklinik = async () => {
         job.level = levels[2];
       }
       //TODO: get link
+
+      job.link = await page.evaluate(() => {
+        return document.body.innerText.match(/\w+@\w+\.\w/);
+      });
       console.log(job);
       allJobs.push(job);
       break;
