@@ -3,14 +3,6 @@ import puppeteer from "puppeteer";
 let positions = ["artz", "pflege"];
 let levels = ["Fachartz", "Chefarzt", "Assistenzarzt"];
 
-let job = {
-  title: "",
-  location: "Sundern (Sauerland)",
-  hospital: "Neurologische Klinik Sorpe",
-  link: "",
-  level: "",
-  position: "",
-};
 let aatalklinik = async () => {
   try {
     let browser = await puppeteer.launch({
@@ -37,6 +29,15 @@ let aatalklinik = async () => {
     let allJobs = [];
 
     for (let jobLink of jobLinks) {
+      let job = {
+        title: "",
+        location: "Sundern (Sauerland)",
+        hospital: "Neurologische Klinik Sorpe",
+        link: "",
+        level: "",
+        position: "",
+      };
+
       await page.goto(jobLink, {
         waitUntil: "load",
         timeout: 0,
