@@ -59,6 +59,13 @@ let aatalklinik = async () => {
         continue;
       }
       //TODO: get level
+      if (job.title.search(levels[0])) {
+        job.level = levels[0];
+      } else if (job.title.search[levels[1]]) {
+        job.level = levels[1];
+      } else if (job.title.search[levels[2]]) {
+        job.level = levels[2];
+      }
       //TODO: get link
       console.log(job);
       allJobs.push(job);
