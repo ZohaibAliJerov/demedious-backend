@@ -73,7 +73,6 @@ let aatalklinik = async () => {
       });
       console.log(job);
       allJobs.push(job);
-      break;
     }
     return allJobs;
   } catch (e) {
