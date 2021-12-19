@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
-let positions = ["artz", "pflege"];
-let levels = ["Fachartz", "Chefarzt", "Assistenzarzt"];
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
 
 let aatalklinik = async () => {
   try {
@@ -51,30 +51,40 @@ let aatalklinik = async () => {
       });
       job.title = title;
 
-      //position
-      if (job.title.toLocaleLowerCase.match(/artz/)) {
-        job.position = "Artz";
-      } else if (job.title.toLocaleLowerCase().match(/pflege/)) {
-        job.position = "Pflege";
-      } else {
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
         continue;
       }
-      //get level
-      if (job.title.match(/Fachartz/)) {
-        job.level = "Fachartz";
-      } else if (job.title.match(/Assistenzarzt/)) {
-        job.level = "Assistenzarzt";
-      } else if (job.title.match(/Chefarzt/)) {
-        job.level = "Chefarzt";
-      }
+
       //get link
-      job.link = await page.evaluate(() => {
+      let link = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
-      console.log(job);
+      if (typeof link == "object") {
+        job.link = link[0];
+      }
+      // console.log(job);
       allJobs.push(job);
     }
-    return allJobs;
+    return allJobs.filter((job) => job.position != "");
   } catch (e) {
     console.log(e);
   }
@@ -99,5 +109,6 @@ async function scroll(page) {
 // export default aatalklinik;
 
 (async () => {
-  await aatalklinik();
+  let jobs = await aatalklinik();
+  console.log(jobs);
 })();
