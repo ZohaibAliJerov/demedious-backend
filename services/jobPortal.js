@@ -40,7 +40,19 @@ const stellenausschreibungen = async () =>{
             return title ? title.innerText : null
          })
          jobObject.title = title;
-      
+         let applyLink = await page.evaluate( () =>{
+            let link = document.querySelector('#btn_online_application > a')
+            return link ? link.href : null;
+        })
+       //  jobObject.link = applyLink
+       if (typeof applyLink == "object" && email != null) {
+           applyLink = applyLink[0];
+         } else if (applyLink == null) {
+          applyLink = " ";
+         }
+         jobObject.link = applyLink;
+       
+        
         
     
          await page.waitForTimeout(4000)
