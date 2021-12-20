@@ -35,8 +35,11 @@ const stellenausschreibungen = async () =>{
         scroll(page)
         await page.goto(details)
 
+       
   
     }
+  
+
    
         
    
@@ -45,4 +48,14 @@ const stellenausschreibungen = async () =>{
         } catch (err) {
             console.error(err)
         }
-    }
+    };
+
+    let jobObject = { 
+        title: "",
+        location: "",
+        hospital: "Katharina Kasper",
+        link: "",
+        level: "",
+        position: "",
+      };
+
