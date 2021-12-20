@@ -79,3 +79,4 @@ const stellenausschreibungen = async () =>{
         position: "",
       };
 
+      stellenausschreibungen()
