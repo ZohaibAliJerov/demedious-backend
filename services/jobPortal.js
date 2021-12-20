@@ -52,7 +52,11 @@ const stellenausschreibungen = async () =>{
          }
          jobObject.link = applyLink;
        
-        
+         let location = await page.evaluate( ( ) =>{
+            let locatin = document.querySelector('#scheme_detail_data > ul:nth-child(1) > li:nth-child(1)')
+            return locatin ? locatin.innerText : null
+        })
+        jobObject.location =  location;
         
     
          await page.waitForTimeout(4000)
