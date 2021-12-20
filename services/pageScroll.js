@@ -1,4 +1,4 @@
-function scroll(page) {
+export async function scroll(page) {
     await page.evaluate(() => {
         const distance = 100;
         const delay = 100;
