@@ -28,6 +28,20 @@ const stellenausschreibungen = async () =>{
             }
             await page.waitForTimeout(3000);
             console.log(jobLinks);
+
+            let allDetails = [ ];
+    for(let details of jobLinks) {
+        let job = { };
+        scroll(page)
+        await page.goto(details)
+
+  
+    }
+   
+        
+   
+        await browser.close();
+        // await page.close();
         } catch (err) {
             console.error(err)
         }
