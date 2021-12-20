@@ -35,14 +35,18 @@ const stellenausschreibungen = async () =>{
         scroll(page)
         await page.goto(details)
 
-       
-  
+        let title = await page.evaluate ( () => {
+            let title = document.querySelector('.scheme-content.scheme-title > h1')
+            return title ? title.innerText : null
+         })
+         jobObject.title = title;
+      
+        
+    
+         await page.waitForTimeout(4000)
+        allDetails.push(jobObject)
     }
   
-
-   
-        
-   
         await browser.close();
         // await page.close();
         } catch (err) {
