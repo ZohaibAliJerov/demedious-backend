@@ -106,9 +106,4 @@ async function scroll(page) {
   });
 }
 
-// export default aatalklinik;
-
-(async () => {
-  let jobs = await aatalklinik();
-  console.log(jobs);
-})();
+export default aatalklinik;
