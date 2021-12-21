@@ -108,4 +108,5 @@ async function scroll(page) {
   }
 
 
+export default bgKliniken;
 
