@@ -38,22 +38,22 @@ const sendEmail = async (email, subject, text) => {
     },
   });
 
-  // point to the template folder
-  const handlebarOptions = {
-    viewEngine: {
-      partialsDir: path.resolve("./views/"),
-      defaultLayout: false,
-    },
-    viewPath: path.resolve("./views/"),
-  };
+  // // point to the template folder
+  // const handlebarOptions = {
+  //   viewEngine: {
+  //     partialsDir: path.resolve("./views/"),
+  //     defaultLayout: false,
+  //   },
+  //   viewPath: path.resolve("./views/"),
+  // };
 
-  // use a template file with nodemailer
-  transporter.use("compile", hbs(handlebarOptions));
+  // // use a template file with nodemailer
+  // transporter.use("compile", hbs(handlebarOptions));
 
   var mailOptions = {
-    from: procesll.env.USER, // sender address
+    from: process.env.USER, // sender address
     to: email, // list of receivers
-    subject: "",
+    subject: subject,
     text: text,
   };
 
