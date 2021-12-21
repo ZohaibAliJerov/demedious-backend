@@ -1,34 +1,6 @@
 import nodemailer from "nodemailer";
 
 const sendEmail = async (email, subject, text) => {
-  // try {
-  //   const transporter = nodemailer.createTransport({
-  //     service: process.env.SERVICE,
-  //     auth: {
-  //       user: process.env.USER,
-  //       pass: process.env.PASS,
-  //     },
-  //   });
-
-  //   transporter.sendMail(
-  //     {
-  //       from: process.env.USER,
-  //       to: email,
-  //       subject: subject,
-  //       text: text,
-  //     },
-  //     (err, info) => {
-  //       if (err) {
-  //         console.log(err);
-  //       } else {
-  //         console.log(info);
-  //       }
-  //     }
-  //   );
-  // } catch (error) {
-  //   console.log(error, "email not sent");
-  // }
-
   // initialize nodemailer
   var transporter = nodemailer.createTransport({
     service: "gmail",
@@ -37,18 +9,6 @@ const sendEmail = async (email, subject, text) => {
       pass: "demediou7@jobs",
     },
   });
-
-  // // point to the template folder
-  // const handlebarOptions = {
-  //   viewEngine: {
-  //     partialsDir: path.resolve("./views/"),
-  //     defaultLayout: false,
-  //   },
-  //   viewPath: path.resolve("./views/"),
-  // };
-
-  // // use a template file with nodemailer
-  // transporter.use("compile", hbs(handlebarOptions));
 
   var mailOptions = {
     from: process.env.USER, // sender address
