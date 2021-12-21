@@ -107,5 +107,5 @@ async function scroll(page) {
     });
   }
 
-bgKliniken()
+
 
