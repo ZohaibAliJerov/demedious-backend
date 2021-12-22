@@ -116,5 +116,5 @@ async function scroll(page) {
       }, delay);
     });
   }
-kreis_krankenhaus()
+
 
