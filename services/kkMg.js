@@ -118,3 +118,5 @@ async function scroll(page) {
   }
 
 
+  export default kreis_krankenhaus;
+
