@@ -103,4 +103,5 @@ async function scroll(page) {
     });
   };
 
-hospitalOfDuisburg_Essen();
+
+  export default hospitalOfDuisburg_Essen;
