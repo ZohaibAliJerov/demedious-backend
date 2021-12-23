@@ -114,3 +114,4 @@ async function scroll(page) {
   };
   
 
+export default marienHospital_Dortmund;
