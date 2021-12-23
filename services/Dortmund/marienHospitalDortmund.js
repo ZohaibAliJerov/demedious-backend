@@ -112,6 +112,5 @@ async function scroll(page) {
       }, delay);
     });
   };
-  marienHospital_Dortmund();
-
+  
 
