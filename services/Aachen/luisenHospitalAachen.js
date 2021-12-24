@@ -93,4 +93,3 @@ const luisenHospital_Aachen = async () =>{
     }
 }
 
-luisenHospital_Aachen();
