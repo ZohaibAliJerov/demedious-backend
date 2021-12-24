@@ -93,3 +93,6 @@ const luisenHospital_Aachen = async () =>{
     }
 }
 
+
+
+export default luisenHospital_Aachen;
