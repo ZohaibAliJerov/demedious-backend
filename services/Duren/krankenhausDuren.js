@@ -2,27 +2,29 @@ import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
-const marienHospital_bruhl  = async () => {
+const krankenhausDuren  = async () => {
     try {
         const browser = await puppeteer.launch({headless: false})
         const page = await browser.newPage();
-       await page.goto("https://www.marienhospital-bruehl.info/service/karriere/stellenangebote.html");
+       await page.goto(
+           "https://www.krankenhaus-dueren.de/index.php"
+           );
        page.setDefaultNavigationTimeout(0);
        
        const jobLinks = [ ];
        let allUrls = [
-           "https://www.marienhospital-bruehl.info/service/karriere/stellenangebote.html"
+           "https://www.krankenhaus-dueren.de/index.php/stellenangebote-krankenhaus-dueren"
        ];
        for(let a=0;a<allUrls.length; a++) {
           await page.goto(allUrls[a])
           scroll(page);
        let job = await page.evaluate( ()=>{
-           return   Array.from(document.querySelectorAll('.breakword > a')
+           return Array.from(document.querySelectorAll('div.itemlist_title > a')
            ).map((el) => el.href);
        })
        jobLinks.push(...job)
        }
-       await page.waitForTimeout(3000);
+    //    await page.waitForTimeout(3000);
        console.log(jobLinks);
 
        const jobDetails = [ ];
@@ -31,17 +33,16 @@ const marienHospital_bruhl  = async () => {
            scroll(page);
            let job =  {
             title: "",
-           location: "Brühl",
-           hospital: "Marienhospital Brühl",
+           location: "Düren",
+           hospital: "Krankenhaus Düren",
            link: "",
            level: "",
            position: "",
            };
            // page.waitForSelector(".accordion-title")
            const title = await page.evaluate( () => {
-               let jobTitle1 = document.querySelector('div.inner > h2');
-               let jobTitle2 = document.querySelector('div.pageHeadline ');
-               return jobTitle1?.innerText || jobTitle2?.innerText
+               let jobTitle = document.querySelector('h3.jobtitle')
+               return jobTitle ? jobTitle.innerText : null
            })
            job.title = title;
            let text = await page.evaluate(() => {
@@ -66,14 +67,9 @@ const marienHospital_bruhl  = async () => {
           if (!position in positions) {
             continue;
           };
-         
-           let applyLink = await page.evaluate( () =>{
-              let link = document.querySelector('a.onlinebewerben.btn.btn--invert');
-              return link ? link.href : null
-           })
-         job.link = applyLink;
         
-           await page.waitForTimeout(4000);
+        
+          await page.waitForTimeout(3000)
            jobDetails.push(job)
        }
        console.log(jobDetails);
@@ -102,4 +98,4 @@ async function scroll(page) {
   };
 
 
-  export default marienHospital_bruhl;
+  krankenhausDuren();
