@@ -82,8 +82,8 @@ const lungenklinik_Hemer = async () =>{
           let link = await page.evaluate(() => {
             return document.body.innerText.match(/[A_Za-z0-9-._+/]+@[A_Za-z0-9-._+/]+\.[A_Za-z0-9-]+/g);
           });
-          if (typeof link == "object") {
-            job.link = link;
+          if (typeof link == 'object') {
+            job.link = {...link}
           }
            jobDetails.push(job)
           await page.waitForTimeout(4000)
