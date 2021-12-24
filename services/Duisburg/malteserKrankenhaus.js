@@ -107,3 +107,4 @@ const heliosKlinik_Duisburg = async () =>{
 }
 
 
+export default heliosKlinik_Duisburg
