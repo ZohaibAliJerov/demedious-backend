@@ -1,3 +1,4 @@
+import { l } from "node-apidoc";
 import puppeteer from "puppeteer";
 
 
@@ -105,3 +106,4 @@ let levels = [
 }
 
 
+export default lukasKrankenhaus_Bünde;
