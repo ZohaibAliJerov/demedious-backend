@@ -107,4 +107,6 @@ export async function scroll(page) {
         }, delay);
     });
 }
-klinikfur_Rehabilitation();
+
+
+export default klinikfur_Rehabilitation;
