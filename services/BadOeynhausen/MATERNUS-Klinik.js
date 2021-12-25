@@ -14,7 +14,9 @@ const klinikfur_Rehabilitation = async () =>{
             headless: false
             })
         const page = await browser.newPage();
-       await page.goto("https://www.wirpflegen.de/karriere/stellenangebote/ort/bad-oeynhausen/v/liste/j/city/nw-Bad%2520Oeynhausen?cHash=0efd8abceef8ff54a7feac73f84f1516#joResults")
+       await page.goto(
+           "https://www.wirpflegen.de/karriere/stellenangebote/ort/bad-oeynhausen/v/liste/j/city/nw-Bad%2520Oeynhausen?cHash=0efd8abceef8ff54a7feac73f84f1516#joResults"
+           );
         page.setDefaultNavigationTimeout(0);
        
         const jobLinks = [ ];
@@ -80,14 +82,14 @@ const klinikfur_Rehabilitation = async () =>{
           if (!position in positions) {
             continue;
           }
-            await page.waitForTimeout(5000)
-            alljobDetails.push(jobAds)
+          alljobDetails.push(jobAds)
+          await page.waitForTimeout(4000)
         }
         console.log(alljobDetails);
         await browser.close();
         // await page.close();
+        return alljobDetails.filter((job) => job.position != "");
       
-
     } catch (err) {
         console.error(err)
     }
