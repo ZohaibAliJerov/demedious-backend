@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
 
-let wuppertalOne = async () => {
+let gangelt = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -11,7 +11,7 @@ let wuppertalOne = async () => {
     let page = await browser.newPage();
 
     await page.goto(
-        "https://www.vamed-gesundheit.de/reha/bergisch-land/unsere-klinik/karriere/stellenangebote/",
+        "https://karriere.katharina-kasper-gruppe.de/stellenangebote.html?filter%5borg_einheit%5d=3",
      {
       waitUntil: "load",
       timeout: 0,
@@ -22,7 +22,7 @@ let wuppertalOne = async () => {
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
-        document.querySelectorAll(".tabular-list__link")
+        document.querySelectorAll(".joboffer_title_text.joboffer_box > a ")
       ).map((el) => el.href);
     });
 
@@ -32,8 +32,8 @@ let wuppertalOne = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Wuppertal",
-        hospital: "VAMED Rehaklinik Bergisch-Land",
+        location: "Krefeld",
+        hospital: "Helios St. Josefshospital U ",
         link: "",
         level: "",
         position: "",
@@ -47,11 +47,11 @@ let wuppertalOne = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1");
+        let ttitle = document.querySelector("div.scheme-content.scheme-title > h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
-      
+
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -63,22 +63,20 @@ let wuppertalOne = async () => {
         level == "Facharzt" ||
         level == "Chefarzt" ||
         level == "Assistenzarzt"
-        ) {
-          job.position = "artz";  
-        }
-        if (position == "pflege" || (position == "Pflege" && !level in levels)) {
-          job.position = "pflege";
-          job.level = "Nicht angegeben";
-        }
-        
-        if (!position in positions) {
-          continue;
-        }
-        let link = await page.evaluate(() => {
-          let lnk = document.querySelector(".button");
-          let apply = document.querySelector(".button-form")
-          apply.click()
-          return lnk ? lnk.href : ""
+      ) {
+        job.position = "artz";  
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
+        continue;
+      }
+      let link = await page.evaluate(() => {
+        let lnk = document.querySelector("div#btn_online_application > a");
+        return lnk ? lnk.href : ""
       });
       job.link = link;
       allJobs.push(job);
@@ -105,5 +103,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-wuppertalOne()
-export default wuppertalOne;
+gangelt()
+export default gangelt;

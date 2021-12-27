@@ -11,20 +11,20 @@ let wuppertalOne = async () => {
     let page = await browser.newPage();
 
     await page.goto(
-        "https://www.vamed-gesundheit.de/reha/bergisch-land/unsere-klinik/karriere/stellenangebote/",
+        "https://karriere.vck-gmbh.de/stellenangebote.html?filter%5Bclient_id%5D%5B%5D=2",
      {
       waitUntil: "load",
       timeout: 0,
     });
-
+    // let more = document.querySelector(".load_more_jobs")
+    // more.click()
     await scroll(page);
-
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(".tabular-list__link")
-      ).map((el) => el.href);
-    });
+        return Array.from(
+            document.querySelectorAll(".post-3349.job_listing.type-job_listing.status-publish.has-post-thumbnail.hentry.entry.has-media.job-type-450-e-basis.job-type-minijob > a")
+            ).map((el) => el.href);
+        });
 
     console.log(jobLinks);
     let allJobs = [];
@@ -32,8 +32,8 @@ let wuppertalOne = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Wuppertal",
-        hospital: "VAMED Rehaklinik Bergisch-Land",
+        location: "Datteln",
+        hospital: "Vestische Kinder- und Jugen Datteln",
         link: "",
         level: "",
         position: "",
@@ -47,7 +47,7 @@ let wuppertalOne = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1");
+        let ttitle = document.querySelector(".page-header-title clr > font");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -75,9 +75,7 @@ let wuppertalOne = async () => {
           continue;
         }
         let link = await page.evaluate(() => {
-          let lnk = document.querySelector(".button");
-          let apply = document.querySelector(".button-form")
-          apply.click()
+          let lnk = document.querySelector("#btn_online_application > a");
           return lnk ? lnk.href : ""
       });
       job.link = link;

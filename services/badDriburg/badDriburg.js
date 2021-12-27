@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
 
-let wuppertalOne = async () => {
+let badDriburg = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -11,7 +11,7 @@ let wuppertalOne = async () => {
     let page = await browser.newPage();
 
     await page.goto(
-        "https://www.vamed-gesundheit.de/reha/bergisch-land/unsere-klinik/karriere/stellenangebote/",
+        "https://www.vital-kliniken.de/?id=2815",
      {
       waitUntil: "load",
       timeout: 0,
@@ -22,7 +22,7 @@ let wuppertalOne = async () => {
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
-        document.querySelectorAll(".tabular-list__link")
+        document.querySelectorAll(".news-list-item > h2 > a")
       ).map((el) => el.href);
     });
 
@@ -32,8 +32,8 @@ let wuppertalOne = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Wuppertal",
-        hospital: "VAMED Rehaklinik Bergisch-Land",
+        location: "Bad Driburg",
+        hospital: "Vital-Kliniken - Klinik Drei",
         link: "",
         level: "",
         position: "",
@@ -51,7 +51,7 @@ let wuppertalOne = async () => {
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
-      
+
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -63,22 +63,20 @@ let wuppertalOne = async () => {
         level == "Facharzt" ||
         level == "Chefarzt" ||
         level == "Assistenzarzt"
-        ) {
-          job.position = "artz";  
-        }
-        if (position == "pflege" || (position == "Pflege" && !level in levels)) {
-          job.position = "pflege";
-          job.level = "Nicht angegeben";
-        }
-        
-        if (!position in positions) {
-          continue;
-        }
-        let link = await page.evaluate(() => {
-          let lnk = document.querySelector(".button");
-          let apply = document.querySelector(".button-form")
-          apply.click()
-          return lnk ? lnk.href : ""
+      ) {
+        job.position = "artz";  
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
+        continue;
+      }
+      let link = await page.evaluate(() => {
+        let lnk = document.querySelector("#c11801 > div > p > a");
+        return lnk ? lnk.href : ""
       });
       job.link = link;
       allJobs.push(job);
@@ -105,5 +103,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-wuppertalOne()
-export default wuppertalOne;
+badDriburg()
+export default badDriburg;
