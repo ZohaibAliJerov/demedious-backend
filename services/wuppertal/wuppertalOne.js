@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
 
-let wuppertalOne = async () => {
+let wuppertal = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -11,16 +11,7 @@ let wuppertalOne = async () => {
     let page = await browser.newPage();
 
     await page.goto(
-        "https://www.helios-gesundheit.de/kliniken/wuppertal/unser-haus-karriere-presse/karriere/stellenangebote/",
-        "https://www.helios-gesundheit.de/kliniken/wuppertal/unser-haus-karriere-presse/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=2&cHash=dacf652f0a4905f03823ca092820ee4d",
-        "https://www.helios-gesundheit.de/kliniken/wuppertal/unser-haus-karriere-presse/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=3&cHash=f58d93fedde7e147e7d4f52eed43e5d1",
-        "https://www.helios-gesundheit.de/kliniken/wuppertal/unser-haus-karriere-presse/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=4&cHash=81aa6a60473889e8548a205757d0dab6",
-        "https://www.helios-gesundheit.de/kliniken/wuppertal/unser-haus-karriere-presse/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=5&cHash=20268dcd0ca08b577c486bba485772f4",
-        "https://www.helios-gesundheit.de/kliniken/wuppertal/unser-haus-karriere-presse/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=6&cHash=a760e30713594e972753eda4499f962f",
-        "https://www.helios-gesundheit.de/kliniken/wuppertal/unser-haus-karriere-presse/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=7&cHash=0fd105302f8d307390dce0bb4da14681",
-        "https://www.helios-gesundheit.de/kliniken/wuppertal/unser-haus-karriere-presse/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=7&cHash=0fd105302f8d307390dce0bb4da14681",
-        "https://www.helios-gesundheit.de/kliniken/wuppertal/unser-haus-karriere-presse/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=9&cHash=5bbf8705d29bbf2fccf0bb4f364f57cd",
-
+        "https://www.vamed-gesundheit.de/reha/bergisch-land/unsere-klinik/karriere/stellenangebote/",
      {
       waitUntil: "load",
       timeout: 0,
@@ -31,7 +22,7 @@ let wuppertalOne = async () => {
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
-        document.querySelectorAll("article.tabular-list__item > a")
+        document.querySelectorAll(".tabular-list__link")
       ).map((el) => el.href);
     });
 
@@ -41,8 +32,8 @@ let wuppertalOne = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Wupperta",
-        hospital: "Helios Universitätsklinikum",
+        location: "Wuppertal",
+        hospital: "VAMED Rehaklinik Bergisch-Land",
         link: "",
         level: "",
         position: "",
@@ -56,7 +47,9 @@ let wuppertalOne = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h2.billboard-panel__title");
+        let apply = await document.querySelector(".button-form")
+        apply.click()
+        let ttitle = document.querySelector("h2");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -112,5 +105,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-wuppertalOne()
-export default wuppertalOne;
+wuppertal()
+export default wuppertal;
