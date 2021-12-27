@@ -47,7 +47,7 @@ let gangelt = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h2#text_ueberschrift");
+        let ttitle = document.querySelector("div.scheme-content.scheme-title > h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -75,7 +75,7 @@ let gangelt = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.btn_online_application > a");
+        let lnk = document.querySelector("div#btn_online_application > a");
         return lnk ? lnk.href : ""
       });
       job.link = link;
