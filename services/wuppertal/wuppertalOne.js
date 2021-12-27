@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
 
-let wuppertal = async () => {
+let wuppertalOne = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -47,13 +47,11 @@ let wuppertal = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let apply = await document.querySelector(".button-form")
-        apply.click()
-        let ttitle = document.querySelector("h2");
+        let ttitle = document.querySelector("h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
-
+      
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -65,20 +63,22 @@ let wuppertal = async () => {
         level == "Facharzt" ||
         level == "Chefarzt" ||
         level == "Assistenzarzt"
-      ) {
-        job.position = "artz";  
-      }
-      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
-        job.position = "pflege";
-        job.level = "Nicht angegeben";
-      }
-
-      if (!position in positions) {
-        continue;
-      }
-      let link = await page.evaluate(() => {
-        let lnk = document.querySelector(".button");
-        return lnk ? lnk.href : ""
+        ) {
+          job.position = "artz";  
+        }
+        if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+          job.position = "pflege";
+          job.level = "Nicht angegeben";
+        }
+        
+        if (!position in positions) {
+          continue;
+        }
+        let link = await page.evaluate(() => {
+          let lnk = document.querySelector(".button");
+          let apply = document.querySelector(".button-form")
+          apply.click()
+          return lnk ? lnk.href : ""
       });
       job.link = link;
       allJobs.push(job);
@@ -105,5 +105,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-wuppertal()
-export default wuppertal;
+wuppertalOne()
+export default wuppertalOne;
