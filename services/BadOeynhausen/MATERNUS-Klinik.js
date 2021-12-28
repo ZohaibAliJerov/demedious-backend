@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 
 import puppeteer from "puppeteer";
 
+=======
+import puppeteer from "puppeteer";
+>>>>>>> e2e45d3c07d8308dcf5e127e3d932f81d539f470
 let positions = [
     "arzt",
      "pflege"
@@ -10,7 +14,11 @@ let levels = [
     "Chefarzt", 
 "Assistenzarzt"
  ];
+<<<<<<< HEAD
  const klinikfur_Rehabilitation = async () =>{
+=======
+const klinikfur_Rehabilitation = async () =>{
+>>>>>>> e2e45d3c07d8308dcf5e127e3d932f81d539f470
     try {
         const browser = await puppeteer.launch({
             headless: false
@@ -96,6 +104,10 @@ let levels = [
         console.error(err)
     }
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> e2e45d3c07d8308dcf5e127e3d932f81d539f470
 export async function scroll(page) {
     await page.evaluate(() => {
         const distance = 100;
@@ -110,6 +122,9 @@ export async function scroll(page) {
 }
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> e2e45d3c07d8308dcf5e127e3d932f81d539f470
 export default klinikfur_Rehabilitation;
