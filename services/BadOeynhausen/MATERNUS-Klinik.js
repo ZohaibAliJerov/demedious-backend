@@ -1,6 +1,16 @@
 
 import puppeteer from "puppeteer";
 
+let positions = [
+    "arzt",
+     "pflege"
+    ];
+let levels = [
+    "Facharzt", 
+    "Chefarzt", 
+"Assistenzarzt"
+ ];
+
 export async function scroll(page) {
     await page.evaluate(() => {
         const distance = 100;
