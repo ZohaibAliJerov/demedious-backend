@@ -56,7 +56,13 @@ let levels = [
          })
          jobAds.title = title
          
-         
+         let applyLink = await page.evaluate( () =>{
+             let link = document.querySelector('a.button-03')
+             return link ? link.href : null
+         })
+         jobAds.link= applyLink;
+
+        
           alljobDetails.push(jobAds)
           await page.waitForTimeout(4000)
         }
