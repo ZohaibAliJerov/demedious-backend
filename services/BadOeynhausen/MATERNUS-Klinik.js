@@ -110,4 +110,6 @@ export async function scroll(page) {
 }
 
 
-klinikfur_Rehabilitation()
+
+
+export default klinikfur_Rehabilitation;
