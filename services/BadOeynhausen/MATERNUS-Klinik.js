@@ -50,7 +50,13 @@ let levels = [
                 position: "",
               };
              scroll(page)
-
+         let title = await page.evaluate( () =>{
+             let jobTitle = document.querySelector('div.content-area > h1');
+             return jobTitle ? jobTitle.innerText : null
+         })
+         jobAds.title = title
+         
+         
           alljobDetails.push(jobAds)
           await page.waitForTimeout(4000)
         }
