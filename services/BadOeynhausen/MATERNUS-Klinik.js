@@ -62,7 +62,28 @@ let levels = [
          })
          jobAds.link= applyLink;
 
-        
+         let text = await page.evaluate(() => {
+            return document.body.innerText;
+          });
+          //get level
+          let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
+          let position = text.match(/arzt|pflege/);
+          jobAds.level = level ? level[0] : "";
+          if (
+            level == "Facharzt" ||
+            level == "Chefarzt" ||
+            level == "Assistenzarzt"
+          ) {
+            jobAds.position = "artz";
+          }
+          if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+            jobAds.position = "pflege";
+            jobAds.level = "Nicht angegeben";
+          }
+    
+          if (!position in positions) {
+            continue;
+          }
           alljobDetails.push(jobAds)
           await page.waitForTimeout(4000)
         }
