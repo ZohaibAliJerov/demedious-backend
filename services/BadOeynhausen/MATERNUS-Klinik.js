@@ -1,4 +1,5 @@
 
+import puppeteer from "puppeteer";
 
 export async function scroll(page) {
     await page.evaluate(() => {
