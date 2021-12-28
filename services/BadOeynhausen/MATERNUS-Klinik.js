@@ -38,9 +38,26 @@ let levels = [
         await page.waitForTimeout(3000);
         console.log(jobLinks);
 
+        const alljobDetails = [ ];
+        for (let details of jobLinks) {
+            await page.goto(details)
+            let jobAds = {
+                title: "",
+                location: "Bad Oeynhausen",
+                hospital: "MATERNUS-Klinik für Rehabilitation",
+                link: "",
+                level: "",
+                position: "",
+              };
+             scroll(page)
+
+          alljobDetails.push(jobAds)
+          await page.waitForTimeout(4000)
+        }
+        console.log(alljobDetails);
         await browser.close();
         // await page.close();
-        // return alljobDetails.filter((job) => job.position != "");
+        return alljobDetails.filter((job) => job.position != "");
       
     } catch (err) {
         console.error(err)
