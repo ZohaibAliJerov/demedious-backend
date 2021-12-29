@@ -112,4 +112,5 @@ export async function scroll(page) {
         }, delay);
     });
 }
-lungenklinik_Hemer();
+
+export default lungenklinik_Hemer;
