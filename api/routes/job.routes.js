@@ -5,6 +5,7 @@ import {
   findJobById,
   updateJob,
   deleteJob,
+  searchJob,
 } from "../controllers/job.controllers.js";
 const router = express.Router();
 
@@ -20,4 +21,6 @@ router.put("/:id", [verifyToken], updateJob);
 //delete a job
 router.delete("/:id", [verifyToken], deleteJob);
 
+//search and filter jobs
+router.post("/search", searchJob);
 export default router;
