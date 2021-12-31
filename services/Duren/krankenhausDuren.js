@@ -97,4 +97,4 @@ async function scroll(page) {
     });
   };
 
-  krankenhausDuren();
+ 
