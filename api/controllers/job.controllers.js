@@ -51,3 +51,106 @@ export const deleteJob = async (req, res) => {
     res.status(400).send(err);
   }
 };
+
+export const searchJob = async (req, res) => {
+  let { title, level, position, location } = req.body;
+
+  let jobs;
+  if (title && level && position && location) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      level: { $regex: level, $options: "i" },
+      position: { $regex: position, $options: "i" },
+      location: { $regex: location, $options: "i" },
+    });
+  }
+  if (title && level && position) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      level: { $regex: level, $options: "i" },
+      position: { $regex: position, $options: "i" },
+    });
+  }
+  if (title && level && location) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      level: { $regex: level, $options: "i" },
+      location: { $regex: location, $options: "i" },
+    });
+  }
+  if (title && position && location) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      position: { $regex: position, $options: "i" },
+      location: { $regex: location, $options: "i" },
+    });
+  }
+  if (level && position && location) {
+    jobs = await Job.find({
+      level: { $regex: level, $options: "i" },
+      position: { $regex: position, $options: "i" },
+      location: { $regex: location, $options: "i" },
+    });
+  }
+  if (title && level) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      level: { $regex: level, $options: "i" },
+    });
+  }
+  if (title && position) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      position: { $regex: position, $options: "i" },
+    });
+  }
+  if (title && location) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      location: { $regex: location, $options: "i" },
+    });
+  }
+  if (level && position) {
+    jobs = await Job.find({
+      level: { $regex: level, $options: "i" },
+      position: { $regex: position, $options: "i" },
+    });
+  }
+  if (level && location) {
+    jobs = await Job.find({
+      level: { $regex: level, $options: "i" },
+      location: { $regex: location, $options: "i" },
+    });
+  }
+  if (position && location) {
+    jobs = await Job.find({
+      position: { $regex: position, $options: "i" },
+      location: { $regex: location, $options: "i" },
+    });
+  }
+  if (title) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+    });
+  }
+  if (level) {
+    jobs = await Job.find({
+      level: { $regex: level, $options: "i" },
+    });
+  }
+  if (position) {
+    jobs = await Job.find({
+      position: { $regex: position, $options: "i" },
+    });
+  }
+  if (location) {
+    jobs = await Job.find({
+      location: { $regex: location, $options: "i" },
+    });
+  }
+  try {
+    res.status(200).send(jobs);
+  } catch (err) {
+    res.status(500).send({ message: err });
+  }
+};

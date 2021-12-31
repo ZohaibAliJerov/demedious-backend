@@ -55,7 +55,7 @@ let aatalklinik = async () => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
