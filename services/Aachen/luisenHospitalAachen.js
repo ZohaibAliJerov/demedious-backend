@@ -1,6 +1,5 @@
 import puppeteer from "puppeteer";
 
-
 let positions = ["arzt", "pflege"];
 let levels = [
     "Facharzt", 
@@ -108,5 +107,6 @@ async function scroll(page) {
       }, delay);
     });
   };
+
 luisenHospital_Aachen()
 export default luisenHospital_Aachen;
