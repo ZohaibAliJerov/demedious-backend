@@ -118,4 +118,5 @@ const stellenausschreibungen = async () =>{
         position: "",
       };
 
-      stellenausschreibungen()
+      
+      export default stellenausschreibungen;
