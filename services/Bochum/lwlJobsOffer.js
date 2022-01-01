@@ -110,5 +110,4 @@ async function scroll(page) {
   };
 
 
-lwlJobOffer();
   export default lwlJobOffer;
