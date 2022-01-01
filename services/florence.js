@@ -46,7 +46,7 @@ const florenceService = async () => {
 
       await page.goto(jobLink, {
         timeout: 0,
-        waitForTimeout,
+        waitForTimeout: "load",
       });
       scroll(page);
       await page.waitForSelector("h2");
@@ -122,9 +122,4 @@ async function scroll(page) {
   });
 }
 
-// export default florenceService;
-
-(async () => {
-  let data = await florenceService();
-  console.log(data);
-})();
+export default florenceService;
