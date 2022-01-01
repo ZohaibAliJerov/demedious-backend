@@ -110,3 +110,4 @@ async function scroll(page) {
 
 
   
+export default mariaJosefHospital;
