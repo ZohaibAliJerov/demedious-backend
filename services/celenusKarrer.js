@@ -88,11 +88,9 @@ let celenusKerrier = async () => {
       //get link
       let link = await page.evaluate(() => {
         let link1 = document.querySelector('.col.col-3-1.nc-sidebar > div.nc-action-button.nc-link-form a')
-        return link1.href
+        return link1.href 
       });
-      if (typeof link == "object") {
-        job.link = link;
-      }
+     job.link = link;
       // console.log(job);
       allJobs.push(job);
     }
