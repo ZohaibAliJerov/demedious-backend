@@ -108,4 +108,5 @@ async function scroll(page) {
     });
   };
 
-mariaJosefHospital()
+
+  
