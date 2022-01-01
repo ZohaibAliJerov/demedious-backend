@@ -1,116 +1,124 @@
-import puppeteer from 'puppeteer';
 
-const gfo_kliniken = async () => {
-    try {
+import puppeteer from "puppeteer";
 
-        let browser = await puppeteer.launch({ headless: false });
-        let page = await browser.newPage();
-        page.setDefaultNavigationTimeout(0)
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-        let allJobs = [];
-        let link = [
-            "https://www.gfo-kliniken-rhein-berg.de/arbeit-karriere/stellenangebote.html"
-        ];
+let gfo_kliniken = async () => {
+  try {
+    let browser = await puppeteer.launch({
+      headless: false,
+    });
 
-        let counter = 0;
-        do {
-            await page.goto(link[counter], { timeout: 0 });
-            await scroll(page);
-
-            const job = await page.evaluate(() => {
-                let links = Array.from(document.querySelectorAll('.job-item.shuffle-item.shuffle-item--visible a')
-                ).map(el => el.href);
-                return links
+    let page = await browser.newPage();
+    let links = [
+        "https://www.gfo-kliniken-rhein-berg.de/arbeit-karriere/stellenangebote.html"
+    ]
+    let jobLinks = []
+    let counter = 0
+    do {
+        await page.goto(links[counter], { timeout: 0 });
+        scroll(page);
+       // get all jobs links 
+       let jobs = await page.evaluate(() => {
+              return Array.from(
+                document.querySelectorAll('.job-item.shuffle-item.shuffle-item--visible a')
+              ).map((el) => el.href)
             });
-            allJobs.push(...job);
-            console.log(job);
+            jobLinks.push(...jobs)
+      
             counter++;
-        } while (counter < link.length);
+            await page.waitForTimeout(3000);
+          } while (counter < links.length);
+         console.log(jobLinks)
+    
+  
+    let allJobs = [];
 
-        let allJobDetails = [];
+    for (let jobLink of jobLinks) {
+      let job = {
+        title: "",
+        location: "Bad Honnef",
+        hospital: "Cura Krankenhaus Bad Ho",
+        link: "",
+        level: "",
+        position: "",
+      };
 
+      await page.goto(jobLink, {
+        waitUntil: "load",
+        timeout: 0,
+      });
 
-        for (const url of allJobs) {
-            await page.goto(url);
+      await page.waitForTimeout(1000);
 
-            // await page.click('a.cc-btn.cc-deny')
+      let title = await page.evaluate(() => {
+        let ttitle = document.querySelector(".pageHeadline");
+        return ttitle ? ttitle.innerText : "";
+      });
+      job.title = title;
 
-            await scroll(page);
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
 
+      if (!position in positions) {
+        continue;
+      }
 
-            await page.waitForSelector('.pageHeadline')
-            ///getting all the title from the links
-            const title = await page.evaluate(() => {
-                let text = document.querySelector('.pageHeadline')
-                return text ? text.innerText : null;
-            });
-
-
-            ///getting all the location
-
-            const location = await page.evaluate(() => {
-                let text = document.querySelector('body');
-                return text ? text.innerText.match(/[a-zA-Z.-]+ \d+[\n]\d+ [a-zA-Z.-]+ [a-zA-Z.-]+|[a-zA-Zß.-]+ \d+. \d+ [a-zA-Zß-]+ [a-zA-Zß-]+|[a-zA-Zß-]+ \d+ [a-zA-Zß-]+ \d+ [a-zA-Zß -]+/) : null;
-            })
-            /// getting all the cell ; 
-            const cell = await page.evaluate(() => {
-                let text = document.querySelector('body')
-                return text ? text.innerText.match(/\d+[-/ ]\d+[ -]\d+|\d+ [/] \d+ \d+/) : null;
-            })
-
-            /// getting all the email
-            const email = await page.evaluate(() => {
-                let text = document.querySelector('body');
-                return text ? text.innerText.match(/[a-zA-Z.]+[(][a-zA-Z-]+[)][a-zA-Z-.]+|[a-zA-Z.]+ [(][a-zA-Z-]+[)] [a-zA-Z-.]+|[(][a-zA-Z-]+[)] [a-zA-Z-.]+|[a-zA-Z.]+@[a-zA-Z-.]+/) : null;
-            });
-
-            /// getting all the applylinks
-            const applyLink = await page.evaluate(() => {
-                let text = document.querySelector('.onlinebewerben.btn.btn--invert');
-                return text ? text.href : null;
-            })
-            const jobDetails = {
-                title,
-                location,
-                cell,
-                email,
-                applyLink
-            }
-            allJobDetails.push(jobDetails);
-
-        }
-        await page.waitForTimeout(3000)
-        console.log(allJobDetails)
-        await page.close();
-        await browser.close();
-        return allJobDetails
-    } catch (error) {
-        console.log(error)
+      //get link
+      let link = await page.evaluate(() => {
+        return document.querySelector('a.onlinebewerben.btn.btn--invert').href
+      });
+      job.link = link
+    //   if (typeof link == "object") {
+    //     job.link = link;
+    //   }
+      // console.log(job);
+      allJobs.push(job);
     }
-}
-
+    console.log(allJobs);
+    await page.close();
+    await browser.close();
+    return allJobs.filter((job) => job.position != "");
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 async function scroll(page) {
-    await page.evaluate(() => {
-        const distance = 100;
-        const delay = 100;
-        const timer = setInterval(() => {
-            document.scrollingElement.scrollBy(0, distance);
-            if (
-                document.scrollingElement.scrollTop + window.innerHeight >=
-                document.scrollingElement.scrollHeight
-            ) {
-                clearInterval(timer);
-            }
-        }, delay);
-    });
+  await page.evaluate(() => {
+    const distance = 100;
+    const delay = 100;
+    const timer = setInterval(() => {
+      document.scrollingElement.scrollBy(0, distance);
+      if (
+        document.scrollingElement.scrollTop + window.innerHeight >=
+        document.scrollingElement.scrollHeight
+      ) {
+        clearInterval(timer);
+      }
+    }, delay);
+  });
 }
-
-gfo_kliniken();
-
-
-
-
+gfo_kliniken()
 
 
 
