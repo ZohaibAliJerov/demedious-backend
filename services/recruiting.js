@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
 
+let positions = ["arzt", "pflege"];
 const recruiting = async () => {
   try {
     let browser = await puppeteer.launch({ headless: false });
