@@ -1,8 +1,11 @@
 import puppeteer from "puppeteer";
 
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
 const johanniter = async () => {
   try {
-    let browser = await puppeteer.launch({ headless: true });
+    let browser = await puppeteer.launch({ headless: false });
     let page = await browser.newPage();
     let url =
       "https://www.johanniter.de/johanniter-kliniken/neurologisches-rehabilitationszentrum-godeshoehe/karriere/";
@@ -82,33 +85,46 @@ const johanniter = async () => {
           setTimeout(1000);
         }
       });
-      let title = await page.evaluate(() => {
+      let job = {
+        title: "",
+        location: "Bonn",
+        hospital: "Neurologisches Rehabilita ",
+        link: "",
+        level: "",
+        position: "",
+      };
+
+      await page.waitForSelector("h1");
+      job.title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
 
-      let location = await page.evaluate(() => {
-        return document.querySelector(".c-inline-list__list  > li").innerText;
-      });
-
-      let cell = await page.evaluate(() => {
-        return document.body.innerText.match(/\d+\s\d+-\d+/);
-      });
-      if (typeof cell == "object" && cell != null) {
-        cell = cell[0];
-      } else if (cell == null) {
-        cell = "";
-      }
-      let email = await page.evaluate(() => {
+      job.link = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
-      if (typeof email == "object" && email != null) {
-        email = email[0];
-      } else if (email == null) {
-        email = "";
+      //get level and position
+      let text = job.title;
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
       }
-      let applyLink = email;
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
 
-      allJobs.push({ title, location, cell, email, applyLink });
+      if (!position in positions) {
+        continue;
+      }
+      allJobs.push(job);
     }
     await page.close();
     await browser.close();
@@ -118,4 +134,9 @@ const johanniter = async () => {
   }
 };
 
-export default johanniter;
+//export default johanniter;
+
+(async () => {
+  let res = await johanniter();
+  console.log(res);
+})();

@@ -1,7 +1,7 @@
-/**
- * first service
- */
 import puppeteer from "puppeteer";
+
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
 const florenceService = async () => {
   try {
@@ -34,59 +34,30 @@ const florenceService = async () => {
     //console.log(allJobs);
     let allJobDetails = [];
     //get data from every job post
-    for (let i = 0; i < allJobs.length; i++) {
-      let job = {};
-      await page.goto(allJobs[i]);
+    for (let jobLink of allJobs) {
+      let job = {
+        title: "",
+        location: "Düsseldorf",
+        hospital: "Klinik für Psychiatrie und",
+        link: "",
+        level: "",
+        position: "",
+      };
+
+      await page.goto(jobLink, {
+        timeout: 0,
+        waitForTimeout: "load",
+      });
       scroll(page);
       await page.waitForSelector("h2");
+      //get job title
       let title = await page.evaluate(() => {
         let title = document.querySelector("h2");
         return title ? title.innerText : null;
       });
-      job["title"] = title;
-      let text;
-      let location = await page.evaluate(() => {
-        let paragraphs = Array.from(document.querySelectorAll("p"));
-        let loc = paragraphs[0];
-        for (let i = 0; i < paragraphs.length; i++) {
-          let maxChilds = paragraphs[i];
-          if (loc.childElementCount < maxChilds.childElementCount) {
-            loc = maxChilds;
-          }
-        }
-        return loc ? loc.innerText : null;
-      });
+      job.title = title;
 
-      job["location"] = location;
-
-      let cell = await page.evaluate(() => {
-        let text = Array.from(document.querySelectorAll("p")).map(
-          (el) => el.innerText
-        );
-        // text = text.join(",");
-        let regex =
-          /\+\d+\s+\W0\W\s+\d+\s+\/\s+\d+-\d+\s+\/\s+\d+|\d+\s+\/\s+\d+-\d+|\d+\/d+-\d+\/\d+|\d+\/\d+-\d+|\d+\s+\d+|\d+\s\d+-\d+/g;
-        let cell = text.filter((el) => el.match(regex));
-        cell = cell.join(",").match(regex);
-        return cell ? cell.filter((el) => el.includes("\n") == false) : "";
-      });
-      if (typeof cell == "object" && cell != null) {
-        cell = cell[0];
-      } else if (cell == null) {
-        cell = "";
-      }
-      job["cell"] = cell;
-      let email = await page.evaluate(() => {
-        let mail = document.querySelector("a.mail");
-        return mail ? mail.innerText : "";
-      });
-      if (typeof email == "object") {
-        email = email[0];
-      } else if (email == null) {
-        email = "";
-      }
-      job["email"] = email;
-
+      //get job link
       let applyLink = await page.evaluate(() => {
         let link = document.querySelector("a.internal-link.button-blau");
         return link ? link.href : "";
@@ -96,7 +67,33 @@ const florenceService = async () => {
       } else if (applyLink == null) {
         applyLink = "";
       }
-      job["applyLink"] = applyLink;
+      job.link = applyLink;
+
+      //get level and position
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
+        continue;
+      }
 
       allJobDetails.push(job);
     }
