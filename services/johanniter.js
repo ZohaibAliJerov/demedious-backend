@@ -99,29 +99,11 @@ const johanniter = async () => {
         return document.querySelector("h1").innerText;
       });
 
-      let location = await page.evaluate(() => {
-        return document.querySelector(".c-inline-list__list  > li").innerText;
-      });
-
-      let cell = await page.evaluate(() => {
-        return document.body.innerText.match(/\d+\s\d+-\d+/);
-      });
-      if (typeof cell == "object" && cell != null) {
-        cell = cell[0];
-      } else if (cell == null) {
-        cell = "";
-      }
-      let email = await page.evaluate(() => {
+      job.link = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
-      if (typeof email == "object" && email != null) {
-        email = email[0];
-      } else if (email == null) {
-        email = "";
-      }
-      let applyLink = email;
 
-      allJobs.push({ title, location, cell, email, applyLink });
+      allJobs.push(job);
     }
     await page.close();
     await browser.close();
