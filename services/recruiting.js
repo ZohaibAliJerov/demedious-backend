@@ -111,7 +111,7 @@ const recruiting = async () => {
         job.link = await page.evaluate(() => {
           return document.querySelector("a.button.apply-link").href;
         });
-        allJobLinks.push({ title, location, cell, email, applyLink });
+        allJobLinks.push(job);
       }
       return allJobs;
     }
