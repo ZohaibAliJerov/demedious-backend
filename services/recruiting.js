@@ -82,6 +82,8 @@ const recruiting = async () => {
         job.title = await page.evaluate(() => {
           return document.querySelector("h1").innerText;
         });
+        //get level
+        let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
 
         //get applyLink
         job.link = await page.evaluate(() => {
