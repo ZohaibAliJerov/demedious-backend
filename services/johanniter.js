@@ -93,6 +93,8 @@ const johanniter = async () => {
         level: "",
         position: "",
       };
+
+      await page.waitForSelector("h1");
       job.title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
