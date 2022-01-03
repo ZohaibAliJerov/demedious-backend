@@ -53,55 +53,44 @@ const recruiting = async () => {
     let allJobs = [];
     //visit each job link
     for (let jobLink of allJobLinks) {
+      for (let jobLink of allJobs) {
+        let job = {
+          title: "",
+          location: "Düsseldorf",
+          hospital: "Klinik für Psychiatrie und",
+          link: "",
+          level: "",
+          position: "",
+        };
+        await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
 
-       for (let jobLink of allJobs) {
-      let job = {
-        title: "",
-        location: "Düsseldorf",
-        hospital: "Klinik für Psychiatrie und",
-        link: "",
-        level: "",
-        position: "",
-      };
-      await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
-
-      await waitForTimeout(1000);
-      //scroll the page
-      await page.evaluate(() => {
-        for (let i = 0; i < 100; i++) {
-          if (
-            document.scrollingElement.scrollTop + window.innerHeight >=
-            document.scrollingElement.scrollHeight
-          ) {
-            break;
+        await waitForTimeout(1000);
+        //scroll the page
+        await page.evaluate(() => {
+          for (let i = 0; i < 100; i++) {
+            if (
+              document.scrollingElement.scrollTop + window.innerHeight >=
+              document.scrollingElement.scrollHeight
+            ) {
+              break;
+            }
+            document.scrollingElement.scrollBy(0, 100);
+            setTimeout(1000);
           }
-          document.scrollingElement.scrollBy(0, 100);
-          setTimeout(1000);
-        }
-      });
-      //get title
-      let title = await page.evaluate(() => {
-        return document.querySelector("h1").innerText;
-      });
-      //get location
-      let location = await page.evaluate(() => {
-        return document.querySelector(".inserat-short-info > font").innerText;
-      });
-      //get email
-      let email = await page.evaluate(() => {
-        return "";
-      });
-      //get cell
-      let cell = await page.evaluate(() => {
-        return document.body.innerText.match(/\d+\s\d+\s\d+\s\d+/);
-      });
-      //get applyLink
-      let applyLink = await page.evaluate(() => {
-        return document.querySelector("a.button.apply-link").href;
-      });
-      allJobLinks.push({ title, location, cell, email, applyLink });
+        });
+        //get title
+        job.title = await page.evaluate(() => {
+          return document.querySelector("h1").innerText;
+        });
+
+        //get applyLink
+        job.link = await page.evaluate(() => {
+          return document.querySelector("a.button.apply-link").href;
+        });
+        allJobLinks.push({ title, location, cell, email, applyLink });
+      }
+      return allJobs;
     }
-    return allJobs;
   } catch (error) {
     console.log(error);
   }
