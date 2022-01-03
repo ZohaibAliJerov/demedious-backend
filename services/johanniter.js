@@ -5,7 +5,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
 const johanniter = async () => {
   try {
-    let browser = await puppeteer.launch({ headless: true });
+    let browser = await puppeteer.launch({ headless: false });
     let page = await browser.newPage();
     let url =
       "https://www.johanniter.de/johanniter-kliniken/neurologisches-rehabilitationszentrum-godeshoehe/karriere/";
@@ -87,8 +87,8 @@ const johanniter = async () => {
       });
       let job = {
         title: "",
-        location: "Sundern (Sauerland)",
-        hospital: "Neurologische Klinik Sorpe",
+        location: "Bonn",
+        hospital: "Neurologisches Rehabilita ",
         link: "",
         level: "",
         position: "",
@@ -134,4 +134,9 @@ const johanniter = async () => {
   }
 };
 
-export default johanniter;
+//export default johanniter;
+
+(async () => {
+  let res = await johanniter();
+  console.log(res);
+})();
