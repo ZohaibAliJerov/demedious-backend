@@ -53,6 +53,16 @@ const recruiting = async () => {
     let allJobs = [];
     //visit each job link
     for (let jobLink of allJobLinks) {
+
+       for (let jobLink of allJobs) {
+      let job = {
+        title: "",
+        location: "Düsseldorf",
+        hospital: "Klinik für Psychiatrie und",
+        link: "",
+        level: "",
+        position: "",
+      };
       await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
 
       await waitForTimeout(1000);
