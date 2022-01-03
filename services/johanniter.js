@@ -102,6 +102,9 @@ const johanniter = async () => {
       job.link = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
+      //get level and position
+      let text = job.title;
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
 
       allJobs.push(job);
     }
