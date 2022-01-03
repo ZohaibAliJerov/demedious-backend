@@ -85,7 +85,15 @@ const johanniter = async () => {
           setTimeout(1000);
         }
       });
-      let title = await page.evaluate(() => {
+      let job = {
+        title: "",
+        location: "Sundern (Sauerland)",
+        hospital: "Neurologische Klinik Sorpe",
+        link: "",
+        level: "",
+        position: "",
+      };
+      job.title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
 
