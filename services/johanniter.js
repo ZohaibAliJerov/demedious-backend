@@ -1,5 +1,7 @@
 import puppeteer from "puppeteer";
 
+let positions = ["arzt", "pflege"];
+
 const johanniter = async () => {
   try {
     let browser = await puppeteer.launch({ headless: true });
