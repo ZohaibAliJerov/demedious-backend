@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
 const johanniter = async () => {
   try {
