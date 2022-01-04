@@ -37,8 +37,8 @@ let drBeaker = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Bad Oeynhausen",
-        hospital: "Diakonische Stiftung Wittekindshof",
+        location: "Horn - Bad Meinberg",
+        hospital: "Dr. Becker Brunnen-Klinik",
         link: "",
         level: "",
         position: "",
