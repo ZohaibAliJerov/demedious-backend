@@ -58,25 +58,16 @@ const nrkAarchecn = async () => {
         setTimeout(1000);
       }
     });
-    let title = await page.evaluate(() => {
+    job.title = await page.evaluate(() => {
       let _title = document.querySelector("div.dt-sc-callout-box.type1 > h4");
       return _title ? _title.innerText : "";
     });
 
-    let location = await page.evaluate(() => {
-      let _location = document.querySelector(
-        "div.dt-sc-callout-box.type1 > h5"
-      );
-      return _location ? _location.innerText : "";
-    });
-
-    let cell = "";
-    let email = await page.evaluate(() => {
+    job.link = await page.evaluate(() => {
       return document.body.innerText.match(/\w+@\w+-\w+\.\w+/);
     });
 
-    let applyLink = email;
-    allJobs.push({ title, location, cell, email, applyLink });
+    allJobs.push(job);
   }
   return allJobs;
 };
