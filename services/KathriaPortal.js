@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let dreifaltHospital = async () => {
+let kathrana_kathe = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -51,7 +51,7 @@ let dreifaltHospital = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("span.big");
+        let ttitle = document.querySelector(".scheme-content.scheme-title > h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -83,7 +83,7 @@ let dreifaltHospital = async () => {
 
       //get link
       let link = await page.evaluate(() => {
-        let applink = document.querySelector('#btn_online_application a')
+        let applink = document.querySelector('.css_button a')
         return applink ? applink.href : "";
     });
     //   if (typeof link == "object") {
