@@ -35,6 +35,14 @@ const nrkAarchecn = async () => {
   //visit all jobs
   let allJobs = [];
   for (let job of jobs) {
+    let job = {
+      title: "",
+      location: "Sundern (Sauerland)",
+      hospital: "Neurologische Klinik Sorpe",
+      link: "",
+      level: "",
+      position: "",
+    };
     await page.goto(job, { timeout: 0, waitUntil: "load" });
     await page.waitForTimeout(1000);
     //scroll the page
