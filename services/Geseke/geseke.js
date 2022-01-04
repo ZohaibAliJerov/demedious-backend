@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt",  "Arzt", "Oberarzt"];
 
 let geseke = async () => {
   try {
@@ -22,7 +22,7 @@ let geseke = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("div.headline > h3 > a")).map(
+      return Array.from(document.querySelectorAll(".headline > h3 > a")).map(
         (el) => el.href
       );
     });
