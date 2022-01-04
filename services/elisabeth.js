@@ -80,46 +80,23 @@ const elisabeth = async () => {
 
       scroll(page);
       await page.waitForTimeout(5000);
-      let newJob = {};
 
       //get title
-
-      let title = await page.evaluate(() => {
+      job.title = await page.evaluate(() => {
         let selector1 = document.querySelector("div#con_1 > font > font");
         let selector2 = document.querySelector("div#con_1");
 
         return selector1?.innerText || selector2?.innerText;
       });
-      newJob.title = title;
-
-      //get address
-      await page.waitForSelector("div#con_2 > div");
-      let address = await page.evaluate(() => {
-        let adrs = document.querySelector("div#con_2 > div");
-        return adrs ? adrs.innerText : null;
-      });
-      newJob.address = address;
-
-      //get email
-      // email is not available
-      newJob.email = null;
-
-      //get cell
-      let cell = await page.evaluate(() => {
-        let cellNo = document.querySelector("div#con_38 > div");
-        return cellNo
-          ? cellNo.innerText.match(/\d+.-.\d+-\d+|\d+.-.\d+.-.\d+/)
-          : null;
-      });
-
-      newJob.cell = cell;
 
       await page.waitForSelector("span#probew > a");
-      let applyLink = await page.evaluate(() => {
+      job.link = await page.evaluate(() => {
         let link = document.querySelector("span#probew > a ");
         return link ? link.href : null;
       });
-      newJob.applyLink = applyLink;
+
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
 
       allJobs.push(newJob);
     }
