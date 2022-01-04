@@ -6,7 +6,8 @@ let positions = [
 let levels = [
     "Facharzt", 
     "Chefarzt", 
-"Assistenzarzt"
+"Assistenzarzt",
+"Arzt", "Oberarzt"
  ];
 const klinikfur_Rehabilitation = async () =>{
     try {
@@ -70,7 +71,10 @@ const klinikfur_Rehabilitation = async () =>{
           if (
             level == "Facharzt" ||
             level == "Chefarzt" ||
-            level == "Assistenzarzt"
+            level == "Assistenzarzt"||
+            level =="Arzt"||
+            level == "Oberarzt"
+
           ) {
             jobAds.position = "artz";
           }
