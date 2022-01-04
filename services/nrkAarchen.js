@@ -38,7 +38,7 @@ const nrkAarchecn = async () => {
     let job = {
       title: "",
       location: "Sundern (Sauerland)",
-      hospital: "Neurologische Klinik Sorpe",
+      hospital: "NRK Aachen Ambulante",
       link: "",
       level: "",
       position: "",
