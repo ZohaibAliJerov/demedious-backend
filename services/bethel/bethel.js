@@ -20,9 +20,7 @@ let bethel = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(".job-offer > a")
-      ).map((el) => el.href);
+    return Array.from(document.querySelectorAll("div.job-list-offers > div.row > div.job-offer > a ")).map(el => el.href) 
     });
 
     console.log(jobLinks);
@@ -78,17 +76,17 @@ let bethel = async () => {
 
       //get link
       let link = await page.evaluate(() => {
-          let applyLink = document.querySelector("a#apply-direct-btn");
-          return applyLink ? applyLink.href : null;
+        let applyLink = document.querySelector("a#apply-direct-btn");
+        return applyLink ? applyLink.href : null;
       });
-      job.link = link
+      job.link = link;
       allJobs.push(job);
     }
     console.log(allJobs);
     return allJobs.filter((job) => job.position != "");
-} catch (e) {
+  } catch (e) {
     console.log(e);
-}
+  }
 };
 
 async function scroll(page) {
@@ -106,5 +104,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-bethel()
+bethel();
 export default bethel;
