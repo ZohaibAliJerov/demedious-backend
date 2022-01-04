@@ -4,7 +4,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let drBeaker = async () => {
+let drBeaker1 = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -37,8 +37,8 @@ let drBeaker = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Bad Oeynhausen",
-        hospital: "Diakonische Stiftung Wittekindshof",
+        location: "Wuppertal",
+        hospital: "Dr. Becker Klinik Juliana",
         link: "",
         level: "",
         position: "",
@@ -119,7 +119,7 @@ async function scroll(page) {
   });
 }
 
-drBeaker()
+drBeaker1()
 
 
 
