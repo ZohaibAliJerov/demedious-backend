@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
 
+let positions = ["arzt", "pflege"];
 const nrkAarchecn = async () => {
   let browser = await puppeteer.launch({ headless: true });
   let page = await browser.newPage();
