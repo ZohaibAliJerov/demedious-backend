@@ -37,7 +37,7 @@ const nrkAarchecn = async () => {
   for (let job of jobs) {
     let job = {
       title: "",
-      location: "Sundern (Sauerland)",
+      location: "Aachen",
       hospital: "NRK Aachen Ambulante",
       link: "",
       level: "",
