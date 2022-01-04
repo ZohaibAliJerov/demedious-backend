@@ -66,6 +66,7 @@ const nrkAarchecn = async () => {
     job.link = await page.evaluate(() => {
       return document.body.innerText.match(/\w+@\w+-\w+\.\w+/);
     });
+    let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
 
     allJobs.push(job);
   }
