@@ -117,7 +117,7 @@ const elisabeth = async () => {
         continue;
       }
 
-      allJobs.push(newJob);
+      allJobs.push(job);
     }
 
     console.log(allJobs);
