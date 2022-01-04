@@ -12,7 +12,6 @@ const jobSchema = new mongoose.Schema({
   },
   link: {
     type: String,
-    unique: true,
   },
   level: {
     type: String,
