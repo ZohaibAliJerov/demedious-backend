@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
 
+let positions = ["arzt", "pflege"];
 const elisabeth = async () => {
   try {
     const browser = await puppeteer.launch({
