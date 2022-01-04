@@ -66,6 +66,14 @@ const elisabeth = async () => {
     //    console.log(allJobLinks);
     let allJobs = [];
     for (let jobLink of allJobLinks) {
+      let job = {
+        title: "",
+        location: "Sundern (Sauerland)",
+        hospital: "Neurologische Klinik Sorpe",
+        link: "",
+        level: "",
+        position: "",
+      };
       //visit each job link
       await page.goto(jobLink, { waitUntil: "load", timeout: 0 });
       //   await page.waitForTimeout(1000);
