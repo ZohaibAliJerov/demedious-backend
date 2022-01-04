@@ -11,12 +11,8 @@ let duishburg = async () => {
     let page = await browser.newPage();
 
     await page.goto(
-      "https://www.helios-gesundheit.de/kliniken/duisburg/unsere-standorte/karriere/stellenangebote/",
-      "https://www.helios-gesundheit.de/kliniken/duisburg/unsere-standorte/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=2&cHash=3f070cf02aaec60004665413692a3d09",
-      "https://www.helios-gesundheit.de/kliniken/duisburg/unsere-standorte/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=3&cHash=03584482332832cf537e7c13d895ab59",
-      "https://www.helios-gesundheit.de/kliniken/duisburg/unsere-standorte/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=4&cHash=df613802062eec15443438c4e6945c20",
-      "https://www.helios-gesundheit.de/kliniken/duisburg/unsere-standorte/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=5&cHash=2f90d34df7d5367fc9c9a5bc6f45e6cd",
-      "https://www.helios-gesundheit.de/kliniken/duisburg/unsere-standorte/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=6&cHash=f0867e77a139b650b2f7150667ff9abb",
+      "https://www.helios-gesundheit.de/reha/rhein-klinik/unsere-klinik/karriere/stellenangebote/",
+      "https://www.helios-gesundheit.de/reha/rhein-klinik/unsere-klinik/karriere/stellenangebote/?tx_heliosuwstemplates_jobsearch%5Baction%5D=list&tx_heliosuwstemplates_jobsearch%5Bcontroller%5D=Job&tx_heliosuwstemplates_jobsearch%5Bpage%5D=2&cHash=0f129f20f303d5b93c7e82d79feb8a8d",
       {
         waitUntil: "load",
         timeout: 0,
