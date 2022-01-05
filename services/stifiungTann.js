@@ -44,8 +44,8 @@ let stifiungTan = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Gelsenkirchen",
-        hospital: "Evangelische Kliniken Gelsenkirchen GmbH",
+        location: "Bielefeld",
+        hospital: "Evangelisches Klinikum Bethel",
         link: "",
         level: "",
         position: "",
