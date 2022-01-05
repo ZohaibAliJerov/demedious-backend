@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt",  "Arzt", "Oberarzt"];
 
 let geseke = async () => {
   try {
@@ -63,7 +63,10 @@ let geseke = async () => {
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"
+        level == "Assistenzarzt"||
+        level =="Arzt"||
+        level == "Oberarzt"
+
       ) {
         job.position = "artz";
       }
