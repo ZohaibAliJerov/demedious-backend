@@ -11,7 +11,7 @@ let bochumLinden = async () => {
     let page = await browser.newPage();
 
     await page.goto(
-      "https://www.helios-gesundheit.de/kliniken/bochum-linden/",
+      "https://www.helios-gesundheit.de/kliniken/bochum-linden/unser-angebot/",
       {
         waitUntil: "load",
         timeout: 0,
@@ -21,18 +21,8 @@ let bochumLinden = async () => {
     await scroll(page);
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-        let  a = document.querySelector(".menu__link")
-        a.click()
-
-       let navigate =  document.querySelector(".menu__link").onclick = function () {
-            window.location.href = "/kliniken/bochum-linden/unser-angebot/";
-        };
-        navigate()
-        
-        let nevgte = document.querySelector('#main > section.panel > div > div.teaser-panel__item > div > div > div > div:nth-child(2) > a').onclick = function () {
-            window.location.href = "/kliniken/bochum-linden/unser-haus/karriere/stellenangebote/"
-        }
-        nevgte()
+        let a = document. querySelector("#main > section.panel > div > div.teaser-panel__item > div > div > div > div:nth-child(2) > a");
+        a.click();
       return Array.from(document.querySelectorAll("article.tabular-list__item > a ")).map(el => el.href)
     });
 
