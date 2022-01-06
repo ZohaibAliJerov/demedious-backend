@@ -22,7 +22,7 @@ let geseke = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("div.headline > h3 > a")).map(
+      return Array.from(document.querySelectorAll("a.btn.btn-default.btn-read-more")).map(
         (el) => el.href
       );
     });
@@ -48,7 +48,7 @@ let geseke = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h3");
+        let ttitle = document.getElementsByTagName("strong")[3];
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -79,7 +79,7 @@ let geseke = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.col-md-12 > a");
+        let lnk = document.querySelector("#c274 > p > a");
         return lnk ? lnk.href : "";
       });
       job.link = link;
