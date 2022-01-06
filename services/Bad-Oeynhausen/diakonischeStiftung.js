@@ -110,3 +110,4 @@ const diakonischeStiftung_Wittekindshof = async () =>{
 let positions = ["arzt", "pflege"];
 let levels = [ "Facharzt",  "Chefarzt", "Assistenzarzt", "Arzt",  "Oberarzt" ];
 
+export default diakonischeStiftung_Wittekindshof;
