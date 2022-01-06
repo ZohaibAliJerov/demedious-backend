@@ -107,3 +107,4 @@ async function scroll(page) {
     });
   }
 
+export default stJosefPaderborn;
