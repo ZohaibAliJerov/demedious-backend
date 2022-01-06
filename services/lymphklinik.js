@@ -1,5 +1,8 @@
 import puppeteer from "puppeteer";
 
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
 const lymphklinik = async () => {
   try {
     let browser = await puppeteer.launch({ headless });
