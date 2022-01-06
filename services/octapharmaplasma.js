@@ -45,8 +45,8 @@ const octapharmaplasma = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Sundern (Sauerland)",
-        hospital: "Neurologische Klinik Sorpe",
+        location: "Mönchengladbach",
+        hospital: "Octapharma Plasmaspend",
         link: "",
         level: "",
         position: "",
