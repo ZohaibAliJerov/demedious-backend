@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-
+let positions = ["arzt", "pflege"];
 const panklinik = async () => {
   try {
     const browser = await puppeteer.launch({ headless: false });
