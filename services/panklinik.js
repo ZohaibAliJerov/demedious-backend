@@ -40,8 +40,30 @@ const panklinik = async () => {
       job.title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
       //get level
       let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
+        continue;
+      }
     }
 
     //TODO: geta ll jobs details
