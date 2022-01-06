@@ -1,4 +1,5 @@
 import puppeteer from "puppeteer";
+let positions = ["arzt", "pflege"];
 
 const octapharmaplasma = async () => {
   try {
