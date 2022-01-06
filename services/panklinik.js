@@ -64,6 +64,11 @@ const panklinik = async () => {
       if (!position in positions) {
         continue;
       }
+      job.link = await page.evaluate(() => {
+        return document.body.innerText.match(/\w+@.+\.\w/);
+      });
+
+      allJobs.push(job);
     }
 
     //TODO: geta ll jobs details
