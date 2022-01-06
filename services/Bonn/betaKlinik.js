@@ -112,4 +112,4 @@ async function scroll(page) {
     });
   }
 
-
+export default betaKlinik
