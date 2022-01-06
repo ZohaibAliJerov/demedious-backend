@@ -5,7 +5,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
 const lymphklinik = async () => {
   try {
-    let browser = await puppeteer.launch({ headless });
+    let browser = await puppeteer.launch({ headless: false });
     let page = await browser.newPage();
     let url = "https://www.lymphklinik.com/karriere.html";
     await page.goto(url, { timeout: 0, waitUntil: "load" });
@@ -26,24 +26,28 @@ const lymphklinik = async () => {
     let allJobs = [];
     //get all jobs
     let jobs = await page.evaluate(() => {
-      return Array.from(document.querySelctor("tm-article > ul > li")).map(
+      return Array.from(document.querySelectorAll(".tm-article > ul > li")).map(
         (el) => el.innerText
       );
     });
-    let location = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".tm-article > p"))[4];
-    });
 
-    let cell = await page.evaluate(() => {
-      return document.body.innerText.match(/.\d+\s\d+\s\d+.\s\d+-\d+/);
-    });
-
-    let email = await page.evaluate(() => {
+    let link = await page.evaluate(() => {
       return document.body.innerText.match(/\w+@\w+\.\w+/);
     });
-    let applyLink = email;
+
+    //get level
+    let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+
     for (let job of jobs) {
-      allJobs.push({ job, location, cell, email, applyLink });
+      allJobs.push({
+        title: title,
+        location: "Sundern (Sauerland)",
+        hospital: "Neurologische Klinik Sorpe",
+        link: link,
+        level: level,
+        position: position,
+      });
+      console.log(job);
     }
     return allJobs;
   } catch (error) {
@@ -51,4 +55,9 @@ const lymphklinik = async () => {
   }
 };
 
-export default lymphklinik;
+// export default lymphklinik;
+
+(async () => {
+  let res = await lymphklinik();
+  console.log(res);
+})();
