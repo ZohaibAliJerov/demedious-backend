@@ -82,6 +82,9 @@ const recruiting = async () => {
         job.title = await page.evaluate(() => {
           return document.querySelector("h1").innerText;
         });
+        let text = await page.evaluate(() => {
+          return document.body.innerText;
+        });
         //get level
         let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
         let position = text.match(/arzt|pflege/);

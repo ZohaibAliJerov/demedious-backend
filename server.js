@@ -26,7 +26,7 @@ connect();
 async function run() {
   try {
     let allJobs = await mainService();
-    Job.insertMany(allJobs, { ordered: false })
+    Job.updateMany(allJobs, { upsert: true })
       .then((data) => {
         console.log(data);
       })

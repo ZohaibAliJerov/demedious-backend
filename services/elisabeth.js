@@ -1,5 +1,8 @@
 import puppeteer from "puppeteer";
 
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
 const elisabeth = async () => {
   try {
     const browser = await puppeteer.launch({
@@ -63,54 +66,58 @@ const elisabeth = async () => {
     //    console.log(allJobLinks);
     let allJobs = [];
     for (let jobLink of allJobLinks) {
+      let job = {
+        title: "",
+        location: "Sundern (Sauerland)",
+        hospital: "Neurologische Klinik Sorpe",
+        link: "",
+        level: "",
+        position: "",
+      };
       //visit each job link
       await page.goto(jobLink, { waitUntil: "load", timeout: 0 });
       //   await page.waitForTimeout(1000);
 
       scroll(page);
       await page.waitForTimeout(5000);
-      let newJob = {};
 
       //get title
-
-      let title = await page.evaluate(() => {
+      job.title = await page.evaluate(() => {
         let selector1 = document.querySelector("div#con_1 > font > font");
         let selector2 = document.querySelector("div#con_1");
 
         return selector1?.innerText || selector2?.innerText;
       });
-      newJob.title = title;
-
-      //get address
-      await page.waitForSelector("div#con_2 > div");
-      let address = await page.evaluate(() => {
-        let adrs = document.querySelector("div#con_2 > div");
-        return adrs ? adrs.innerText : null;
-      });
-      newJob.address = address;
-
-      //get email
-      // email is not available
-      newJob.email = null;
-
-      //get cell
-      let cell = await page.evaluate(() => {
-        let cellNo = document.querySelector("div#con_38 > div");
-        return cellNo
-          ? cellNo.innerText.match(/\d+.-.\d+-\d+|\d+.-.\d+.-.\d+/)
-          : null;
-      });
-
-      newJob.cell = cell;
 
       await page.waitForSelector("span#probew > a");
-      let applyLink = await page.evaluate(() => {
+      job.link = await page.evaluate(() => {
         let link = document.querySelector("span#probew > a ");
         return link ? link.href : null;
       });
-      newJob.applyLink = applyLink;
 
-      allJobs.push(newJob);
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
+        continue;
+      }
+
+      allJobs.push(job);
     }
 
     console.log(allJobs);

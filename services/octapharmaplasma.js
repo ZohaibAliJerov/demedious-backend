@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
-
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 const octapharmaplasma = async () => {
   try {
     let browser = await puppeteer.launch({ headless: true });
@@ -42,6 +43,14 @@ const octapharmaplasma = async () => {
     console.log(jobLinks);
     let allJobs = [];
     for (let jobLink of jobLinks) {
+      let job = {
+        title: "",
+        location: "Mönchengladbach",
+        hospital: "Octapharma Plasmaspend",
+        link: "",
+        level: "",
+        position: "",
+      };
       await page.goto(jobLink, { waitUntil: "load", timeout: 0 });
       await page.waitForTimeout(1000);
 
@@ -60,31 +69,38 @@ const octapharmaplasma = async () => {
       });
 
       //get title
-      let title = await page.evaluate(() => {
+      job.title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
-
-      let location = await page.evaluate(() => {
-        return document.body.innerText
-          .split(",")
-          .map((el) => el.split(" "))
-          .flat(1);
-      });
-      for (let lctn of locations) {
-        if (location.includes(lctn)) {
-          location = lctn;
-          break;
-        }
-      }
-      let cell = await page.evaluate(() => {
-        return "";
-      });
-      let email = await page.evaluate(() => {
+      job.link = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
-      let applyLink = email;
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
 
-      allJobs.push({ title, location, cell, email, applyLink });
+      if (!position in positions) {
+        continue;
+      }
+
+      allJobs.push(job);
     }
     return allJobs;
   } catch (error) {
