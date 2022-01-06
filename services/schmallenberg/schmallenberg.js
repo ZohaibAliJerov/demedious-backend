@@ -3,14 +3,14 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
 
-let minden = async () => {
+let schmallenberg = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
     let page = await browser.newPage();
 
-    await page.goto("https://www.muehlenkreiskliniken.de/muehlenkreiskliniken/karriere/stellenangebote", {
+    await page.goto("https://www.johannesbad-karriere.com/Stellenangebote.aspx", {
       waitUntil: "load",
       timeout: 0,
     });
@@ -19,7 +19,7 @@ let minden = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".career-overview-item")).map(
+      return Array.from(document.querySelectorAll("a.position-title")).map(
         (el) => el.href
       );
     });
@@ -30,8 +30,8 @@ let minden = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Minden",
-        hospital: "Johannes Wesling Klinikum",
+        location: "Schmallenberg",
+        hospital: "Johannesbad Fachklinik  Fredeburg",
         link: "",
         level: "",
         position: "",
@@ -45,7 +45,7 @@ let minden = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h2");
+        let ttitle = document.querySelector("div.content-container > h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -76,7 +76,7 @@ let minden = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.container > a");
+        let lnk = document.querySelector("a#ctl01_cphInhalt_hBewerben1");
         return lnk ? lnk.href : "";
       });
       job.link = link;
@@ -104,5 +104,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-minden();
-export default minden;
+schmallenberg();
+export default schmallenberg;

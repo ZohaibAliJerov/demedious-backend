@@ -1,25 +1,28 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt",  "Arzt", "Oberarzt"];
 
-let minden = async () => {
+let kamen = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
     let page = await browser.newPage();
 
-    await page.goto("https://www.muehlenkreiskliniken.de/muehlenkreiskliniken/karriere/stellenangebote", {
-      waitUntil: "load",
-      timeout: 0,
-    });
+    await page.goto(
+      "https://www.isomeds.de/karriere.html",
+      {
+        waitUntil: "load",
+        timeout: 0,
+      }
+    );
 
     await scroll(page);
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".career-overview-item")).map(
+      return Array.from(document.querySelectorAll(".col-lg-6.col-md-6.col-sm-12.col-xs-12 > li > a")).map(
         (el) => el.href
       );
     });
@@ -30,8 +33,8 @@ let minden = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Minden",
-        hospital: "Johannes Wesling Klinikum",
+        location: "Kamen",
+        hospital: "Isomed Isomed Reha Kamen",
         link: "",
         level: "",
         position: "",
@@ -45,7 +48,7 @@ let minden = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h2");
+        let ttitle = document.querySelector("h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -76,7 +79,7 @@ let minden = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.container > a");
+        let lnk = document.querySelector("body > div.container-fluid > div.row.row-content > div.col-lg-8 > div > div > div > div > div.nd > div.f > p > a");
         return lnk ? lnk.href : "";
       });
       job.link = link;
@@ -104,5 +107,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-minden();
-export default minden;
+kamen();
+export default kamen;
