@@ -6,12 +6,11 @@ const panklinik = async () => {
   try {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
-
+    page.setDefaultNavigationTimeout(0);
     let url = "https://www.pan-klinik.de/stellenangebote/";
     await page.goto(url, { timestamp: 0, waitUntil: "load" });
-    //TODO:scroll
+
     await scroll(page);
-    //TODO: get all jobs
     let links = await page.evaluate(() => {
       let halfJobs = Array.from(document.querySelectorAll(".bluetext > a")).map(
         (el) => el.href
@@ -35,7 +34,7 @@ const panklinik = async () => {
         level: "",
         position: "",
       };
-      await page.got(link, { timeout: 0, waitUntil: "load" });
+      await page.goto(link, { timeout: 0, waitUntil: "load" });
       await page.waitForTimeout(5000);
       await scroll(page);
       job.title = await page.evaluate(() => {
@@ -73,7 +72,6 @@ const panklinik = async () => {
     }
 
     return allJobs;
-    //TODO: geta ll jobs details
   } catch (err) {
     console.log(err);
   }
@@ -94,3 +92,8 @@ async function scroll(page) {
     }, delay);
   });
 }
+
+(async () => {
+  let res = await panklinik();
+  console.log(res);
+})();
