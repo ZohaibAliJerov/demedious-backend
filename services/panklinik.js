@@ -25,6 +25,24 @@ const panklinik = async () => {
       restHalf.length > 0 ? jobLinks.push(...restHalf) : (restHalf = []);
       return jobLinks;
     });
+    for (let link of links) {
+      let job = {
+        title: "",
+        location: "Köln",
+        hospital: "PAN Klinik Am Neumarkt",
+        link: "",
+        level: "",
+        position: "",
+      };
+      await page.got(link, { timeout: 0, waitUntil: "load" });
+      await page.waitForTimeout(5000);
+
+      job.title = await page.evaluate(() => {
+        return document.querySelector("h1").innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+    }
 
     //TODO: geta ll jobs details
   } catch (err) {
