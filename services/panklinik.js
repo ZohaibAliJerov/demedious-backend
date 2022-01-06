@@ -1,5 +1,7 @@
 import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
 const panklinik = async () => {
   try {
     const browser = await puppeteer.launch({ headless: false });
