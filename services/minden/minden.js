@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
 
 let minden = async () => {
   try {
@@ -19,7 +19,7 @@ let minden = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".career-overview row > .category-130 category-115.category-119.col-12.col-md-6 > a")).map(
+      return Array.from(document.querySelectorAll(".career-overview-item")).map(
         (el) => el.href
       );
     });
@@ -60,7 +60,10 @@ let minden = async () => {
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"
+        level == "Assistenzarzt"||
+        level =="Arzt"||
+        level == "Oberarzt"
+
       ) {
         job.position = "artz";
       }
@@ -73,7 +76,7 @@ let minden = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector(".div.container > a");
+        let lnk = document.querySelector("div.container > a");
         return lnk ? lnk.href : "";
       });
       job.link = link;
