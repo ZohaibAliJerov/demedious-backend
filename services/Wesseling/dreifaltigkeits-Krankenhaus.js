@@ -103,4 +103,4 @@ const stellenausschreibungen = async () =>{
 
   let positions = ["arzt", "pflege"];
 let levels = [ "Facharzt",  "Chefarzt", "Assistenzarzt", "Arzt",  "Oberarzt" ];
-stellenausschreibungen()
+
