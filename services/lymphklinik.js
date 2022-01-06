@@ -25,28 +25,49 @@ const lymphklinik = async () => {
 
     let allJobs = [];
     //get all jobs
-    let jobs = await page.evaluate(() => {
+    let titles = await page.evaluate(() => {
       return Array.from(document.querySelectorAll(".tm-article > ul > li")).map(
         (el) => el.innerText
       );
     });
-
-    let link = await page.evaluate(() => {
+    let job = {
+      title: "",
+      location: "Bad Berleburg",
+      hospital: "Ödemzentrum Bad Berleburg",
+      link: "",
+      level: "",
+      position: "",
+    };
+    job.link = await page.evaluate(() => {
       return document.body.innerText.match(/\w+@\w+\.\w+/);
     });
-
+    if (typeof job.link == "object") {
+      job.link = job.link[0];
+    }
+    let text = await page.evaluate(() => {
+      return document.body.innerText;
+    });
     //get level
     let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+    let position = text.match(/arzt|pflege/);
+    job.level = level ? level[0] : "";
+    if (
+      level == "Facharzt" ||
+      level == "Chefarzt" ||
+      level == "Assistenzarzt" ||
+      level == "Arzt" ||
+      level == "Oberarzt"
+    ) {
+      job.position = "artz";
+    }
+    if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+      job.position = "pflege";
+      job.level = "Nicht angegeben";
+    }
 
-    for (let job of jobs) {
-      allJobs.push({
-        title: title,
-        location: "Sundern (Sauerland)",
-        hospital: "Neurologische Klinik Sorpe",
-        link: link,
-        level: level,
-        position: position,
-      });
+    for (let title of titles) {
+      job.title = title;
+      allJobs.push(job);
       console.log(job);
     }
     return allJobs;
@@ -55,9 +76,4 @@ const lymphklinik = async () => {
   }
 };
 
-// export default lymphklinik;
-
-(async () => {
-  let res = await lymphklinik();
-  console.log(res);
-})();
+export default lymphklinik;
