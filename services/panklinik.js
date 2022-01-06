@@ -10,6 +10,19 @@ const panklinik = async () => {
     //TODO:scroll
     await scroll(page);
     //TODO: get all jobs
+    let links = await page.evaluate(() => {
+      let halfJobs = Array.from(document.querySelectorAll(".bluetext > a")).map(
+        (el) => el.href
+      );
+      let restHalf = Array.from(
+        document.querySelectorAll(".inner > p > a")
+      ).map((el) => el.href);
+
+      let jobLinks = [];
+      halfJobs.length > 0 ? jobLinks.push(...halfJobs) : (halfJobs = []);
+      restHalf.length > 0 ? jobLinks.push(...restHalf) : (restHalf = []);
+      return jobLinks;
+    });
 
     //TODO: geta ll jobs details
   } catch (err) {
