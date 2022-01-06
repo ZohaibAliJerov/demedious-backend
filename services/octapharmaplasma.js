@@ -72,6 +72,9 @@ const octapharmaplasma = async () => {
       job.title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
+      job.link = await page.evaluate(() => {
+        return document.body.innerText.match(/\w+@\w+\.\w+/);
+      });
 
       allJobs.push(job);
     }
