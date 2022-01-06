@@ -25,6 +25,7 @@ const panklinik = async () => {
       restHalf.length > 0 ? jobLinks.push(...restHalf) : (restHalf = []);
       return jobLinks;
     });
+    let allJobs = [];
     for (let link of links) {
       let job = {
         title: "",
@@ -36,7 +37,7 @@ const panklinik = async () => {
       };
       await page.got(link, { timeout: 0, waitUntil: "load" });
       await page.waitForTimeout(5000);
-
+      await scroll(page);
       job.title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
@@ -71,6 +72,7 @@ const panklinik = async () => {
       allJobs.push(job);
     }
 
+    return allJobs;
     //TODO: geta ll jobs details
   } catch (err) {
     console.log(err);
