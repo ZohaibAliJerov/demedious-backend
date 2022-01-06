@@ -69,31 +69,11 @@ const octapharmaplasma = async () => {
       });
 
       //get title
-      let title = await page.evaluate(() => {
+      job.title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
 
-      let location = await page.evaluate(() => {
-        return document.body.innerText
-          .split(",")
-          .map((el) => el.split(" "))
-          .flat(1);
-      });
-      for (let lctn of locations) {
-        if (location.includes(lctn)) {
-          location = lctn;
-          break;
-        }
-      }
-      let cell = await page.evaluate(() => {
-        return "";
-      });
-      let email = await page.evaluate(() => {
-        return document.body.innerText.match(/\w+@\w+\.\w+/);
-      });
-      let applyLink = email;
-
-      allJobs.push({ title, location, cell, email, applyLink });
+      allJobs.push(job);
     }
     return allJobs;
   } catch (error) {
