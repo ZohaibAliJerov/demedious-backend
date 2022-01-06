@@ -9,9 +9,7 @@ const panklinik = async () => {
 
     let url = "https://www.pan-klinik.de/stellenangebote/";
     await page.goto(url, { timestamp: 0, waitUntil: "load" });
-    //TODO:scroll
     await scroll(page);
-    //TODO: get all jobs
     let links = await page.evaluate(() => {
       let halfJobs = Array.from(document.querySelectorAll(".bluetext > a")).map(
         (el) => el.href
@@ -73,7 +71,6 @@ const panklinik = async () => {
     }
 
     return allJobs;
-    //TODO: geta ll jobs details
   } catch (err) {
     console.log(err);
   }
