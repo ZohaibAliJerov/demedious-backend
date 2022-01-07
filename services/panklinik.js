@@ -68,6 +68,10 @@ const panklinik = async () => {
         return document.body.innerText.match(/\w+@.+\.\w/);
       });
 
+      if (typeof job.link == "object") {
+        job.link = job.link[0];
+      }
+
       allJobs.push(job);
     }
 
