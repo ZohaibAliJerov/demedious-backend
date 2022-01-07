@@ -28,7 +28,7 @@ const paracelsus = async () => {
     let job = {
       title: "",
       location: "Bonn",
-      hospital: "Paracelsus-Klinik Hemer",
+      hospital: "Plastische & Ästhetische",
       link: "",
       level: "",
       position: "",
