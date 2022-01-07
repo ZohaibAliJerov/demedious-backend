@@ -1,6 +1,8 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
 const paracelsus = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
