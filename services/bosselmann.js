@@ -60,7 +60,11 @@ const paracelsus = async () => {
     if (!position in positions) {
       continue;
     }
-    job.link = link;
+    job.link = await page.evaluate(() => {
+      return document.querySelector(
+        ".vc_general.vc_btn3.vc_btn3-size-lg.vc_btn3-shape-rounded.vc_btn3-style-custom.vc_btn3-icon-left"
+      );
+    });
     allJobs.push(job);
   } //end of for loop
   await page.close();
