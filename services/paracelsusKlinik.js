@@ -83,9 +83,4 @@ async function scroll(page) {
   });
 }
 
-//export default paracelsus;
-
-(async () => {
-  let res = await paracelsus();
-  console.log(res);
-})();
+export default paracelsus;
