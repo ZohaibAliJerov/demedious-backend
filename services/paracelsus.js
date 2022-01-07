@@ -1,10 +1,10 @@
 import puppeteer from "puppeteer";
 
 const paracelsus = async () => {
-  let browser = await puppeteer.launch({ headless: true });
+  let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://jobs.pkd.de/category/golzheim/5559";
+  let url = "https://jobs.pkd.de/category/adorf-schoeneck/5559";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
@@ -17,6 +17,24 @@ const paracelsus = async () => {
     ).map((el) => el.href);
   });
   //TODO:get all job details
+  let allJobs = [];
+  for (let link of links) {
+    await page.goto(link, { timeout: 0, waitUntil: "load" });
+    await page.waitForTimeout(5000);
+    for (let link of links) {
+      let job = {
+        title: "",
+        location: "Düsseldorf",
+        hospital: "Paracelsus-Klinik Golzheim",
+        link: "",
+        level: "",
+        position: "",
+      };
+      job.title = await page.evaluate(() => {
+        return document.querySelector("h1").innerText;
+      });
+      
+  }//end of for loop
   await page.close();
   await browser.close();
 };
@@ -36,3 +54,8 @@ async function scroll(page) {
     }, delay);
   });
 }
+
+(async () => {
+  let res = await paracelsus();
+  console.log(res);
+})();
