@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
 
+let positions = ["arzt", "pflege"];
 const paracelsus = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
@@ -33,7 +34,9 @@ const paracelsus = async () => {
       job.title = await page.evaluate(() => {
         return document.querySelector("h1").innerText;
       });
-      
+
+
+
   }//end of for loop
   await page.close();
   await browser.close();
