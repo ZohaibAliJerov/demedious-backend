@@ -27,7 +27,7 @@ const paracelsus = async () => {
     await page.waitForTimeout(5000);
     let job = {
       title: "",
-      location: "Hemer",
+      location: "Bonn",
       hospital: "Paracelsus-Klinik Hemer",
       link: "",
       level: "",
