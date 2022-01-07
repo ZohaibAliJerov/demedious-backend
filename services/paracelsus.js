@@ -11,15 +11,15 @@ const paracelsus = async () => {
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
-  //TODO:scroll the page
+  //scroll the page
   await scroll(page);
-  //TODO:get all job links
+  //get all links
   let links = await page.evaluate(() => {
     return Array.from(
       document.querySelectorAll(".module.moduleItems.hasShonts > a ")
     ).map((el) => el.href);
   });
-  //TODO:get all job details
+  //get all job details
   let allJobs = [];
   for (let link of links) {
     await page.goto(link, { timeout: 0, waitUntil: "load" });
