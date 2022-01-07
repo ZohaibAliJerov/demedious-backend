@@ -35,7 +35,10 @@ const paracelsus = async () => {
     job.title = await page.evaluate(() => {
       return document.querySelector("h1").innerText;
     });
-
+    let text = await page.evaluate(() => {
+      return document.body.innerText;
+    });
+    //get level and positions
     let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
     let position = text.match(/arzt|pflege/);
     job.level = level ? level[0] : "";
@@ -79,3 +82,5 @@ async function scroll(page) {
     }, delay);
   });
 }
+
+export default paracelsus;
