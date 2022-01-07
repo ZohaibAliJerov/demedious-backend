@@ -33,8 +33,8 @@ let munster = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Bochum",
-        hospital: "Hyperthermie - Tagesklinik Bochum",
+        location: "Münster",
+        hospital: "Universitätsklinikum Münster",
         link: "",
         level: "",
         position: "",
