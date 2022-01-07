@@ -97,7 +97,4 @@ async function scroll(page) {
   });
 }
 
-(async () => {
-  let res = await panklinik();
-  console.log(res);
-})();
+export default panklinik;
