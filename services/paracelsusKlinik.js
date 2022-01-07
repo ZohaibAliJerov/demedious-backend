@@ -83,4 +83,4 @@ async function scroll(page) {
   });
 }
 
-//export default paracelsus;
+export default paracelsus;
