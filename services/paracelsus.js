@@ -9,6 +9,7 @@ const paracelsus = async () => {
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
   //TODO:scroll the page
+  await scroll(page);
   //TODO:get all job links
   //TODO:get all job details
   await page.close();
