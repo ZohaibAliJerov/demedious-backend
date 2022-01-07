@@ -24,22 +24,20 @@ const paracelsus = async () => {
   for (let link of links) {
     await page.goto(link, { timeout: 0, waitUntil: "load" });
     await page.waitForTimeout(5000);
-    for (let link of links) {
-      let job = {
-        title: "",
-        location: "Düsseldorf",
-        hospital: "Paracelsus-Klinik Golzheim",
-        link: "",
-        level: "",
-        position: "",
-      };
-      job.title = await page.evaluate(() => {
-        return document.querySelector("h1").innerText;
-      });
+    let job = {
+      title: "",
+      location: "Düsseldorf",
+      hospital: "Paracelsus-Klinik Golzheim",
+      link: "",
+      level: "",
+      position: "",
+    };
+    job.title = await page.evaluate(() => {
+      return document.querySelector("h1").innerText;
+    });
 
-
-
-  }//end of for loop
+    let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+  } //end of for loop
   await page.close();
   await browser.close();
 };
@@ -59,8 +57,3 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-(async () => {
-  let res = await paracelsus();
-  console.log(res);
-})();
