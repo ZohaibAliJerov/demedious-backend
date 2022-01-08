@@ -95,8 +95,4 @@ async function scroll(page) {
   });
 }
 
-//export default wessel;
-(async () => {
-  let res = await wessel();
-  console.log(res);
-})();
+export default wessel;
