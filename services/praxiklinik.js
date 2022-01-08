@@ -24,8 +24,8 @@ const praxiklinik = async () => {
   for (let title of links) {
     let job = {
       title: "",
-      location: "Hemer",
-      hospital: "Paracelsus-Klinik Hemer",
+      location: "",
+      hospital: "Preventicum - Privatärztli",
       link: "",
       level: "",
       position: "",
