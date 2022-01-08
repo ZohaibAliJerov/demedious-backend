@@ -3,7 +3,7 @@ https: import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const procelis = async () => {
+const wessel = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
