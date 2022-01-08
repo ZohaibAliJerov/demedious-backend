@@ -80,14 +80,19 @@ let drvKarriere = async () => {
       }
 
       //get link
-      let link = await page.evaluate(() => {
-        return document.querySelector(
+      job.link = await page.evaluate(() => {
+        let link = document.querySelector(
           "#default-btn-c736e2b03394cb1914ff8e36269ca596"
-        ).href;
+        );
+        return link ? link.href : "";
       });
+      if (job.link == "") {
+        continue;
+      }
       if (typeof link == "object") {
         job.link = link[0];
       }
+      console.log(job);
       // console.log(job);
       allJobs.push(job);
     }
@@ -112,3 +117,5 @@ async function scroll(page) {
     }, delay);
   });
 }
+
+export default drvKarriere;
