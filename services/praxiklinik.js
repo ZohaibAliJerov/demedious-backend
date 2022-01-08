@@ -16,7 +16,7 @@ const paracelsus = async () => {
   //get all links
   let titles = await page.evaluate(() => {
     return Array.from(
-      document.querySelectorAll(".info.ce_text.block > h1")
+      document.querySelectorAll(".newsbox > .ce_text.block > h1 ")
     ).map((el) => el.innerText);
   });
   //get all job details
@@ -57,7 +57,9 @@ const paracelsus = async () => {
     if (!position in positions) {
       continue;
     }
-    job.link = link;
+    job.link = await page.evaluate(() => {
+      return document.querySelector(".ce_text block > h2").innerText;
+    });
     allJobs.push(job);
   } //end of for loop
   await page.close();
