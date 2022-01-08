@@ -22,8 +22,6 @@ const paracelsus = async () => {
   //get all job details
   let allJobs = [];
   for (let title of links) {
-    // await page.goto(link, { timeout: 0, waitUntil: "load" });
-    await page.waitForTimeout(5000);
     let job = {
       title: "",
       location: "Hemer",
