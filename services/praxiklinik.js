@@ -21,7 +21,7 @@ const praxiklinik = async () => {
   });
   //get all job details
   let allJobs = [];
-  for (let title of links) {
+  for (let title of titles) {
     let job = {
       title: "",
       location: "Essen",
@@ -30,9 +30,7 @@ const praxiklinik = async () => {
       level: "",
       position: "",
     };
-    job.title = await page.evaluate(() => {
-      return document.querySelector("h1").innerText;
-    });
+    job.title = title;
     let text = await page.evaluate(() => {
       return document.body.innerText;
     });
@@ -58,7 +56,7 @@ const praxiklinik = async () => {
       continue;
     }
     job.link = await page.evaluate(() => {
-      return document.querySelector(".ce_text block > h2").innerText;
+      return document.querySelector(".ce_text.block > h2").innerText;
     });
     allJobs.push(job);
   } //end of for loop
@@ -83,4 +81,9 @@ async function scroll(page) {
   });
 }
 
-export default praxiklinik;
+//export default praxiklinik;
+
+(async () => {
+  let res = await praxiklinik();
+  console.log(res);
+})();
