@@ -33,7 +33,7 @@ const wessel = async () => {
     let job = {
       title: "",
       location: "Recklinghausen",
-      hospital: "Prosper-Hospital Reckling",
+      hospital: "reha-Klinik Panorama",
       link: "",
       level: "",
       position: "",
