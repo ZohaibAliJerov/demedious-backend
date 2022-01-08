@@ -92,4 +92,4 @@ async function scroll(page) {
   });
 }
 
-export default procelis;
+export default wessel;
