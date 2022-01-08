@@ -24,7 +24,7 @@ let drvKarriere = async () => {
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
-        document.querySelectorAll("div.shortcode-jobs > ul > li > a")
+        document.querySelectorAll("#wpv-view-layout-761 > a")
       ).map((el) => el.href);
     });
 
@@ -34,8 +34,8 @@ let drvKarriere = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Sundern (Sauerland)",
-        hospital: "Neurologische Klinik Sorpe",
+        location: "Bad Salzuflen",
+        hospital: "Rehabilitationsklinik",
         link: "",
         level: "",
         position: "",
@@ -49,7 +49,7 @@ let drvKarriere = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1#page-title");
+        let ttitle = document.querySelector(".wpb_wrapper > h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
