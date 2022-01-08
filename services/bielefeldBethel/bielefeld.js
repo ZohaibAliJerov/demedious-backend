@@ -30,7 +30,7 @@ let bielefeld = async () => {
       let job = {
         title: "",
         location: "bielefeldBethel",
-        hospital: "",
+        hospital: "severinskloesterchen",
         link: "",
         level: "",
         position: "",
