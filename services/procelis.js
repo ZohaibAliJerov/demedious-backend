@@ -29,7 +29,7 @@ const procelis = async () => {
     let job = {
       title: "",
       location: "Hemer",
-      hospital: "Paracelsus-Klinik Hemer",
+      hospital: "Prosper-Hospital Reckling",
       link: "",
       level: "",
       position: "",
