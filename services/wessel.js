@@ -3,19 +3,23 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const procelis = async () => {
+const wessel = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://www.proselis.de/karriere/stellenmarkt";
+  let url =
+    "https://www.wessel-gruppe.de/offene-stellen/?company_name=Fachklinik+Spielwigge&job_types=vollzeit,teilzeit";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
   //scroll the page
   await scroll(page);
+  await page.waitForSelector("ui > li > input");
+  await page.click("ui > li > input");
+  await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".tx-rssdisplay > a ")).map(
+    return Array.from(document.querySelectorAll(".job_listings > li > a")).map(
       (el) => el.href
     );
   });
@@ -28,15 +32,15 @@ const procelis = async () => {
     await page.waitForTimeout(5000);
     let job = {
       title: "",
-      location: "Recklinghausen",
-      hospital: "Prosper-Hospital Reckling",
+      location: "Lippstadt",
+      hospital: "reha-Klinik Panorama",
       link: "",
       level: "",
       position: "",
     };
     await scroll(page);
     job.title = await page.evaluate(() => {
-      return document.querySelector("h1").innerText;
+      return document.querySelector(".uk-article-title").innerText;
     });
     let text = await page.evaluate(() => {
       return document.body.innerText;
@@ -63,8 +67,11 @@ const procelis = async () => {
       continue;
     }
     job.link = await page.evaluate(() => {
-      return document.querySelector(".div-apply > a").href;
+      return document.body.innerText.match(/\w+@.+\.\w+/);
     });
+    if (typeof job.link == "object") {
+      job.link = job.link[0];
+    }
     allJobs.push(job);
   } //end of for loop
   await page.close();
@@ -88,4 +95,4 @@ async function scroll(page) {
   });
 }
 
-export default procelis;
+export default wessel;
