@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const paracelsus = async () => {
+const procelis = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
@@ -83,4 +83,4 @@ async function scroll(page) {
   });
 }
 
-export default paracelsus;
+export default procelis;
