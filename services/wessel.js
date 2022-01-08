@@ -14,9 +14,12 @@ const procelis = async () => {
 
   //scroll the page
   await scroll(page);
+  await page.waitForSelector("ui > li > input");
+  await page.click("ui > li > input");
+  await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".tx-rssdisplay > a ")).map(
+    return Array.from(document.querySelectorAll(".job_listings > li > a")).map(
       (el) => el.href
     );
   });
@@ -45,9 +48,7 @@ const procelis = async () => {
     //get level and positions
     let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
     let position = text.match(/arzt|pflege/);
-    job.level = level
-      ? level[0]
-      : "https://www.proselis.de/karriere/stellenmarkt";
+    job.level = level ? level[0] : "";
     if (
       level == "Facharzt" ||
       level == "Chefarzt" ||

@@ -44,9 +44,7 @@ const procelis = async () => {
     //get level and positions
     let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
     let position = text.match(/arzt|pflege/);
-    job.level = level
-      ? level[0]
-      : "https://www.proselis.de/karriere/stellenmarkt";
+    job.level = level ? level[0] : "";
     if (
       level == "Facharzt" ||
       level == "Chefarzt" ||
