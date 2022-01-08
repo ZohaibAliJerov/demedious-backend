@@ -30,8 +30,8 @@ let dusseldorfOne = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Bonn",
-        hospital: "Zentrum für Kinderheilkunde des Universitätsklinikums Bonn",
+        location: "Düsseldorf",
+        hospital: "koe-aesthetics",
         link: "",
         level: "",
         position: "",
