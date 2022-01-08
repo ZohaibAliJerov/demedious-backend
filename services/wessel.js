@@ -32,7 +32,7 @@ const wessel = async () => {
     await page.waitForTimeout(5000);
     let job = {
       title: "",
-      location: "Recklinghausen",
+      location: "Lippstadt",
       hospital: "reha-Klinik Panorama",
       link: "",
       level: "",
