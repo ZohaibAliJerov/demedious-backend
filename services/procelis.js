@@ -34,6 +34,7 @@ const procelis = async () => {
       level: "",
       position: "",
     };
+    await scroll(page);
     job.title = await page.evaluate(() => {
       return document.querySelector("h1").innerText;
     });
