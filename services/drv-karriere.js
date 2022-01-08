@@ -81,7 +81,9 @@ let drvKarriere = async () => {
 
       //get link
       let link = await page.evaluate(() => {
-        return document.body.innerText.match(/\w+@\w+\.\w+/);
+        return document.querySelector(
+          "#default-btn-c736e2b03394cb1914ff8e36269ca596"
+        ).href;
       });
       if (typeof link == "object") {
         job.link = link[0];
