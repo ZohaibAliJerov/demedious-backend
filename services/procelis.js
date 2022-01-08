@@ -7,7 +7,7 @@ const procelis = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://jobs.pkd.de/category/hemer/5565";
+  let url = "https://www.proselis.de/karriere/stellenmarkt";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
@@ -41,7 +41,9 @@ const procelis = async () => {
     //get level and positions
     let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
     let position = text.match(/arzt|pflege/);
-    job.level = level ? level[0] : "";
+    job.level = level
+      ? level[0]
+      : "https://www.proselis.de/karriere/stellenmarkt";
     if (
       level == "Facharzt" ||
       level == "Chefarzt" ||
