@@ -11,10 +11,13 @@ let drvKarriere = async () => {
 
     let page = await browser.newPage();
 
-    await page.goto("https://www.aatalklinik.de/", {
-      waitUntil: "load",
-      timeout: 0,
-    });
+    await page.goto(
+      "https://jobs.drv-bund-karriere.de/stellenmarkt/?wpv-jobort=bad-salzuflen&wpv_aux_current_post_id=763&wpv_aux_parent_post_id=763&wpv_view_count=761",
+      {
+        waitUntil: "load",
+        timeout: 0,
+      }
+    );
 
     await scroll(page);
 
