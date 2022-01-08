@@ -8,7 +8,7 @@ const wessel = async () => {
   let page = await browser.newPage();
 
   let url =
-    "//www.wessel-gruppe.de/offene-stellen/?company_name=Fachklinik+Spielwigge&job_types=vollzeit,teilzeit";
+    "https://www.wessel-gruppe.de/offene-stellen/?company_name=Fachklinik+Spielwigge&job_types=vollzeit,teilzeit";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
@@ -67,7 +67,7 @@ const wessel = async () => {
       continue;
     }
     job.link = await page.evaluate(() => {
-      return document.querySelector(".div-apply > a").href;
+      return document.body.innerText.match(/\w+@.+\.\w+/);
     });
     allJobs.push(job);
   } //end of for loop
