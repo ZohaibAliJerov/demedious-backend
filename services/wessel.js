@@ -40,7 +40,7 @@ const wessel = async () => {
     };
     await scroll(page);
     job.title = await page.evaluate(() => {
-      return document.querySelector("h1").innerText;
+      return document.querySelector(".uk-article-title").innerText;
     });
     let text = await page.evaluate(() => {
       return document.body.innerText;
