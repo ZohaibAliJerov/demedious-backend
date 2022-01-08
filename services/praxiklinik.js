@@ -61,6 +61,7 @@ const praxiklinik = async () => {
     job.link = await page.evaluate(() => {
       return document.querySelector(".ce_text.block > h2").innerText;
     });
+    job.link = job.link.replace("Jetzt bewerben:", "");
     allJobs.push(job);
   } //end of for loop
   await page.close();
