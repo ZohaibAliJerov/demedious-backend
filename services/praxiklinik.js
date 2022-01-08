@@ -19,6 +19,9 @@ const praxiklinik = async () => {
       document.querySelectorAll(".newsbox > .ce_text.block > h1 ")
     ).map((el) => el.innerText);
   });
+  titles = titles.map((el) => {
+    return el.replace("GESUCHT:", "").trim();
+  });
   //get all job details
   let allJobs = [];
   for (let title of titles) {
