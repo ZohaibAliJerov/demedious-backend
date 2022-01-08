@@ -69,6 +69,9 @@ const wessel = async () => {
     job.link = await page.evaluate(() => {
       return document.body.innerText.match(/\w+@.+\.\w+/);
     });
+    if (typeof job.link == "object") {
+      job.link = job.link[0];
+    }
     allJobs.push(job);
   } //end of for loop
   await page.close();
