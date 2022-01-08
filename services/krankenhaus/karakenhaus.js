@@ -34,8 +34,8 @@ let karankenhaus = async () => {
         location: "karakenhaus der  Augustinerinnen",
         hospital: "severinskloesterchen",
         link: "",
-        level: "",
         position: "",
+        level: "",
       };
 
       await page.goto(jobLink, {
