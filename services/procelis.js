@@ -19,7 +19,7 @@ const procelis = async () => {
       (el) => el.href
     );
   });
-  //slice the jobs
+  //slice the links
   links = links.slice(0, 10);
   //get all job details
   let allJobs = [];
