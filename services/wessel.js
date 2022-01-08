@@ -1,4 +1,4 @@
-https: import puppeteer from "puppeteer";
+import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
@@ -92,4 +92,8 @@ async function scroll(page) {
   });
 }
 
-export default wessel;
+//export default wessel;
+(async () => {
+  let res = await wessel();
+  console.log(res);
+})();
