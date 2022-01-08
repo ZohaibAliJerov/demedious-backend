@@ -63,7 +63,9 @@ const procelis = async () => {
     if (!position in positions) {
       continue;
     }
-    job.link = link;
+    job.link = await page.evaluate(() => {
+      return document.querySelector(".div-apply > a").href;
+    });
     allJobs.push(job);
   } //end of for loop
   await page.close();
