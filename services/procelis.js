@@ -15,9 +15,9 @@ const procelis = async () => {
   await scroll(page);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(
-      document.querySelectorAll(".module.moduleItems.hasShonts > a ")
-    ).map((el) => el.href);
+    return Array.from(document.querySelectorAll(".tx-rssdisplay > a ")).map(
+      (el) => el.href
+    );
   });
   //get all job details
   let allJobs = [];
