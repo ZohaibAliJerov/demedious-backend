@@ -115,5 +115,5 @@ async function scroll(page) {
   });
 }
 
-zissedorf()
+
 export default zissedorf;
