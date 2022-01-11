@@ -22,9 +22,7 @@ let bergheim = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-        let a = document.querySelector('##b7if9e-accordion-label')
-        a.click();
-      return Array.from(document.querySelectorAll("#b7if9e-accordion-label")).map(
+      return Array.from(document.querySelectorAll("a.accordion-title")).map(
         (el) => el.href
       );
     });
