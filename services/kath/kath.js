@@ -33,8 +33,8 @@ let kath = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "lippstadt",
-        hospital: "Dreifaltigkeits",
+        location: "Kath",
+        hospital: "Kath.St Paulus",
         link: "",
         level: "",
         position: "",
