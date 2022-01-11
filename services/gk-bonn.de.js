@@ -1,132 +1,126 @@
-// import puppeteer from "puppeteer";
+import puppeteer from "puppeteer";
 
-// let positions = ["arzt", "pflege"];
-// let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-// const gk_bonn = async () => {
-//   try {
-//     let browser = await puppeteer.launch({ headless: false });
-//     let page = await browser.newPage();
+let gk_bonn = async () => {
+  try {
+    let browser = await puppeteer.launch({
+      headless: false,
+    });
 
-//     let url = [ "https://www.gk-bonn.de/gkbn/bildung-karriere/stellenboerse/?pageId29534281=1#list_29534",
-//                 "https://www.gk-bonn.de/gkbn/bildung-karriere/stellenboerse/?pageId29534281=2#list_29534281"
-//             ]
+    let page = await browser.newPage();
 
-//             let allJobLinks  = []
-//             let counter = 0
-//             do {
+    let url = ["https://www.gk-bonn.de/gkbn/bildung-karriere/stellenboerse/?pageId29534281=1#list_29534",
+            "https://www.gk-bonn.de/gkbn/bildung-karriere/stellenboerse/?pageId29534281=2#list_29534281"
+        ]
 
-//                 await page.goto(url, {
-//                     waitUntil: "load",
-//                     timeout: 0,
-//                   });
-//                 //wait for a while
-//         await page.waitForTimeout(3000);
+        let allJobLinks = []
+        let counter = 0
+        do {
+            await page.goto(url[counter], {
+                waitUntil: "load",
+                timeout: 0,
+            });
+            //wait for a while
+            await page.waitForTimeout(1000);
 
-//       //scroll the page
-//       await scroll(page)
-        
-//       //get all jobLinks
-//       let jobLinks = await page.evaluate(() => {
-//         return Array.from(
-//           document.querySelectorAll(".listEntryTitle  a")
-//         ).map((el) => el.href);
-//       });
-//       allJobLinks.push(jobLinks)
-//       counter++;
-     
-//     } while (counter > jobLinks.length);
-//     console.log(allJobLinks);
-    
+            //scroll the page
+            await scroll(page)
 
-//     //end of while loop
-//     let allJobs = [];
+            //get all jobLinks
+            let jobLinks = await page.evaluate(() => {
+                return Array.from(
+                    document.querySelectorAll(".listEntryTitle  a")
+                ).map((el) => el.href);
+            });
+            allJobLinks.push(...jobLinks)
+            counter++;
 
-//     //visit each job link
-//     for (let jobLink of allJobLinks) {
-    
-//         let job = {
-//           title: "",
-//           location: "Düsseldorf",
-//           hospital: "Klinik für Psychiatrie und",
-//           link: "",
-//           level: "",
-//           position: "",
-//         };
-//         await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
+        } while (counter < url.length);
+        console.log(allJobLinks);
 
+    let allJobs = [];
 
-//         //scroll the page
-//         await scroll(page);
-//         //get title
-//         job.title = await page.evaluate(() => {
-//           let ttitle = document.querySelector(".elementStandard.elementContent.elementHeadline h1")
-//           return ttitle ?  ttitle.innerText : "";
-//         });
-//         let text = await page.evaluate(() => {
-//           return document.body.innerText;
-//         });
-//         //get level
-//         let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
-//         let position = text.match(/arzt|pflege/);
-//         job.level = level ? level[0] : "";
-//         if (
-//           level == "Facharzt" ||
-//           level == "Chefarzt" ||
-//           level == "Assistenzarzt" ||
-//           level == "Arzt" ||
-//           level == "Oberarzt"
-//         ) {
-//           job.position = "artz";
-//         }
-//         if (
-//           position == "pflege" ||
-//           (position == "Pflege" && !level in levels)
-//         ) {
-//           job.position = "pflege";
-//           job.level = "Nicht angegeben";
-//         }
+    for (let jobLink of allJobLinks) {
+      let job = {
+        title: "",
+        location: "Bonn",
+        hospital: "Gemeinschaftskrankenhaus Bonn - Gesundheitszentrum St. Johannes Hospital",
+        link: "",
+        level: "",
+        position: "",
+      };
 
-//         if (!position in positions) {
-//           continue;
-//         }
+      await page.goto(jobLink)
 
-//         //get applyLink
-//         const link  = await page.evaluate(() => {
-//           let applyLink =  document.querySelector(".onlineBewerben")
-//           return applyLink ? applyLink.href : " ";
-//         });
-//         allJobs.push(link, job);
-//         console.log(allJobs)
-//         await browser.close()
-//         await page.close();
-//         console.log(allJobLinks)
-//       }
-//         return allJobs;
-//   }catch (error) {
-//     console.log(error);
-//   }
-// }
+      let title = await page.evaluate(() => {
+        let ttitle = document.querySelector(".elementStandard.elementContent.elementHeadline h1");
+        return ttitle ? ttitle.innerText : "";
+      });
+      job.title = title;
 
-// async function scroll(page) {
-//     await page.evaluate(() => {
-//       const distance = 100;
-//       const delay = 100;
-//       const timer = setInterval(() => {
-//         document.scrollingElement.scrollBy(0, distance);
-//         if (
-//           document.scrollingElement.scrollTop + window.innerHeight >=
-//           document.scrollingElement.scrollHeight
-//         ) {
-//           clearInterval(timer);
-//         }
-//       }, delay);
-//     });
-//   }
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
 
-//   gk_bonn()
-//export default recruiting;
+      if (!position in positions) {
+        continue;
+      }
 
+      //get link
+      let link = await page.evaluate(() => {
+        let applyLink = document.querySelector(".onlineBewerben");
+        return applyLink ? applyLink.href : ""
+      });
+      
+        job.link = link
 
+      // console.log(job);
+      allJobs.push(job);
+    }
+    console.log(allJobs);
+    await browser.close();
+    await page.close();
+    return allJobs.filter((job) => job.position != "");
+  } catch (e) {
+    console.log(e);
+  }
+};
 
+async function scroll(page) {
+  await page.evaluate(() => {
+    const distance = 100;
+    const delay = 100;
+    const timer = setInterval(() => {
+      document.scrollingElement.scrollBy(0, distance);
+      if (
+        document.scrollingElement.scrollTop + window.innerHeight >=
+        document.scrollingElement.scrollHeight
+      ) {
+        clearInterval(timer);
+      }
+    }, delay);
+  });
+}
+
+// gk_bonn()
+export default gk_bonn;
 
