@@ -109,5 +109,5 @@ const krankenhaus_porz = async () => {
 }
 
 
-
+export default krankenhaus_porz;
 
