@@ -52,9 +52,10 @@ let ugos_de1 = async () => {
       };
 
       await page.goto(jobLink)
-
+      await page.waitForTimeout(3000)
+      await page.waitForSelector('h1')
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector(".article h1");
+        let ttitle = document.querySelector("h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -94,7 +95,7 @@ let ugos_de1 = async () => {
         job.link = link
 
       
-      allJobs.push(...job);
+      allJobs.push(job);
     }
     console.log(allJobs);
     await browser.close();
