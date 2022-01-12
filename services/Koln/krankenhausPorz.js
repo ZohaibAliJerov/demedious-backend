@@ -90,7 +90,7 @@ const krankenhaus_porz = async () => {
         return document.body.innerText.match(/[A_Za-z0-9._+/-]+@[A_Za-z0-9-._+/]+\.[A_Za-z0-9-]+/g);
       });
       if (typeof link == "object") {
-        job.link = link[0];
+        job.link = link;
       }
         await page.waitForTimeout(4000)
         details.push(job)
@@ -107,7 +107,6 @@ const krankenhaus_porz = async () => {
         console.error(err)
     }
 }
-
 
 export default krankenhaus_porz;
 
