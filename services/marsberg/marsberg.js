@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
 let marsberg = async () => {
   try {
@@ -22,7 +22,9 @@ let marsberg = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("div.article-text > a")).map(el => el.href)
+      return Array.from(
+        document.querySelectorAll("div.article-text > p > a")
+      ).map((el) => el.href);
     });
 
     console.log(jobLinks);
@@ -46,7 +48,7 @@ let marsberg = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1.mainTitle");
+        let ttitle = document.querySelector("h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -61,10 +63,9 @@ let marsberg = async () => {
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"||
-        level =="Arzt"||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
         level == "Oberarzt"
-
       ) {
         job.position = "artz";
       }
@@ -77,7 +78,7 @@ let marsberg = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let apply = document.querySelector("a.btn-apply")
+        let apply = document.querySelector("#tab1 > p.applyBtn.apply > a");
         return apply ? apply.href : "";
       });
       job.link = link;
