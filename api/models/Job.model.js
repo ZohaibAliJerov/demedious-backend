@@ -20,6 +20,9 @@ const jobSchema = new mongoose.Schema({
   position: {
     type: String,
   },
+  city: {
+    type: String,
+  },
   date: {
     type: Date,
     default: Date.now,
