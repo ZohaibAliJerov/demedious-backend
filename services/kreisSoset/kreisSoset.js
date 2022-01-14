@@ -27,7 +27,7 @@ let kreisSoset = async () => {
 
     console.log(jobLinks);
     let allJobs = [];
-
+    
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
