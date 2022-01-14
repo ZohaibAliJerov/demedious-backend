@@ -25,7 +25,7 @@ let aatalklinik = async () => {
       ).map((el) => el.href);
     });
 
-    console.log(jobLinks);
+    //console.log(jobLinks);
     let allJobs = [];
 
     for (let jobLink of jobLinks) {
