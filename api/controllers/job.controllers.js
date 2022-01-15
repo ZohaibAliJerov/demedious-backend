@@ -264,8 +264,13 @@ export const searchJob = async (req, res) => {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
     });
+  } else {
+    try {
+      res.status(200).send({ message: "no valid search parameters" });
+    } catch (err) {
+      res.status(500).send(err);
+    }
   }
-
   try {
     res.status(200).send(jobs);
   } catch (err) {
