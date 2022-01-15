@@ -68,7 +68,7 @@ export const searchJob = async (req, res) => {
     });
   }
   //if title levels positions locations are there
-  if (title && levels && positions && locations) {
+  else if (title && levels && positions && locations) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
@@ -77,7 +77,7 @@ export const searchJob = async (req, res) => {
     });
   }
   //if title levels positions and citites are there
-  if (title && levels && positions && cities) {
+  else if (title && levels && positions && cities) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
@@ -95,7 +95,7 @@ export const searchJob = async (req, res) => {
     });
   }
   //if title positions locations and cities are there
-  if (title && positions && locations && cities) {
+  else if (title && positions && locations && cities) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       position: { $in: positions },
@@ -104,7 +104,7 @@ export const searchJob = async (req, res) => {
     });
   }
   //if title positions levels and cities are there
-  if (title && positions && levels && cities) {
+  else if (title && positions && levels && cities) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       position: { $in: positions },
@@ -113,7 +113,7 @@ export const searchJob = async (req, res) => {
     });
   }
   //if levels positions locations and cities are there
-  if (levels && positions && locations && cities) {
+  else if (levels && positions && locations && cities) {
     jobs = await Job.find({
       level: { $in: levels },
       position: { $in: positions },
@@ -122,7 +122,7 @@ export const searchJob = async (req, res) => {
     });
   }
   //if title levels and locations are there
-  if (title && levels && locations) {
+  else if (title && levels && locations) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
@@ -130,7 +130,7 @@ export const searchJob = async (req, res) => {
     });
   }
   //if title positions and locations are there
-  if (title && positions && locations) {
+  else if (title && positions && locations) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       position: { $in: positions },
@@ -139,7 +139,7 @@ export const searchJob = async (req, res) => {
   }
 
   //if title positions and levels are there
-  if (title && positions && levels) {
+  else if (title && positions && levels) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       position: { $in: positions },
@@ -147,7 +147,7 @@ export const searchJob = async (req, res) => {
     });
   }
   //if title locations and levels are there
-  if (title && locations && levels) {
+  else if (title && locations && levels) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       location: { $in: locations },
@@ -155,36 +155,31 @@ export const searchJob = async (req, res) => {
     });
   }
   //if title locations and positions
-  if (title && locations && positions) {
+  else if (title && locations && positions) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       location: { $in: locations },
       position: { $in: positions },
     });
-  }
-
-  if (levels && positions && locations) {
+  } else if (levels && positions && locations) {
     jobs = await Job.find({
       level: { $in: levels },
       position: { $in: positions },
       location: { $in: locations },
     });
-  }
-  if (levels && positions && cities) {
+  } else if (levels && positions && cities) {
     jobs = await Job.find({
       level: { $in: levels },
       position: { $in: positions },
       city: { $in: cities },
     });
-  }
-  if (levels && locations && cities) {
+  } else if (levels && locations && cities) {
     jobs = await Job.find({
       level: { $in: levels },
       location: { $in: locations },
       city: { $in: cities },
     });
-  }
-  if (positions && locations && cities) {
+  } else if (positions && locations && cities) {
     jobs = await Job.find({
       position: { $in: positions },
       location: { $in: locations },
@@ -192,58 +187,53 @@ export const searchJob = async (req, res) => {
     });
   }
   //if title and levels are there
-  if (title && levels) {
+  else if (title && levels) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
     });
   }
   //if title and positions are there
-  if (title && positions) {
+  else if (title && positions) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       position: { $in: positions },
     });
   }
   //if title and locations are there
-  if (title && locations) {
+  else if (title && locations) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       location: { $in: locations },
     });
   }
   //if title and cities are there
-  if (title && cities) {
+  else if (title && cities) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       city: { $in: cities },
     });
-  }
-  if (levels && positions) {
+  } else if (levels && positions) {
     jobs = await Job.find({
       level: { $in: levels },
       position: { $in: positions },
     });
-  }
-  if (levels && locations) {
+  } else if (levels && locations) {
     jobs = await Job.find({
       level: { $in: levels },
       location: { $in: locations },
     });
-  }
-  if (levels && cities) {
+  } else if (levels && cities) {
     jobs = await Job.find({
       level: { $in: levels },
       city: { $in: cities },
     });
-  }
-  if (positions && locations) {
+  } else if (positions && locations) {
     jobs = await Job.find({
       position: { $in: positions },
       location: { $in: locations },
     });
-  }
-  if (positions && cities) {
+  } else if (positions && cities) {
     jobs = await Job.find({
       position: { $in: positions },
       city: { $in: cities },
@@ -254,28 +244,23 @@ export const searchJob = async (req, res) => {
       location: { $in: locations },
       city: { $in: cities },
     });
-  }
-  if (levels) {
+  } else if (levels) {
     jobs = await Job.find({
       level: { $in: levels },
     });
-  }
-  if (positions) {
+  } else if (positions) {
     jobs = await Job.find({
       position: { $in: positions },
     });
-  }
-  if (locations) {
+  } else if (locations) {
     jobs = await Job.find({
       location: { $in: locations },
     });
-  }
-  if (cities) {
+  } else if (cities) {
     jobs = await Job.find({
       city: { $in: cities },
     });
-  }
-  if (title) {
+  } else if (title) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
     });
