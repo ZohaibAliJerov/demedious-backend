@@ -23,6 +23,10 @@ const jobSchema = new mongoose.Schema({
   city: {
     type: String,
   },
+  month: {
+    type: Date,
+    default: new Date().getMonth(),
+  },
   date: {
     type: Date,
     default: Date.now,
