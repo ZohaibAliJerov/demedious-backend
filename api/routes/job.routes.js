@@ -7,6 +7,8 @@ import {
   updateJob,
   deleteJob,
   searchJob,
+  saveJob,
+  getSavedJobs,
 } from "../controllers/job.controllers.js";
 const router = express.Router();
 
@@ -23,6 +25,12 @@ router.put("/:id", [verifyToken], updateJob);
 
 //delete a job
 router.delete("/:id", [verifyToken], deleteJob);
+
+//save a job
+router.post("/:id", saveJob);
+
+//get saved jobs
+router.get("/saved", getSavedJobs);
 
 //search and filter jobs
 router.post("/search", searchJob);

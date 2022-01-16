@@ -415,3 +415,15 @@ export const saveJob = async (req, res) => {
     res.status(500).send({ message: err });
   }
 };
+
+// get saved jobs for a user
+export const getSavedJobs = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    res.status(200).send(user.savedJobs);
+  } catch (err) {
+    res.status(500).send({ message: err });
+  }
+}
