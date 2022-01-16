@@ -399,3 +399,19 @@ export const searchJob = async (req, res) => {
     res.status(500).send({ message: err });
   }
 };
+
+// save a job to each user's saved jobs
+export const saveJob = async (req, res) => {
+  const { jobId } = req.params;
+  const { userId } = req.body;
+
+  try {
+    const job = await Job.findById(jobId);
+    const user = await User.findById(userId);
+    user.savedJobs.push(job);
+    await user.save();
+    res.status(200).send({ message: "Job saved" });
+  } catch (err) {
+    res.status(500).send({ message: err });
+  }
+};
