@@ -1,5 +1,5 @@
 import Job from "../models/Job.model.js";
-import User from "../models/User.model";
+import User from "../models/User.model.js";
 //get all jobs
 export const findAllJobs = async (req, res) => {
   let jobs = await Job.find({});
@@ -426,4 +426,4 @@ export const getSavedJobs = async (req, res) => {
   } catch (err) {
     res.status(500).send({ message: err });
   }
-}
+};
