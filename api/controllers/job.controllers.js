@@ -1,5 +1,5 @@
 import Job from "../models/Job.model.js";
-
+import User from "../models/User.model";
 //get all jobs
 export const findAllJobs = async (req, res) => {
   let jobs = await Job.find({});
