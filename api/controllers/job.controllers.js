@@ -97,14 +97,6 @@ export const searchJob = async (req, res) => {
       city: { $in: cities },
       month: { $in: months },
     });
-  } else if (title && levels && positions && cities && months) {
-    jobs = await Job.find({
-      title: { $regex: title, $options: "i" },
-      level: { $in: levels },
-      position: { $in: positions },
-      cities: { $in: cities },
-      month: { $in: months },
-    });
   } else if (title && positions && locations && cities && months) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
@@ -292,11 +284,10 @@ export const searchJob = async (req, res) => {
       month: { $in: months },
     });
   } else if (title && levels) {
-      jobs = await Job.find({
-        title: { $regex: title, $options: "i" },
-        level: { $in: levels }
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      level: { $in: levels },
     });
-
   } else if (title && positions) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
@@ -374,8 +365,7 @@ export const searchJob = async (req, res) => {
     });
   } else if (title) {
     jobs = await Job.find({
-      
-      title: { $regex: title, $options: "i" }
+      title: { $regex: title, $options: "i" },
     });
   } else if (levels) {
     jobs = await Job.find({
@@ -399,10 +389,10 @@ export const searchJob = async (req, res) => {
     });
   } else {
     res.status(200).send({
-     message: "No valid search parameters provided" 
-    })
+      message: "No valid search parameters provided",
+    });
   }
-    
+
   try {
     res.status(200).send(jobs);
   } catch (err) {
