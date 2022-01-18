@@ -37,11 +37,14 @@ const florenceService = async () => {
     for (let jobLink of allJobs) {
       let job = {
         title: "",
-        location: "Düsseldorf",
+        location: "",
         hospital: "Klinik für Psychiatrie und",
         link: "",
         level: "",
         position: "",
+        city: "Düsseldorf",
+        email: "",
+        republic: "Rhine Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -69,6 +72,25 @@ const florenceService = async () => {
       }
       job.link = applyLink;
 
+      job.location = await page.evaluate(() => {
+        let ps = Array.from(
+          document.querySelectorAll(".news-single-content.clearfix > p")
+        );
+        let text = ps.map((p) => p.innerText);
+        //   if(ps.length > 0){
+        // return ps.length == 9
+        //   ? ps[5].innerText
+        //   : ps.slice(12, 14).map((el) => el.innerText);
+        let loc = text.filter((el) => el.match(/.+\(at\).+\.\w+/));
+        return loc ? loc[0] : "";
+      });
+      job.email = await page.evaluate(() => {
+        let email = document.body.innerText.match(/\w+@\w+\.\w+/);
+        return email ? email : document.body.innerText.match(/.+\(at\).+\.\w+/);
+      });
+      if (typeof job.email == "object") {
+        job.email = job.email[0];
+      }
       //get level and position
       let text = await page.evaluate(() => {
         return document.body.innerText;
@@ -77,6 +99,7 @@ const florenceService = async () => {
       let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
+
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||

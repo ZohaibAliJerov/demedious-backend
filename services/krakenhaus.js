@@ -1,65 +1,48 @@
 import puppeteer from "puppeteer";
-
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
-
-let aatalklinik = async () => {
+const krankenhausBethanien = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: true,
     });
-
     let page = await browser.newPage();
-
-    await page.goto("https://www.aatalklinik.de/", {
-      waitUntil: "load",
-      timeout: 0,
-    });
-
-    await scroll(page);
-
-    //get all jobLinks
-    const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll("div.shortcode-jobs > ul > li > a")
-      ).map((el) => el.href);
-    });
-
-    //console.log(jobLinks);
+    const jobLinks = [];
+    let allUrls = ["https://jobs.diakonie-bethanien.de/jobs"];
+    // all jobsLinks
+    for (let a = 0; a < allUrls.length; a++) {
+      await page.goto(allUrls[a]);
+      scroll(page);
+      let job = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll(".jobfeed-inner > a")).map(
+          (el) => el.href
+        );
+      });
+      jobLinks.push(...job);
+    }
+    console.log(jobLinks);
     let allJobs = [];
-
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "",
-        hospital: "Neurologische Klinik Sorpe",
+        location: "Solingen",
+        hospital: "Krankenhaus Bethanien ",
         link: "",
         level: "",
         position: "",
-        city: "Sundern",
         email: "",
+        city: "Solingen",
         republic: "North Rhine-Westphalia",
       };
-
       await page.goto(jobLink, {
         waitUntil: "load",
         timeout: 0,
       });
-
-      await page.waitForTimeout(1000);
-
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1#page-title");
-        return ttitle ? ttitle.innerText : "";
+        let ttitle = document.querySelector("h1#tms-job-title");
+        return ttitle ? ttitle.innerText : null;
       });
       job.title = title;
-
-      job.location = await page.evaluate(() => {
-        let loc = document.querySelector(".sidebar-widget").innerText;
-        loc = loc.replace("\n", " ");
-        return loc.replace(/\w+@\w+\.\w+/, "");
-      });
-
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -80,30 +63,35 @@ let aatalklinik = async () => {
         job.position = "pflege";
         job.level = "Nicht angegeben";
       }
-
       if (!position in positions) {
         continue;
       }
-
       //get link
-      job.email = await page.evaluate(() => {
-        return document.body.innerText.match(/\w+@\w+\.\w+/);
+      let link = await page.evaluate(() => {
+        let link = document.querySelector("div#tms-action-editor > a");
+        return link ? link.href : null;
       });
-      if (typeof job.email == "object") {
-        job.email = job.email[0];
+      job.link = link;
+      let email = await page.evaluate(() => {
+        return document.body.innerText.match(
+          /[a-zA-Z0-9-._+/]+@[a-zA-Z0-9-._+/]+\.[a-zA-Z0-9-]+/
+        );
+      });
+      if (typeof email == "object") {
+        job.email = "" + email;
       }
-
-      job.link = jobLink;
-
+      // console.log(job);
       allJobs.push(job);
     }
+    console.log(allJobs);
+    await browser.close();
+    // await page.close()
     return allJobs.filter((job) => job.position != "");
-  } catch (e) {
-    console.log(e);
+  } catch (err) {
+    console.error(err);
   }
 };
-
-async function scroll(page) {
+export async function scroll(page) {
   await page.evaluate(() => {
     const distance = 100;
     const delay = 100;
@@ -119,4 +107,4 @@ async function scroll(page) {
   });
 }
 
-export default aatalklinik;
+export default krankenhausBethanien;

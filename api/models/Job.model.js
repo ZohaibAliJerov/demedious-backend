@@ -23,6 +23,12 @@ const jobSchema = new mongoose.Schema({
   city: {
     type: String,
   },
+  email: {
+    type: String,
+  },
+  republic: {
+    type: String,
+  },
   month: {
     type: Date,
     default: new Date().getMonth(),
