@@ -4,7 +4,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 const krankenhausBethanien = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
     });
     let page = await browser.newPage();
     const jobLinks = [];
