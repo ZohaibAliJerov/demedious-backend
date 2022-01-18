@@ -87,8 +87,7 @@ export const logout = async (req, res) => {
 //save job with job referenc
 export const saveJob = async (req, res) => {
   try {
-    let userId = req.query.userId;
-    let jobId = req.body;
+    let { jobId, userId } = req.body;
     let user = await User.findOne({ _id: userId });
     let job = await Job.findOne({ _id: jobId });
     if (!user || !job) {
@@ -98,6 +97,7 @@ export const saveJob = async (req, res) => {
     let index = user.savedJobs.indexOf(jobId);
     if (index > -1) {
       user.savedJobs.splice(index, 1);
+      return res.status(200).send({ message: "Job deleted successfully!" });
     }
     user.savedJobs.push(job);
     user.save();
