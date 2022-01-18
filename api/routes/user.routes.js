@@ -1,4 +1,10 @@
-import { register, login, Logout,saveJob, getSavedJobs } from "../controllers/user.controller.js";
+import {
+  register,
+  login,
+  logout,
+  saveJob,
+  getSavedJobs,
+} from "../controllers/user.controller.js";
 import verifySignUp from "../middlewares/verifySignup.js";
 
 import express from "express";
@@ -10,7 +16,7 @@ router.post("/signin", login);
 
 router.get("/logout", logout);
 
-router.post("/saveJob, saveJob);
+router.post("/saveJob", saveJob);
 
 router.get("/getSavedJobs", getSavedJobs);
 export default router;
