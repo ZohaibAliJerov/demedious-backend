@@ -116,7 +116,8 @@ export const getSavedJobs = async (req, res) => {
       return res.status(404).send("User not found!");
     }
     let savedJobs = user.savedJobs;
-    return res.status(200).send(savedJobs);
+    let jobs = await Job.find({ _id: { $in: savedJobs } });
+    return res.status(200).send(jobs);
   } catch (err) {
     return res.status(500).send({ message: err.message });
   }
