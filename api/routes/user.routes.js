@@ -18,5 +18,5 @@ router.get("/logout", logout);
 
 router.post("/saveJob", saveJob);
 
-router.get("/getSavedJobs", getSavedJobs);
+router.post("/getSavedJobs", getSavedJobs);
 export default router;
