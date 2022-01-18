@@ -6,7 +6,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 let aatalklinik = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
     });
 
     let page = await browser.newPage();
@@ -31,11 +31,14 @@ let aatalklinik = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Sundern (Sauerland)",
+        location: "",
         hospital: "Neurologische Klinik Sorpe",
         link: "",
         level: "",
         position: "",
+        city: "Sundern",
+        email: "",
+        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -50,6 +53,12 @@ let aatalklinik = async () => {
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
+
+      job.location = await page.evaluate(() => {
+        let loc = document.querySelector(".sidebar-widget").innerText;
+        loc = loc.replace("\n", " ");
+        return loc.replace(/\w+@\w+\.\w+/, "");
+      });
 
       let text = await page.evaluate(() => {
         return document.body.innerText;
@@ -77,13 +86,15 @@ let aatalklinik = async () => {
       }
 
       //get link
-      let link = await page.evaluate(() => {
+      job.email = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
-      if (typeof link == "object") {
-        job.link = link[0];
+      if (typeof job.email == "object") {
+        job.email = job.email[0];
       }
-      // console.log(job);
+
+      job.link = jobLink;
+
       allJobs.push(job);
     }
     return allJobs.filter((job) => job.position != "");
