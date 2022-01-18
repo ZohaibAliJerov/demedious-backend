@@ -30,12 +30,12 @@ const jobSchema = new mongoose.Schema({
     type: String,
   },
   month: {
-    type: Date,
+    type: Number,
     default: new Date().getMonth(),
   },
   date: {
     type: Date,
-    default: Date.now,
+    default: new Date().toLocaleDateString(),
   },
 });
 
