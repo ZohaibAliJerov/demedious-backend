@@ -26,7 +26,7 @@ connect();
 async function run() {
   try {
     let allJobs = await mainService();
-    Job.updateMany(allJobs, { upsert: true })
+    Job.insertMany(allJobs)
       .then((data) => {
         console.log(data);
       })
@@ -58,7 +58,7 @@ app.use("/api/v1/jobs", jobRoutes);
 app.use("/api/v1/resetpassword", resetRoutes);
 
 // const job = new CronJob(
-//   " 0 30 * * * *",
+//   " 0 0 7,12,15 * * *",
 //   () => {
 //     run().catch(console.dir);
 //   },
@@ -68,6 +68,7 @@ app.use("/api/v1/resetpassword", resetRoutes);
 // );
 
 // job.start();
+
 run();
 
 app.listen(port, () => {
