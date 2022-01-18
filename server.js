@@ -26,7 +26,7 @@ connect();
 async function run() {
   try {
     let allJobs = await mainService();
-    Job.insertMany(allJobs,{ordered:false});
+    Job.insertMany(allJobs, { ordered: false })
       .then((data) => {
         console.log(data);
       })
@@ -57,17 +57,17 @@ app.use("/api/v1/jobs", jobRoutes);
 //reset password routes
 app.use("/api/v1/resetpassword", resetRoutes);
 
-// const job = new CronJob(
-//   " 0 0 7,12,15 * * *",
-//   () => {
-//     run().catch(console.dir);
-//   },
-//   null,
-//   true,
-//   "Europe/Berlin"
-// );
+const job = new CronJob(
+  " 0 0 7,12,15 * * *",
+  () => {
+    run().catch(console.dir);
+  },
+  null,
+  true,
+  "Europe/Berlin"
+);
 
-// job.start();
+job.start();
 
 run();
 
