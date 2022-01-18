@@ -1,8 +1,9 @@
 import aatalklinik from "./aatalklinik.js";
-import johaniter from "./johanniter.js";
+import krankenhausAugustin from "./krankenhausAugustin.js";
 import krakehan from "./krakenhaus.js";
+
 const mainService = async () => {
-  return Promise.all([aatalklinik(), krakehan(), johaniter()]).then(
+  return Promise.all([aatalklinik(), krakehan(), krankenhausAugustin()]).then(
     (results) => {
       return results.flat(1);
     }
