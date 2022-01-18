@@ -145,4 +145,8 @@ async function scroll(page) {
   });
 }
 
-export default florenceService;
+// export default florenceService;
+(async () => {
+  let res = await florenceService();
+  console.log(res);
+})();
