@@ -31,13 +31,14 @@ let karriere = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "karriere",
-        city : "",
+        location: "Schönheitschirurgie Düsseldorf | KÖ-Aesthetics",
+        city : "karriere",
         hospital: "koe-aesthetics",
         link: "",
         email: "",
         level: "",
         position: "",
+        republic : "Republic M! Deutschland GmbH"
       };
 
       await page.goto(jobLink, {
@@ -84,13 +85,6 @@ let karriere = async () => {
           return applyLink ? applyLink.href : null;
       });
       job.link = link
-
-      //get city 
-      let city = await page.evaluate(()=>{
-        let cty =  document.querySelector('.footer-block')
-        return cty ? cty.innerText.slice(97,-54) : null
-      })
-      job.city = city;
 
       //get email 
 
