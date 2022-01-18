@@ -94,6 +94,11 @@ export const saveJob = async (req, res) => {
     if (!user || !job) {
       return res.status(404).send("User or Job not found!");
     }
+    //delete job if already exists
+    let index = user.savedJobs.indexOf(jobId);
+    if (index > -1) {
+      user.savedJobs.splice(index, 1);
+    }
     user.savedJobs.push(job);
     user.save();
     return res.status(200).send("Job saved successfully!");
