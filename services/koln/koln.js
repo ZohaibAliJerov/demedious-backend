@@ -1,5 +1,4 @@
 import puppeteer from "puppeteer";
-
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
@@ -20,8 +19,8 @@ let koln = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-        let nextPage = document.querySelector(".next > a");
-        nextPage.click();
+      let nextPage = document.querySelector(".next > a");
+      nextPage.click();
       return Array.from(
         document.querySelectorAll("ul.job-list.hidden-md.hidden-lg > li > a")
       ).map((el) => el.href);
@@ -34,13 +33,13 @@ let koln = async () => {
       let job = {
         title: "",
         location: "",
-        city : "Köln",
+        city: "Köln",
         hospital: "Heilig Geist-Krankenhaus, Köln-Longerich",
         link: "",
         email: "",
         level: "",
         position: "",
-        republic: "North Rhine-Westphalia"
+        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -83,32 +82,34 @@ let koln = async () => {
 
       //get link
       let link = await page.evaluate(() => {
-          let applyLink = document.querySelector("a.a-button");
-          return applyLink ? applyLink.href : null;
+        let applyLink = document.querySelector("a.a-button");
+        return applyLink ? applyLink.href : null;
       });
-      job.link = link
+      job.link = link;
 
-      //get email 
+      //get email
 
-      let email = await page.evaluate(()=> {
-        let eml = document.querySelector('.footer-block');
+      let email = await page.evaluate(() => {
+        let eml = document.querySelector(".footer-block");
         return eml ? eml.innerText.match(/\w+@\w+\-\w+.\w+/).toString() : "";
-      })
+      });
       job.email = email;
 
       //get location
-      let location = await page.evaluate(()=>{
-          let loc = document.querySelector("#cjb-list > div.jobad > div > div:nth-child(5) > div:nth-child(5)");
-          return loc ? loc.innerText.slice(0, -19) : null;
-      })
-      job.location = location
+      let location = await page.evaluate(() => {
+        let loc = document.querySelector(
+          "#cjb-list > div.jobad > div > div:nth-child(5) > div:nth-child(5)"
+        );
+        return loc ? loc.innerText.slice(0, -19) : null;
+      });
+      job.location = location;
       allJobs.push(job);
     }
     console.log(allJobs);
     return allJobs.filter((job) => job.position != "");
-} catch (e) {
+  } catch (e) {
     console.log(e);
-}
+  }
 };
 
 async function scroll(page) {
@@ -126,5 +127,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-koln()
+koln();
 export default koln;
