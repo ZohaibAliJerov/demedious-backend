@@ -4,14 +4,14 @@ let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
 
-let  marienborn_jobs = async () => {
+let fachKlinikHon = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
     let page = await browser.newPage();
 
-    await page.goto("https://www.marienborn-jobs.de/stellenangebote/", {
+    await page.goto("https://fachklinik-hornheide.de/karriere/stellenmarkt/index_ger.html", {
       waitUntil: "load",
       timeout: 0,
     });
@@ -19,7 +19,7 @@ let  marienborn_jobs = async () => {
     await scroll(page);
               let jobLinks = await page.evaluate(() => {
                 return Array.from(
-                    document.querySelectorAll('ul > li a')
+                    document.querySelectorAll('.jotitle > p a')
                 ).map(el => el.href)
               });
     console.log(jobLinks);
@@ -30,8 +30,8 @@ let  marienborn_jobs = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Zülpich",
-        hospital: "Fachklinik für Psychiatrie und Psychotherapie der Marienborn",
+        location: "Münster",
+        hospital: "Fachklinik Hornheide",
         link: "",
         level: "",
         position: "",
@@ -43,7 +43,7 @@ let  marienborn_jobs = async () => {
 
       await page.waitForTimeout(1000);
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector(".bewerbung-title");
+        let ttitle = document.querySelector("#jo h2");
         return ttitle ? ttitle.innerText : "";
       });
 
@@ -73,7 +73,7 @@ let  marienborn_jobs = async () => {
       }
       //get link
       let link = await page.evaluate(() => {
-          let links =  document.querySelector('.button-jetzt-bewerben');
+          let links =  document.querySelector('.btn.btn-primary');
         //document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zaA-Z-.]+ [(][a-z]+[)] [a-zaA-Z-.]+/)
                         
         return links ? links.href : "";
@@ -104,4 +104,4 @@ async function scroll(page) {
     }, delay)
 });
 }
-marienborn_jobs()
+fachKlinikHon()
