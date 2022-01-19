@@ -109,7 +109,7 @@ const johanniter = async () => {
       job.email = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
-      if (typeof job.email == "object") {
+      if (typeof job.email == "object" && job.email != null) {
         job.email = job.email[0];
       }
       job.link = await page.evaluate(() => {
@@ -150,3 +150,8 @@ const johanniter = async () => {
 };
 
 export default johanniter;
+
+// (async () => {
+//   let res = await johanniter();
+//   console.log(res);
+// })();
