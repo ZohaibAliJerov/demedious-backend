@@ -1,25 +1,31 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let minden = async () => {
+let bedburgHau = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
     let page = await browser.newPage();
 
-    await page.goto("https://www.muehlenkreiskliniken.de/muehlenkreiskliniken/karriere/stellenangebote", {
-      waitUntil: "load",
-      timeout: 0,
-    });
+    await page.goto(
+        "https://jobs.lvr.de/index.php?ac=search_result&search_criterion_division%5B%5D=42",
+      {
+        waitUntil: "load",
+        timeout: 0,
+      }
+    );
 
     await scroll(page);
 
     //get all jobLinks
+    await page.waitForSelector('tbody.jb-dt-list-body > tr > td > a')
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".career-overview-item")).map(
+        let nextPage = document.querySelector(".active > a");
+        nextPage.click()
+      return Array.from(document.querySelectorAll("tbody.jb-dt-list-body > tr > td > a")).map(
         (el) => el.href
       );
     });
@@ -30,8 +36,8 @@ let minden = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Munester",
-        hospital: "Herz-Jesu-Krankenhaus Munester",
+        location: "Bedburg-Hau",
+        hospital: "Landschaftsverband Rheinland (LVR)",
         link: "",
         level: "",
         position: "",
@@ -45,7 +51,7 @@ let minden = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h2");
+        let ttitle = document.querySelector("h1#skip-to-main-heading");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -60,10 +66,9 @@ let minden = async () => {
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"||
-        level =="Arzt"||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
         level == "Oberarzt"
-
       ) {
         job.position = "artz";
       }
@@ -76,10 +81,10 @@ let minden = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.container > a");
-        return lnk ? lnk.href : "";
+          let apply = document.querySelector("a.btn.btn-lg.btn-block.btn-primary.js-button-apply.btn-apply-top")
+          return  apply ? apply.href : "";
       });
-      job.link = link;
+   job.link = link;
       allJobs.push(job);
     }
     console.log(allJobs);
@@ -104,5 +109,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-minden();
-export default minden;
+bedburgHau();
+export default bedburgHau;

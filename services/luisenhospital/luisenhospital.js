@@ -1,25 +1,29 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let minden = async () => {
+let luisenhospital = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
     let page = await browser.newPage();
 
-    await page.goto("https://www.muehlenkreiskliniken.de/muehlenkreiskliniken/karriere/stellenangebote", {
-      waitUntil: "load",
-      timeout: 0,
-    });
+    await page.goto(
+        "https://stellen.luisenhospital.de/stellenangebote.html",
+      {
+        waitUntil: "load",
+        timeout: 0,
+      }
+    );
 
     await scroll(page);
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".career-overview-item")).map(
+        
+      return Array.from(document.querySelectorAll("div.joboffer_title_text.joboffer_box > a")).map(
         (el) => el.href
       );
     });
@@ -30,8 +34,8 @@ let minden = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Munester",
-        hospital: "Herz-Jesu-Krankenhaus Munester",
+        location: "Luisenhospital",
+        hospital: "luisenhospital Aachen",
         link: "",
         level: "",
         position: "",
@@ -45,7 +49,7 @@ let minden = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h2");
+        let ttitle = document.querySelector("div.scheme-content.scheme-title > h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -60,10 +64,9 @@ let minden = async () => {
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"||
-        level =="Arzt"||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
         level == "Oberarzt"
-
       ) {
         job.position = "artz";
       }
@@ -76,8 +79,8 @@ let minden = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.container > a");
-        return lnk ? lnk.href : "";
+          let apply = document.querySelector("div#btn_online_application > a")
+          return  apply ? apply.innerText : "";
       });
       job.link = link;
       allJobs.push(job);
@@ -104,5 +107,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-minden();
-export default minden;
+luisenhospital();
+export default luisenhospital;

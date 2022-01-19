@@ -1,25 +1,28 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let minden = async () => {
+let bergheim = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
     let page = await browser.newPage();
 
-    await page.goto("https://www.muehlenkreiskliniken.de/muehlenkreiskliniken/karriere/stellenangebote", {
-      waitUntil: "load",
-      timeout: 0,
-    });
+    await page.goto(
+      "https://www.maria-hilf-krankenhaus.de/ueber-uns/karriere/offene-stellen",
+      {
+        waitUntil: "load",
+        timeout: 0,
+      }
+    );
 
     await scroll(page);
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".career-overview-item")).map(
+      return Array.from(document.querySelectorAll("a.accordion-title")).map(
         (el) => el.href
       );
     });
@@ -30,8 +33,8 @@ let minden = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Munester",
-        hospital: "Herz-Jesu-Krankenhaus Munester",
+        location: "Bergheim",
+        hospital: "maria-hilf-krankenhaus",
         link: "",
         level: "",
         position: "",
@@ -45,7 +48,7 @@ let minden = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h2");
+        let ttitle = document.querySelector("ul.accordion > li > a > font");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -60,10 +63,9 @@ let minden = async () => {
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"||
-        level =="Arzt"||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
         level == "Oberarzt"
-
       ) {
         job.position = "artz";
       }
@@ -76,8 +78,8 @@ let minden = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.container > a");
-        return lnk ? lnk.href : "";
+          let apply = document.querySelector("#c20034 > div > div > p:nth-child(4) > a")
+          return  apply ? apply.href : "";
       });
       job.link = link;
       allJobs.push(job);
@@ -104,5 +106,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-minden();
-export default minden;
+bergheim();
+export default bergheim;

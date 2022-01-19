@@ -1,25 +1,31 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let minden = async () => {
+let euskirchen = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
     let page = await browser.newPage();
 
-    await page.goto("https://www.muehlenkreiskliniken.de/muehlenkreiskliniken/karriere/stellenangebote", {
-      waitUntil: "load",
-      timeout: 0,
-    });
+    await page.goto(
+      "https://www.marien-hospital.com/karriere/stellenangebote",
+      {
+        waitUntil: "load",
+        timeout: 0,
+      }
+    );
 
     await scroll(page);
 
     //get all jobLinks
+    await page.waitForSelector('#job_id_12865112 > div.matchValue.title > a')
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".career-overview-item")).map(
+        // let a = document.querySelector("#job-search-pagination > li:nth-child(5) > a");
+        // a.click()
+      return Array.from(document.querySelectorAll("#job_id_12865112 > div.matchValue.title > a")).map(
         (el) => el.href
       );
     });
@@ -30,8 +36,8 @@ let minden = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Munester",
-        hospital: "Herz-Jesu-Krankenhaus Munester",
+        location: "Euskirchen",
+        hospital: "Marien",
         link: "",
         level: "",
         position: "",
@@ -45,7 +51,7 @@ let minden = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h2");
+        let ttitle = document.querySelector("#main-title");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -60,10 +66,9 @@ let minden = async () => {
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"||
-        level =="Arzt"||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
         level == "Oberarzt"
-
       ) {
         job.position = "artz";
       }
@@ -76,8 +81,8 @@ let minden = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.container > a");
-        return lnk ? lnk.href : "";
+          let apply = document.querySelector("#applynow")
+          return  apply ? apply.innerText : "";
       });
       job.link = link;
       allJobs.push(job);
@@ -104,5 +109,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-minden();
-export default minden;
+euskirchen();
+export default euskirchen;
