@@ -122,3 +122,4 @@ async function scroll(page) {
   });
 }
 
+export default KoAesthetics_Dusseldorf;
