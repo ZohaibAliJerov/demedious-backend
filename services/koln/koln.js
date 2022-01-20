@@ -127,5 +127,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-koln();
+
 export default koln;
