@@ -45,15 +45,16 @@ export const updateJob = async (req, res) => {
 export const deleteJob = async (req, res) => {
   try {
     await Job.findByIdAndRemove(req.params.id);
-    res.status(200).send("Job deleted successfully!");
+    return res.status(200).send("Job deleted successfully!");
   } catch (err) {
-    res.status(400).send(err);
+    return res.status(400).send(err);
   }
 };
 
 export const searchJob = async (req, res) => {
   let { title, levels, positions, republics, cities, months } = req.body;
-  //levels,positions,locations are arrays
+
+  // //levels,positions,locations are array
   let jobs = [];
   if (title && levels && positions && republics && cities && months) {
     jobs = await Job.find({
@@ -308,7 +309,7 @@ export const searchJob = async (req, res) => {
       month: { $in: months },
     });
   } else if (levels && positions) {
-    jobs = await Job.find({
+    jobs = await Job.find(
       level: { $in: levels },
       position: { $in: positions },
     });
@@ -320,7 +321,7 @@ export const searchJob = async (req, res) => {
   } else if (levels && republics) {
     jobs = await Job.find({
       level: { $in: levels },
-      republics: { $in: republics },
+      republic: { $in: republics },
     });
   } else if (levels && months) {
     jobs = await Job.find({
@@ -380,21 +381,21 @@ export const searchJob = async (req, res) => {
     });
   } else if (republics) {
     jobs = await Job.find({
-      republics: { $in: republics },
+      republic: { $in: republics },
     });
   } else if (months) {
     jobs = await Job.find({
       month: { $in: months },
     });
   } else {
-    res.status(200).send({
+    return res.status(200).send({
       message: "No valid search parameters provided",
     });
   }
 
   try {
-    res.status(200).send(jobs);
+    return res.status(200).send(jobs);
   } catch (err) {
-    res.status(500).send({ message: err });
+    return res.status(500).send({ message: err });
   }
 };
