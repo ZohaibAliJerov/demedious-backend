@@ -309,7 +309,7 @@ export const searchJob = async (req, res) => {
       month: { $in: months },
     });
   } else if (levels && positions) {
-    jobs = await Job.find(
+    jobs = await Job.find({
       level: { $in: levels },
       position: { $in: positions },
     });
