@@ -1,52 +1,42 @@
 import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
-
 let lengerich = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
-
     let page = await browser.newPage();
-
     await page.goto("https://www.helios-gesundheit.de/kliniken/lengerich/unser-haus/karriere/stellenangebote/", {
       waitUntil: "load",
       timeout: 0,
     });
-
     await scroll(page);
-
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      let nextPage = document.querySelector("a.pagination__jump-link.pagination__jump-link--linked");
+      let nextPage =  document.querySelector(".pagination__jump-link.pagination__jump-link--linked");
       nextPage.click();
-      return Array.from(
-        document.querySelectorAll("ul.job-list.hidden-md.hidden-lg > li > a")
+      return Array.from(document.querySelectorAll("article.tabular-list__item > a")
       ).map((el) => el.href);
     });
-
     console.log(jobLinks);
     let allJobs = [];
-
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
         location: "",
-        city: "Lengerich",
+        city : "Lengerich",
         hospital: "Helios Klinik Lengerich",
         link: "",
         email: "",
         level: "",
         position: "",
-        republic: "Nordrhein-Westfalen (North Rhine-Westphalia)",
+        republic: "North Rhine-Westphalia"
       };
-
       await page.goto(jobLink, {
         waitUntil: "load",
         timeout: 0,
       });
-
       await page.waitForTimeout(1000);
       // title
       let title = await page.evaluate(() => {
@@ -54,7 +44,6 @@ let lengerich = async () => {
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
-
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -75,41 +64,38 @@ let lengerich = async () => {
         job.position = "pflege";
         job.level = "Nicht angegeben";
       }
-
       if (!position in positions) {
         continue;
       }
-
       //get link
+      await page.waitForSelector
       let link = await page.evaluate(() => {
-        let applyLink = document.querySelector("a.button");
-        return applyLink ? applyLink.href : null;
+        let getLink = document.querySelector(".button-form");
+        getLink.click();
+          let applyLink = document.querySelector("a.button");
+          return applyLink ? applyLink.href : null;
       });
-      job.link = link;
-
-      //get email
-
-      let email = await page.evaluate(() => {
-        let eml = document.getElementsByTagName("p")[5];
-        return eml ? eml.innerText.match(/\w+.\w+\[at]\w+\-\w+.\w+./).toString() : "";
-      });
-      job.email = email;
-
+      job.link = link
+      //get email 
+      let email = await page.evaluate(()=> {
+        let eml = document.querySelector("#c101670 > div > section.content-block-list > div > article:nth-child(5) > div > div > div ");
+        return eml ? eml.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g) : "";
+      })
+      job.email = String() + email;
       //get location
-      let location = await page.evaluate(() => {
-        let loc = document.getElementsByTagName("p")[6]
-        return loc ? loc.innerText.slice(0, -19) : null;
-      });
-      job.location = location;
+      let location = await page.evaluate(()=>{
+          let loc = document.getElementsByTagName("td")[1];
+          return loc ? loc.innerText: null;
+      })
+      job.location = location
       allJobs.push(job);
     }
     console.log(allJobs);
     return allJobs.filter((job) => job.position != "");
-  } catch (e) {
+} catch (e) {
     console.log(e);
-  }
+}
 };
-
 async function scroll(page) {
   await page.evaluate(() => {
     const distance = 100;
@@ -125,5 +111,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-lengerich();
+lengerich()
 export default lengerich;
