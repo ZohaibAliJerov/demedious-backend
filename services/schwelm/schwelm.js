@@ -44,8 +44,8 @@ let schwelm = async () => {
       let job = {
         title: "",
         location: "",
-        city : "Velbert",
-        hospital: "Helios Klinikum Niederberg",
+        city : "Schwelm",
+        hospital: "Helios Klinikum Schwelm",
         link: "",
         email: "",
         level: "",
