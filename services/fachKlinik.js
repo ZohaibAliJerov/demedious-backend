@@ -6,7 +6,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 let fachKlinik_h = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
     });
 
     let page = await browser.newPage();
@@ -32,11 +32,11 @@ let fachKlinik_h = async () => {
       let job = {
         title: "",
         location: "",
-        hospital: "Neurologische Klinik Sorpe",
+        hospital: "Fachklinik Hornheide",
         link: "",
         level: "",
         position: "",
-        city: "Sundern",
+        city: "Hornheide",
         email: "",
         republic: "North Rhine-Westphalia",
       };
