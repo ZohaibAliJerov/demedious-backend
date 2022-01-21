@@ -128,5 +128,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-dionyius()
-// export default dionyius;
+// dionyius()
+export default dionyius;
