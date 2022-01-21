@@ -59,6 +59,9 @@ let zissedorf = async () => {
         return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+|[a-zA-Z-. ].+[\n]\d+ [a-zA-Z-.].+/) : '';
       });
 
+      if(typeof job.location == 'object' && job.location != null ){
+        job.location = job.location[0]
+      }
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -89,8 +92,8 @@ let zissedorf = async () => {
       job.email = await page.evaluate(() => {
         return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+/);
       });
-      if(typeof job.email == "object"){
-        job.email = email[0]
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
       }
       // job.email = email
 
