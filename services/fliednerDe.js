@@ -31,12 +31,12 @@ let zissedorf = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Gut Zissendorf, 53773 Hennef (Sieg), Germany",
-        hospital: "Fachklink Gut Zissendorf",
+        location: "",
+        hospital: "Fliedner Klinik Düsseldorf",
         link: "",
         level: "",
         position: "",
-        city: "Hennef, Sieg",
+        city: "Düsseldorf",
         email: "",
         republic: "North Rhine-Westphalia",
       };
@@ -56,7 +56,7 @@ let zissedorf = async () => {
 
       job.location = await page.evaluate(() => {
         let loc = document.querySelector(".con-content.col-sm-8 col-xs-12")
-        return loc ? loc.innerText.match(/[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+/) : '';
+        return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+|[a-zA-Z-. ].+[\n]\d+ [a-zA-Z-.].+/) : '';
       });
 
       let text = await page.evaluate(() => {
