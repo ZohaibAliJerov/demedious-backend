@@ -117,3 +117,9 @@ const krankenhausder_Augustin = async () =>{
             }, delay);
         });
     };
+
+
+
+
+
+    export default krankenhausder_Augustin;
