@@ -45,7 +45,7 @@ let duisburg = async () => {
         title: "",
         location: "",
         city : "Duisburg",
-        hospital: "Helios Marien Klinik",
+        hospital: "Helios Rhein Klinik Duisburg",
         link: "",
         email: "",
         level: "",
