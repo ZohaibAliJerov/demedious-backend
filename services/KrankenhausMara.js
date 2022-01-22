@@ -126,3 +126,4 @@ await page.waitForTimeout(2000)
 
 
 
+export default KrankenhausMara;
