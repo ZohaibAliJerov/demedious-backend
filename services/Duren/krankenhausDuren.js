@@ -121,3 +121,5 @@ async function scroll(page) {
   });
 }
 
+
+export default krankenhausDuren;
