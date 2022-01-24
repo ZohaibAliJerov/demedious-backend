@@ -11,16 +11,31 @@ let wipperfuerth = async () => {
       waitUntil: "load",
       timeout: 0,
     });
+    let pagesToScrape = 2;
+    let currentPage = 1;
+    while (currentPage <= pagesToScrape) {
+        let allJobs = [];         
+        let jobLinks = await page.evaluate(() => {
+          return Array.from(document.querySelectorAll("article.tabular-list__item > a")
+          ).map((el) => el.href);
+          if (currentPage < pagesToScrape) {
+            await page.click('.pagination__jump-link.pagination__jump-link--linked')
+            await page.waitForSelector('.pagination__jump-link.pagination__jump-link--linked')
+          }
+          jobLinks = jobLinks.concat(allJobs)
+          currentPage++;
+        });
+
+
     await scroll(page);
-    //get all jobLinks
-    const jobLinks = await page.evaluate(() => {
-        let nextPage = document.querySelector(".pagination__jump-link.pagination__jump-link--linked");
-        nextPage.click();
-      return Array.from(document.querySelectorAll("article.tabular-list__item > a")
-      ).map((el) => el.href);
+    await page.evaluate(() => {
+      window.scrollBy(0, window.innerHeight);
     });
+    //pagination website
+    
+    // variable to hold collection of all book titles and prices
+    
     console.log(jobLinks);
-    let allJobs = [];
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
@@ -92,7 +107,8 @@ allJobs.push(job);
 }
 console.log(allJobs);
 return allJobs.filter((job) => job.position != "");
-} catch (e) {
+} 
+}catch (e) {
 console.log(e);
 }
 };
