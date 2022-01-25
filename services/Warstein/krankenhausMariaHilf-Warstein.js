@@ -122,3 +122,4 @@ let krankenhausMariaHilf_Warstein = async () => {
 };
 
 
+export default krankenhausMariaHilf_Warstein;
