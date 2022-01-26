@@ -1,18 +1,17 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
 
-let beraLinaKlinik = async () => {
+let paderborn = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
-
     let page = await browser.newPage();
 
     await page.goto(
-      "https://www.berolinaklinik.de/aktuelles/stellenangebote/",
+      "https://www.lwl-klinik-paderborn.de/de/fuer-bewerber-mitarbeiter-job-karriere/fuer-bewerberinnen-bewerber-job-karriere/",
       {
         waitUntil: "load",
         timeout: 0,
@@ -23,21 +22,17 @@ let beraLinaKlinik = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(
-          ".news-list-container > ul > li > .news-list-item > h3 a"
-        )
-      ).map((el) => el.href);
+      return Array.from(document.querySelectorAll("div.col-md-8.pull-right-md > ul > li > a")).map(el => el.href)
     });
 
     console.log(jobLinks);
     let allJobs = [];
-
+    
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Löhne",
-        hospital: "Berolina Klinik Löhne",
+        location: "Paderborn",
+        hospital: "lwl-klinik-paderborn",
         link: "",
         level: "",
         position: "",
@@ -66,7 +61,10 @@ let beraLinaKlinik = async () => {
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"
+        level == "Assistenzarzt"||
+        level =="Arzt"||
+        level == "Oberarzt"
+
       ) {
         job.position = "artz";
       }
@@ -78,22 +76,14 @@ let beraLinaKlinik = async () => {
       if (!position in positions) {
         continue;
       }
-
-      //get link
       let link = await page.evaluate(() => {
-        return document.body.innerText.match(
-          /[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+|[a-zA-Z0-9]+ @[a-zA-Z0-9-]+\ [a-z]\w+ \.[a-z]+/
-        );
-      });
-      if (typeof link == "object") {
-        job.link = link;
-      }
-      // console.log(job);
+        let apply = document.querySelector("#tab1 > p.applyBtn.apply > a")
+        return apply ? apply.href : "";
+      }); 
+      job.link = link;
       allJobs.push(job);
     }
     console.log(allJobs);
-    await page.close();
-    await browser.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
     console.log(e);
@@ -115,5 +105,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-beraLinaKlinik();
+paderborn();
+export default paderborn;

@@ -1,104 +1,145 @@
-import puppeteer from 'puppeteer';
 
-const betaKlinik = async () => {
-    try {
-        const browser = await puppeteer.launch({ headless: false });
-        const page = await browser.newPage();
-        page.setDefaultNavigationTimeout(0);
+import puppeteer from "puppeteer";
 
-        let allJobs = [];
-        let allLinks = [
-            'https://www.betaklinik.de/beta-klinik/stellenangebote/'
-        ]
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-        async function scroll(page) {
-            await page.evaluate(() => {
-                const distance = 100;
-                const delay = 100;
-                const timer = setInterval(() => {
-                    document.scrollingElement.scrollBy(0, distance);
-                    if (
-                        document.scrollingElement.scrollTop + window.innerHeight >=
-                        document.scrollingElement.scrollHeight
-                    ) {
-                        clearInterval(timer);
-                    }
-                }, delay);
-            });
-        }
-        let counter = 0;
-        do {
-            await page.goto(allLinks[counter], { timeout: 0 });
-            scroll(page);
+let betaKlinik = async () => {
+  try {
+    let browser = await puppeteer.launch({
+      headless: true,
+    });
 
-            // get all jobs links 
+    let page = await browser.newPage();
 
-            let jobs = await page.evaluate(() => {
-                return Array.from(
-                    document.querySelectorAll('.vc_custom_heading.vc_custom_1562575030398.vc_gitem-post-data.vc_gitem-post-data-source-post_title > h3 a')
-                ).map(el => el.href)
-            });
-            allJobs.push(...jobs)
+    await page.goto("https://www.betaklinik.de/beta-klinik/stellenangebote/", {
+      waitUntil: "load",
+      timeout: 0,
+    });
 
-            counter++;
-            await page.waitForTimeout(3000);
-        } while (counter < allLinks);
-        console.log(allJobs);
+    await scroll(page);
 
-        const allJobDetails = [];
-        // get all the data from stored links 
-        for (const urls of allJobs) {
-            await page.goto(urls)
-            scroll(page);
+    //get all jobLinks
+    const jobLinks = await page.evaluate(() => {
+      return Array.from(
+        document.querySelectorAll(".vc_custom_heading.vc_custom_1562575030398.vc_gitem-post-data.vc_gitem-post-data-source-post_title > h3 a")
+      ).map((el) => el.href);
+    });
 
-            // gettingg all the Title of the links 
-            await page.waitForSelector('h1')
-            const title = await page.evaluate(() => {
-                let Title = document.querySelector('h1');
-                return Title ? Title.innerText : null;
-            });
+    console.log(jobLinks);
+    let allJobs = [];
 
-            // getting apply links 
-            const email = await page.evaluate(() => {
-                let applink = document.querySelector('.content > p a')
-                return applink ? applink.href : null;
-            });
+    for (let jobLink of jobLinks) {
+      let job = {
+        title: "",
+        location: "Joseph-Schumpeter-Allee 15 53227 Bonn",
+        hospital: "Beta Klinik",
+        link: "",
+        level: "",
+        position: "",
+        city: "Bonn",
+        email: "",
+        republic: "Bonn Republic",
+      };
 
-            // /// get all the address 
-            const address = await page.evaluate(() => {
-                let regex = /[a-zA-Z]+-[a-zA-Z]+-[a-zA-Z]+ \d+[\n]\d+ [a-zA-Z]+/
-                let adr = document.querySelector('.content');
-                return adr ? adr.innerText.match(regex) : null;
-            });
+      await page.goto(jobLink, {
+        waitUntil: "load",
+        timeout: 0,
+      });
 
-            // // // getting all the cell no. 
-            // const cell = await page.evaluate(() => {
-            //     let regex = /\d+ [/] \d{3}-\d+|\d+ \d{3}-\d{4}|\d{5} \d{3} \d{4}|[(]\d+[)] \d+ \d+|\d{5}[/]\d{7}|\d{5}[/]\d{5} \d{4}|\d{5} \d{5}/;
-            //     let text = Array.from(document.querySelectorAll('.col.col1 p'));
-            //     text = text.map(el => el.innerText)
-            //     let str = text.join(" ");
-            //     str = str.match(regex);
-            //     return str;
+      await page.waitForTimeout(1000);
+    
+        let title = await page.evaluate(() => {
+          let ttitle = document.querySelector("h1");
+          return ttitle ? ttitle.innerText : "";
+        });
+        job.title = title;
+    //
+    
 
-            // });
+    //   job.location = await page.evaluate(() => {
+    //     let loc = document.querySelector("body");
+    //     return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+[\n][\n]\d+[a-zA-Z-. ].+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+|[a-zA-Z]+-[a-zA-Z]+-[a-zA-Z]+ \d+[\n]\d+ [a-zA-Z]/) : ""
+        
+    //   });
 
-            let jobDetails = {
-                title,
-                address,
-                email,
+    //   if(typeof job.location == 'object' && job.location != null ){
+    //     job.location = job.location[0]
+    //   }
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
+        continue;
+      }
+
+      //get link\
+
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/);
+      });
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
+      }
+      // job.email = email
+
+      // get link 
+    //   let link1 = 0;
+    //   if (link1) {
+    //     const link = await page.evaluate(() => {
+    //       let applyLink = document.querySelector('a.onlinebewerben.btn.btn--invert')
+    //       return applyLink ? applyLink.href : ""
+    //     })
+    //     job.link = link;
+    //   } else {
+        job.link = jobLink
+    //   }
 
 
 
-            }
-            allJobDetails.push(jobDetails);
-        }
-        await page.waitForTimeout(3000);
-        console.log(allJobDetails);
-        await browser.close();
-        return allJobDetails
-    } catch (error) {
-        console.log(error)
+      allJobs.push(job);
     }
-}
+    console.log(allJobs)
+    await browser.close();
+    return allJobs.filter((job) => job.position != "");
+  } catch (e) {
+    console.log(e);
+  }
+};
 
-betaKlinik();
+async function scroll(page) {
+  await page.evaluate(() => {
+    const distance = 100;
+    const delay = 100;
+    const timer = setInterval(() => {
+      document.scrollingElement.scrollBy(0, distance);
+      if (
+        document.scrollingElement.scrollTop + window.innerHeight >=
+        document.scrollingElement.scrollHeight
+      ) {
+        clearInterval(timer);
+      }
+    }, delay);
+  });
+}
+// betaKlinik()
+export default betaKlinik
+

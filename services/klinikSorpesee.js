@@ -40,7 +40,9 @@ const klinikSorpesee = async () => {
       jobLink.click();
       //get title
       job.title = jobLink.innerText;
-
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
       //get level and position
       let text = job.title;
       let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
