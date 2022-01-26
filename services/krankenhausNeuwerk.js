@@ -119,3 +119,7 @@ let krankenhausNeuwerk = async () => {
   }
 };
 
+
+
+
+export default krankenhausNeuwerk;
