@@ -1,88 +1,138 @@
+
 import puppeteer from "puppeteer";
 
-const contila = async () => {
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
+let contila = async () => {
     try {
-        const browser = await puppeteer.launch({ headless: false });
-        const page = await browser.newPage();
-        page.setDefaultNavigationTimeout(0);
+        let browser = await puppeteer.launch({
+            headless: false,
+        });
 
+        let page = await browser.newPage();
+
+        await page.goto("https://www.contilia.de/stellenangebote/aerztlicher-dienst.html", {
+            waitUntil: "load",
+            timeout: 0,
+        });
+
+        await scroll(page);
+
+        await page.waitForSelector('.list-group-item a')
+        //get all jobLinks
+        const jobLinks = await page.evaluate(() => {
+            return Array.from(
+                document.querySelectorAll(".list-group-item a")
+            ).map((el) => el.href);
+        });
+
+        console.log(jobLinks);
         let allJobs = [];
-        let link = ["https://www.contilia.de/stellenangebote/aerztlicher-dienst.html"]
 
-        let counter = 0;
-        do {
-            await page.goto(link[counter], { timeout: 0 })
-            scroll(page);
-
-            //getting all the jobs links 
-
-
-            await page.waitForTimeout(3000)
-            const jobs = await page.evaluate(() => {
-                return Array.from(
-                    document.querySelectorAll('.list-group-item a')
-                ).map(el => el.href)
-            });
-            console.log(jobs);
-            allJobs.push(...jobs);
-            counter++;
-        } while (counter < link);
-
-        const allJobDetails = []
-
-        for (const url of allJobs) {
-            await page.goto(url)
-            await scroll(page)
-            /// getting all the title
-            await page.waitForSelector('h2')
-            const title = await page.evaluate(() => {
-                return document.querySelector('h2').innerText || null;
-            })
-
-            /// getting all the cell no.
-            const cell = await page.evaluate(() => {
-                let text = document.querySelector('.ce-bodytext');
-                return text ? text.innerText.match(/\d+[-]\d+ \d+ \d+-\d+|\d+[/\s].\d+[-\s]\d+|\d+.. \d+ . \d+|\d+ [/] \d+[-]\d+/) : null;
-            });
-
-            // getting all the links
-            const applyLink = await page.evaluate(() => {
-                let link = document.querySelector('.square-wrap.frame.frame-default.frame-type-imageTeaser.col-6.col-md-3 a')
-                return link ? link.href : null;
-
-            })
-            // // getting all the location from the links 
-            // const location = await page.evaluate(() => {
-            //     let text = document.querySelector('.frame.frame-type-list.frame-layout-0.ce-default.col-xs-12');
-            //     return text ? text.innerText.match(/[a-zA-Z]+.[a-zA-Zß]+. \d+[\n]\d+ [a-zA-Z., ]+/) : null;
-            // });
-
-            // /// getting all the emails 
-            const email = await page.evaluate(() => {
-                let text = document.querySelector('.ce-bodytext');
-                return text ? text.innerText.match(/[a-zA-Z.]+[a-zA-Z]+@[a-zA-Z.]+/) : null;
-            });
-
-
-            const jobDetails = {
-                title,
-                cell,
-                applyLink,
-                // location,
-                email
-
+        for (let jobLink of jobLinks) {
+            let job = {
+                title: "",
+                location: "Klara-Kopp-Weg 1, 45138 Essen",
+                hospital: "GFO Kliniken Rhein-Berg, Betriebsstätte Marien-Krankenhaus",
+                link: "",
+                level: "",
+                position: "",
+                city: "Bergisch Gladbach",
+                email: "",
+                republic: "North Rhine-Westphalia",
             };
-            allJobDetails.push(jobDetails);
-            await page.waitForTimeout(3000);
+
+            await page.goto(jobLink, {
+                waitUntil: "load",
+                timeout: 0,
+            });
+
+            await page.waitForTimeout(1000);
+            //   let tit = 0;
+            //   if(tit){
+            let title = await page.evaluate(() => {
+                let ttitle = document.querySelector("h2");
+                return ttitle ? ttitle.innerText : "";
+            });
+            job.title = title;
+            //   }else{
+            //     let title = await page.evaluate(() => {
+            //       let ttitle = document.querySelector(".news-single-item h2");
+            //       return ttitle ? ttitle.innerText : "";
+            //     });
+            //     job.title = title;
+            //   }
+
+
+            //   job.location = await page.evaluate(() => {
+            //     let loc = document.querySelector(".siteFooter");
+            //     return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+[\n][\n]\d+[a-zA-Z-. ].+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+/) : ""
+
+            //   });
+
+            //   if(typeof job.location == 'object' && job.location != null ){
+            //     job.location = job.location[0]
+            //   }
+            let text = await page.evaluate(() => {
+                return document.body.innerText;
+            });
+            //get level
+            let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+            let position = text.match(/arzt|pflege/);
+            job.level = level ? level[0] : "";
+            if (
+                level == "Facharzt" ||
+                level == "Chefarzt" ||
+                level == "Assistenzarzt" ||
+                level == "Arzt" ||
+                level == "Oberarzt"
+            ) {
+                job.position = "artz";
+            }
+            if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+                job.position = "pflege";
+                job.level = "Nicht angegeben";
+            }
+
+            if (!position in positions) {
+                continue;
+            }
+
+            //get link\
+
+            job.email = await page.evaluate(() => {
+                let text = document.querySelector('.ce-bodytext');
+                return text ? text.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+/) : null;
+            });
+            if (typeof job.email == "object" && job.email != null) {
+                job.email = job.email[0]
+            }
+            // job.email = email
+
+            // get link 
+            let link1 = 0;
+            if (link1) {
+                const link = await page.evaluate(() => {
+                    let applyLink = document.querySelector('a.teaser-hover')
+                    return applyLink ? applyLink.href : ""
+                })
+                job.link = link;
+            } else {
+                job.link = jobLink
+            }
+
+
+
+            allJobs.push(job);
         }
-        console.log(allJobDetails);
-        await page.close();
+        console.log(allJobs)
         await browser.close();
-        return allJobDetails;
-    } catch (error) {
-        console.log(error)
+        return allJobs.filter((job) => job.position != "");
+    } catch (e) {
+        console.log(e);
     }
-}
+};
 
 async function scroll(page) {
     await page.evaluate(() => {
@@ -98,6 +148,8 @@ async function scroll(page) {
             }
         }, delay);
     });
-};
+}
+contila()
+// export default contila
 
-contila();
+

@@ -26,7 +26,7 @@ connect();
 async function run() {
   try {
     let allJobs = await mainService();
-    Job.updateMany(allJobs, { upsert: true })
+    Job.insertMany(allJobs, { ordered: false })
       .then((data) => {
         console.log(data);
       })
@@ -67,7 +67,10 @@ const job = new CronJob(
   "Europe/Berlin"
 );
 
-//job.start();
+job.start();
+
+run();
+
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
