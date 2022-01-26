@@ -4,7 +4,9 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let evk_kar_duess = async () => {
+
+let karankenEnger = async () => {
+
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -18,12 +20,15 @@ let evk_kar_duess = async () => {
     });
 
     await scroll(page);
+
+
     
     await page.waitForSelector('h3 a ')
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
         document.querySelectorAll('h3 a ')
+
       ).map((el) => el.href);
     });
 
@@ -61,7 +66,6 @@ let evk_kar_duess = async () => {
         return loc;
       });
       job.location = location
-
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -86,8 +90,6 @@ let evk_kar_duess = async () => {
       if (!position in positions) {
         continue;
       }
-
-      //get link
       const email = await page.evaluate(() => {
         let Email = document.querySelector('.blockContentInner')
             return Email ? Email.innerText.match(/[A-Za-z-.]+@[A-Za-z-.]+/) : "";
@@ -95,12 +97,7 @@ let evk_kar_duess = async () => {
   
       job.email = email
 
-    //   getting applylink
-    //   let link = page.evaluate(()=> {
-    //       let Link = document.querySelector('.kein-mitarbeiter.button.btn.btn-default');
-    //       return Link ? Link.href : ""
-    //   })
-    //   job.link = link
+  
       job.link = jobLink;
 
       allJobs.push(job);
@@ -130,8 +127,5 @@ async function scroll(page) {
   });
 }
 
-// evk_kar_duess()
-export default  evk_kar_duess;
-
-
+karankenEnger();
 
