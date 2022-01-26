@@ -1,30 +1,30 @@
-
 import puppeteer from "puppeteer";
-let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let koln = async () => {
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt",  "Arzt", "Oberarzt"];
+
+let dusseldorf = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
-
     let page = await browser.newPage();
 
-    await page.goto("https://www.ergaenzen-sie-uns.de/job-suche/", {
-      waitUntil: "load",
-      timeout: 0,
-    });
+    await page.goto(
+      "https://www.uniklinik-duesseldorf.de/ausbildung-karriere/stellenangebote",
+      {
+        waitUntil: "load",
+        timeout: 0,
+      }
+    );
 
     await scroll(page);
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      let nextPage = document.querySelector(".next > a");
-      nextPage.click();
-      return Array.from(
-        document.querySelectorAll("ul.job-list.hidden-md.hidden-lg > li > a")
-      ).map((el) => el.href);
+      return Array.from(document.querySelectorAll(".tx_brajobsukd > tbody > tr > td > a")).map(
+        (el) => el.href
+      );
     });
 
     console.log(jobLinks);
@@ -33,14 +33,11 @@ let koln = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "",
-        city: "Köln",
-        hospital: "Heilig Geist-Krankenhaus, Köln-Longerich",
+        location: "Geseke",
+        hospital: "Hospital zum Hl. Geist Geseke",
         link: "",
-        email: "",
         level: "",
         position: "",
-        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -49,9 +46,9 @@ let koln = async () => {
       });
 
       await page.waitForTimeout(1000);
-      // title
+
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1.jobad-title");
+        let ttitle = document.querySelector(".tx_brajobsukd > tbody > tr > td > font");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -60,15 +57,13 @@ let koln = async () => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt" ||
-        level == "Arzt" ||
-        level == "Oberarzt"
+        level == "Assistenzarzt"
       ) {
         job.position = "artz";
       }
@@ -80,30 +75,11 @@ let koln = async () => {
       if (!position in positions) {
         continue;
       }
-
-      //get link
       let link = await page.evaluate(() => {
-        let applyLink = document.querySelector("a.a-button");
-        return applyLink ? applyLink.href : null;
+        let lnk = document.querySelector(".tx_brajobsukd > p > a");
+        return lnk ? lnk.href : "";
       });
       job.link = link;
-
-      //get email
-
-      let email = await page.evaluate(() => {
-        let eml = document.querySelector(".footer-block");
-        return eml ? eml.innerText.match(/\w+@\w+\-\w+.\w+/).toString() : "";
-      });
-      job.email = email;
-
-      //get location
-      let location = await page.evaluate(() => {
-        let loc = document.querySelector(
-          "#cjb-list > div.jobad > div > div:nth-child(5) > div:nth-child(5)"
-        );
-        return loc ? loc.innerText.slice(0, -19) : null;
-      });
-      job.location = location;
       allJobs.push(job);
     }
     console.log(allJobs);
@@ -128,6 +104,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-export default koln;
-
+dusseldorf();
+export default dusseldorf;
