@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let fliednerDe = async () => {
+let Fliender = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -31,11 +31,14 @@ let fliednerDe = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Düsseldorf",
+        location: "",
         hospital: "Fliedner Klinik Düsseldorf",
         link: "",
         level: "",
         position: "",
+        city: "Düsseldorf",
+        email: "",
+        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -51,6 +54,14 @@ let fliednerDe = async () => {
       });
       job.title = title;
 
+      job.location = await page.evaluate(() => {
+        let loc = document.querySelector(".con-content.col-sm-8 col-xs-12")
+        return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+|[a-zA-Z-. ].+[\n]\d+ [a-zA-Z-.].+/) : '';
+      });
+
+      if(typeof job.location == 'object' && job.location != null ){
+        job.location = job.location[0]
+      }
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -76,18 +87,34 @@ let fliednerDe = async () => {
         continue;
       }
 
-      //get link
-      let link = await page.evaluate(() => {
-        let applink = document.querySelector('.a-full-area')
-        return applink ? applink.href : " ";
+      //get link\
+
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+/);
       });
-      
-    job.link = link
-    allJobs.push(job);
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
+      }
+      // job.email = email
+
+      // get link 
+      let link1 = 0;
+      if (link1) {
+        const link = await page.evaluate(() => {
+          let applyLink = document.querySelector('.a-full-area')
+          return applyLink ? applyLink.href : ""
+        })
+        job.link = link;
+      } else {
+        job.link = jobLink
+      }
+
+
+
+      allJobs.push(job);
     }
-    console.log(allJobs);
+    console.log(allJobs)
     await browser.close();
-    await page.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
     console.log(e);
@@ -109,6 +136,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-// fliednerDe()
-export default fliednerDe;
+// Fliender()
+export default Fliender;
