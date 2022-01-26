@@ -1,14 +1,14 @@
 import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
-let krefeld = async () => {
+let schwelm = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
 
     let page = await browser.newPage();
-    await page.goto("https://www.helios-gesundheit.de/kliniken/krefeld/unser-haus/karriere/stellenangebote/?tx_heliosuwsjoboffers_joboffers%5Bclinic%5D=56&tx_heliosuwsjoboffers_joboffers%5Bareas%5D=&tx_heliosuwsjoboffers_", {
+    await page.goto("https://www.helios-gesundheit.de/kliniken/schwelm/unser-haus/stellenangebote/", {
       waitUntil: "load",
       timeout: 0,
     });
@@ -44,8 +44,8 @@ let krefeld = async () => {
       let job = {
         title: "",
         location: "",
-        city : "Krefeld",
-        hospital: "HELIOS Klinikum Krefeld",
+        city : "Schwelm",
+        hospital: "Helios Klinikum Schwelm",
         link: "",
         email: "",
         level: "",
@@ -97,7 +97,7 @@ let link = await page.evaluate(() => {
 job.link = link
 //get email 
 let email = await page.evaluate(()=> {
-  let eml = document.querySelector("#c74505 > div > section.content-block-list > div > article:nth-child(5) > div > div");
+  let eml = document.querySelector("#c101700 > div > section.content-block-list > div > article:nth-child(5) > div > div");
   return eml ? eml.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g) : "";
 })
 job.email = String() + email;
@@ -131,4 +131,5 @@ if (
 }, delay);
 });
 }
-export default krefeld()
+schwelm()
+export default schwelm()

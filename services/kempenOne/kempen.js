@@ -1,72 +1,60 @@
 import puppeteer from "puppeteer";
-
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
-
-let bochum = async () => {
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+let kempen = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
     let page = await browser.newPage();
-
-    await page.goto(
-      "https://www.hyperthermie-tagesklinik.de/index.html/",
-      {
-        waitUntil: "load",
-        timeout: 0,
-      }
-    );
-
+    await page.goto("https://www.krankenhaus-kempen.de/karriere/stellenangebote", {
+      waitUntil: "load",
+      timeout: 0,
+    });
     await scroll(page);
-
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("div.headline > h3 > a")).map(
-        (el) => el.href
-      );
+      return Array.from(
+        document.querySelectorAll(".behandlungen-inhaltsverzeichnis__listing > a")
+      ).map((el) => el.href);
     });
-
     console.log(jobLinks);
     let allJobs = [];
-
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Bochum",
-        hospital: "Hyperthermie - Tagesklinik Bochum",
+        location: "Schönheitschirurgie Düsseldorf | KÖ-Aesthetics",
+        city : "Dusseldorf",
+        hospital: "koe-aesthetics",
         link: "",
+        email: "",
         level: "",
         position: "",
+        republic : "Republic M! Deutschland GmbH"
       };
-
       await page.goto(jobLink, {
         waitUntil: "load",
         timeout: 0,
       });
-
       await page.waitForTimeout(1000);
-
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h3");
+        let ttitle = document.querySelector("div.block-content.text > h2");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
-
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"||
-        level =="Arzt"||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
         level == "Oberarzt"
-
       ) {
         job.position = "artz";
       }
@@ -74,24 +62,29 @@ let bochum = async () => {
         job.position = "pflege";
         job.level = "Nicht angegeben";
       }
-
       if (!position in positions) {
         continue;
       }
+      //get link
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.col-md-12 > a");
-        return lnk ? lnk.href : "";
+          let applyLink = document.querySelector(".behandlungen-inhaltsverzeichnis__listing > a");
+          return applyLink ? applyLink.href : null;
       });
-      job.link = link;
+      job.link = link
+      //get email 
+      let email = await page.evaluate(()=> {
+        let eml = document.querySelector('.footer-block');
+        return eml ? eml.innerText.match(/\w+@\w+\-\w+.\w+/).toString() : null;
+      })
+      job.email = email;
       allJobs.push(job);
     }
     console.log(allJobs);
     return allJobs.filter((job) => job.position != "");
-  } catch (e) {
+} catch (e) {
     console.log(e);
-  }
+}
 };
-
 async function scroll(page) {
   await page.evaluate(() => {
     const distance = 100;
@@ -107,5 +100,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-bochum();
-export default bochum;
+kempen()
+export default kempen;

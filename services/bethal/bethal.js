@@ -1,38 +1,19 @@
 import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
-let krefeld = async () => {
+let bethal = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
 
     let page = await browser.newPage();
-    await page.goto("https://www.helios-gesundheit.de/kliniken/krefeld/unser-haus/karriere/stellenangebote/?tx_heliosuwsjoboffers_joboffers%5Bclinic%5D=56&tx_heliosuwsjoboffers_joboffers%5Bareas%5D=&tx_heliosuwsjoboffers_", {
+    await page.goto("https://karriere.bethel.de/go/0000_Gesundheitsberufe/5101501/", {
       waitUntil: "load",
       timeout: 0,
     });
     await scroll(page);
 
-    //function for moving to next page
-    await page.waitForTimeout(1000);
-
-    let nextPage = true;
-    let allJobLinks = [];
-    while (nextPage) {
-      //scroll the page
-      await page.evaluate(() => {
-        for (let i = 0; i < 100; i++) {
-          if (
-            document.scrollingElement.scrollTop + window.innerHeight >=
-            document.scrollingElement.scrollHeight
-          ) {
-            break;
-          }
-          document.scrollingElement.scrollBy(0, 100);
-          setTimeout(1000);
-        }
-    });
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(document.querySelectorAll("article.tabular-list__item > a")
@@ -44,8 +25,8 @@ let krefeld = async () => {
       let job = {
         title: "",
         location: "",
-        city : "Krefeld",
-        hospital: "HELIOS Klinikum Krefeld",
+        city : "Warburg",
+        hospital: "Helios Klinikum Warburg",
         link: "",
         email: "",
         level: "",
@@ -97,7 +78,7 @@ let link = await page.evaluate(() => {
 job.link = link
 //get email 
 let email = await page.evaluate(()=> {
-  let eml = document.querySelector("#c74505 > div > section.content-block-list > div > article:nth-child(5) > div > div");
+  let eml = document.querySelector("#c101700 > div > section.content-block-list > div > article:nth-child(5) > div > div");
   return eml ? eml.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g) : "";
 })
 job.email = String() + email;
@@ -111,7 +92,6 @@ allJobs.push(job);
 }
 console.log(allJobs);
 return allJobs.filter((job) => job.position != "");
-};
 } catch (e) {
     console.log(e);
     }
@@ -131,4 +111,5 @@ if (
 }, delay);
 });
 }
-export default krefeld()
+bethal()
+export default bethal()

@@ -1,30 +1,26 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let bochum = async () => {
+let bethel = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
+
     let page = await browser.newPage();
 
-    await page.goto(
-      "https://www.hyperthermie-tagesklinik.de/index.html/",
-      {
-        waitUntil: "load",
-        timeout: 0,
-      }
-    );
+    await page.goto("https://karriere.evkb.de/stellenboerse.html?stadt=1", {
+      waitUntil: "load",
+      timeout: 0,
+    });
 
     await scroll(page);
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("div.headline > h3 > a")).map(
-        (el) => el.href
-      );
+    return Array.from(document.querySelectorAll("div.job-list-offers > div.row > div.job-offer > a ")).map(el => el.href) 
     });
 
     console.log(jobLinks);
@@ -33,8 +29,8 @@ let bochum = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Bochum",
-        hospital: "Hyperthermie - Tagesklinik Bochum",
+        location: "bethel",
+        hospital: "EVANGELISCHES",
         link: "",
         level: "",
         position: "",
@@ -48,7 +44,7 @@ let bochum = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h3");
+        let ttitle = document.querySelector("h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -57,16 +53,15 @@ let bochum = async () => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"||
-        level =="Arzt"||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
         level == "Oberarzt"
-
       ) {
         job.position = "artz";
       }
@@ -78,9 +73,11 @@ let bochum = async () => {
       if (!position in positions) {
         continue;
       }
+
+      //get link
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.col-md-12 > a");
-        return lnk ? lnk.href : "";
+        let applyLink = document.querySelector("a#apply-direct-btn");
+        return applyLink ? applyLink.href : null;
       });
       job.link = link;
       allJobs.push(job);
@@ -107,5 +104,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-bochum();
-export default bochum;
+bethel();
+export default bethel;
