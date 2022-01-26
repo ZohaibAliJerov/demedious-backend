@@ -3,6 +3,7 @@ import verifyToken from "../middlewares/authJwt.js";
 import {
   findAllJobs,
   findJobById,
+  createJob,
   updateJob,
   deleteJob,
   searchJob,
@@ -10,8 +11,10 @@ import {
 const router = express.Router();
 
 //get all jobs
-router.get("/all", [verifyToken], findAllJobs);
+router.get("/all", findAllJobs);
 
+//create a job
+router.post("/create", [verifyToken], createJob);
 //get job by id
 router.get("/:id", [verifyToken], findJobById);
 
