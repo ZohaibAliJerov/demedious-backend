@@ -4,6 +4,30 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
+let EKO = async () => {
+  try {
+    let browser = await puppeteer.launch({
+      headless: false,
+    });
+
+    let page = await browser.newPage();
+
+    await page.goto("https://eko.de/unternehmen/stellenangebote.html", {
+      waitUntil: "load",
+      timeout: 0,
+    });
+
+    await scroll(page);
+
+    //get all jobLinks
+    const jobLinks = await page.evaluate(() => {
+      return Array.from(
+        document.querySelectorAll("span.listitemtitle a")
+      ).map((el) => el.href);
+    });
+
+    console.log(jobLinks);
+
 let Ekode = async () => {
   try {
     let browser = await puppeteer.launch({
@@ -27,7 +51,6 @@ let Ekode = async () => {
         ).map((el) => el.href);
       });
       console.log(jobLinks);
-
 
     let allJobs = [];
 
@@ -57,6 +80,7 @@ let Ekode = async () => {
       });
       job.title = title;
 
+
       job.location = await page.evaluate(() => {
         let text = document.querySelector("body");
         return text ? text.innerText.match(
@@ -68,6 +92,7 @@ let Ekode = async () => {
       if(typeof job.location =="object" && job.location != null){
         job.location = job.location[0];
       }
+
 
       let text = await page.evaluate(() => {
         return document.body.innerText;
