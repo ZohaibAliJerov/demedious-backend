@@ -168,8 +168,8 @@ async function scroll(page) {
     }, delay);
   });
 }
-ugos_de()
-// export default ugos_de
+
+export default ugos_de;
 
 
 

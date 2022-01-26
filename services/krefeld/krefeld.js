@@ -1,115 +1,134 @@
 import puppeteer from "puppeteer";
-const krefeld = async () => {
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+let krefeld = async () => {
   try {
-    const browser = await puppeteer.launch({
+    let browser = await puppeteer.launch({
       headless: false,
     });
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(0);
-    //scroll the page
+
+    let page = await browser.newPage();
+    await page.goto("https://www.helios-gesundheit.de/kliniken/krefeld/unser-haus/karriere/stellenangebote/?tx_heliosuwsjoboffers_joboffers%5Bclinic%5D=56&tx_heliosuwsjoboffers_joboffers%5Bareas%5D=&tx_heliosuwsjoboffers_", {
+      waitUntil: "load",
+      timeout: 0,
+    });
+    await scroll(page);
+
+    //function for moving to next page
+    await page.waitForTimeout(1000);
+
+    let nextPage = true;
+    let allJobLinks = [];
+    while (nextPage) {
+      //scroll the page
+      await page.evaluate(() => {
+        for (let i = 0; i < 100; i++) {
+          if (
+            document.scrollingElement.scrollTop + window.innerHeight >=
+            document.scrollingElement.scrollHeight
+          ) {
+            break;
+          }
+          document.scrollingElement.scrollBy(0, 100);
+          setTimeout(1000);
+        }
+    });
+    //get all jobLinks
+    const jobLinks = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll("article.tabular-list__item > a")
+      ).map((el) => el.href);
+    });
+    console.log(jobLinks);
     let allJobs = [];
-    let allLinks = [
-      "https://www.helios-gesundheit.de/kliniken/krefeld-uerdingen/unser-haus/karriere/stellenangebote/",
-    ];
-    let counter = 0;
-    do {
-      await page.goto(allLinks[counter], {
+    for (let jobLink of jobLinks) {
+      let job = {
+        title: "",
+        location: "",
+        city : "Krefeld",
+        hospital: "HELIOS Klinikum Krefeld",
+        link: "",
+        email: "",
+        level: "",
+        position: "",
+        republic: "North Rhine-Westphalia"
+      };
+      await page.goto(jobLink, {
+        waitUntil: "load",
         timeout: 0,
       });
-      scroll(page);
-      //  get all job links
-      let jobs = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll(".tabular-list__link")).map(
-          (el) => el.href
-        );
+      await page.waitForTimeout(1000);
+      // title
+      let title = await page.evaluate(() => {
+        let ttitle = document.querySelector("h2.billboard-panel__title");
+        return ttitle ? ttitle.innerText : "";
       });
-      console.log(jobs);
-      allJobs.push(...jobs);
-      counter++;
-      await page.waitForTimeout(3000);
-    } while (counter < allLinks.length);
-    let allJobDetails = [];
-    // get data from every job post
-    for (const url of allJobs) {
-      await page.goto(url);
-      scroll(page);
-
-      const title = await page.evaluate(() => {
-        let text = document.querySelector(".billboard-panel__body > h2");
-        return text ? text.innerText : null;
+      job.title = title;
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
       });
-
-      //get contacts
-      let cell = await page.evaluate(() => {
-        let text = document
-          .querySelector(".content-block-list__container")
-          .getElementsByTagName("article")[4];
-        return text
-          ? text.innerText.match(
-              /\(\d+\).\d+.\d+[-/]\d+.\d+|\d{5}.\d{3}.\d{4}|\(\d+\).\d+.[-/].\d+.\d+|\(\d+\)/g
-            )
-          : null;
-      });
-      // get email
-      let email = await page.evaluate(() => {
-        let text = document
-          .querySelector(".content-block-list__container")
-          .getElementsByTagName("article")[4];
-        return text
-          ? text.innerText.match(
-              /[a-zA-Z]+.[a-zA-Z-]+.[a-zA-Z]+.\[at\].[a-zA-Z-]+.[a-zA-Z.]+.[a-zA-Z]+./g
-            )
-          : null;
-      });
-
-      //   get location
-      let location = await page.evaluate(() => {
-        let text = document
-          .querySelector(".content-block-list")
-          .getElementsByTagName("article")[4];
-        return text
-          ? text.innerText.match(
-              /[a-zA-Z.]+.\d+.[a-zA-Z]+.\d+.[a-zA-Z]+.|[a-zA-Z]+\W{1}[a-zA-Z]+\W{1}[a-zA-Z]+.\d+[,/].\d+.[a-zA-Z]+/g
-            )
-          : null;
-      });
-
-        //get apply link
-        let applyLink = await page.evaluate(() => {
-          let text = document.querySelector(".dialog__content >a");
-          return text ? text.href : null;
-        });
-      const jobDetails = {
-        title,
-        cell,
-        email,
-        location,
-        applyLink,
-      };
-      allJobDetails.push(jobDetails);
-      await page.waitForTimeout(4000);
-    }
-    console.log(allJobDetails);
-    await page.close();
-    return allJobDetails;
-  } catch (err) {
-    console.log(err);
-  }
-};
-async function scroll(page) {
-  await page.evaluate(() => {
-    const distance = 100;
-    const delay = 100;
-    const timer = setInterval(() => {
-      document.scrollingElement.scrollBy(0, distance);
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
       if (
-        document.scrollingElement.scrollTop + window.innerHeight >=
-        document.scrollingElement.scrollHeight
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
       ) {
-        clearInterval(timer);
+        job.position = "artz";
       }
-    }, delay);
-  });
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+      if (!position in positions) {
+        continue;
+      }
+//get link
+await page.waitForSelector
+let link = await page.evaluate(() => {
+  let getLink = document.querySelector(".button-form");
+  getLink.click();
+    let applyLink = document.querySelector("a.button");
+    return applyLink ? applyLink.href : null;
+});
+job.link = link
+//get email 
+let email = await page.evaluate(()=> {
+  let eml = document.querySelector("#c74505 > div > section.content-block-list > div > article:nth-child(5) > div > div");
+  return eml ? eml.innerText.match(/[a-z.]+[a-z]+.\[at].[a-z-]+[a-z.]+[a-z.]+/g) : "";
+})
+job.email = String() + email;
+//get location
+let location = await page.evaluate(()=>{
+    let loc = document.getElementsByTagName("td")[1];
+    return loc ? loc.innerText: null;
+})
+job.location = location
+allJobs.push(job);
 }
-krefeld();
-export default krefeld;
+console.log(allJobs);
+return allJobs.filter((job) => job.position != "");
+};
+} catch (e) {
+    console.log(e);
+    }
+}
+async function scroll(page) {
+await page.evaluate(() => {
+const distance = 100;
+const delay = 100;
+const timer = setInterval(() => {
+document.scrollingElement.scrollBy(0, distance);
+if (
+  document.scrollingElement.scrollTop + window.innerHeight >=
+  document.scrollingElement.scrollHeight
+) {
+  clearInterval(timer);
+}
+}, delay);
+});
+}
+export default krefeld()

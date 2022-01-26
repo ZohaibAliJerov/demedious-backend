@@ -1,16 +1,17 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let schmallenberg = async () => {
+let bewerber = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
+
     let page = await browser.newPage();
 
-    await page.goto("https://www.johannesbad-karriere.com/Stellenangebote.aspx", {
+    await page.goto("https://kmrdd.pi-asp.de/bewerber-web/?companyEid=*&lang=D&position_cats=8bbc455b-44f6-4cfd-bbfa-860daa9e75ca#positions", {
       waitUntil: "load",
       timeout: 0,
     });
@@ -19,9 +20,9 @@ let schmallenberg = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("a.position-title")).map(
-        (el) => el.href
-      );
+      return Array.from(
+        document.querySelectorAll(".ng-scope.ng-isolate-scope > div > a")
+      ).map((el) => el.href);
     });
 
     console.log(jobLinks);
@@ -30,8 +31,8 @@ let schmallenberg = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Schmallenberg",
-        hospital: "Johannesbad Fachklinik  Fredeburg",
+        location: "Düsseldorf",
+        hospital: "St. Vinzenz",
         link: "",
         level: "",
         position: "",
@@ -45,7 +46,7 @@ let schmallenberg = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("div.content-container > h1");
+        let ttitle = document.querySelector("h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -54,16 +55,15 @@ let schmallenberg = async () => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"||
-        level =="Arzt"||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
         level == "Oberarzt"
-
       ) {
         job.position = "artz";
       }
@@ -75,18 +75,20 @@ let schmallenberg = async () => {
       if (!position in positions) {
         continue;
       }
+
+      //get link
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("a#ctl01_cphInhalt_hBewerben1");
-        return lnk ? lnk.href : "";
+          let applyLink = document.querySelector("a.btn.btn-primary");
+          return applyLink ? applyLink.href : null;
       });
-      job.link = link;
+      job.link = link
       allJobs.push(job);
     }
     console.log(allJobs);
     return allJobs.filter((job) => job.position != "");
-  } catch (e) {
+} catch (e) {
     console.log(e);
-  }
+}
 };
 
 async function scroll(page) {
@@ -104,5 +106,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-schmallenberg();
-export default schmallenberg;
+bewerber()
+export default bewerber;
