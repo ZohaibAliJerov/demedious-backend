@@ -6,41 +6,73 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 let gtkKrefeld = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
     });
 
     let page = await browser.newPage();
+    // let url = []
 
+    await page.goto("https://gtk-krefeld.de/jobs/", {
+      waitUntil: "load",
+      timeout: 0,
+    });
 
-            await page.goto("https://gtk-krefeld.de/jobs/", {
-                waitUntil: "load",
-                timeout: 0,
-            });
-            //scroll the page
-            await scroll(page)
-           
+    await scroll(page);
 
+    // //get all jobLinks
+    // const jobLinks = await page.evaluate(() => {
+    //   return Array.from(
+    //     document.querySelectorAll(".gi.cell.breakword a")
+    //   ).map((el) => el.href);
+    // });
+
+    // console.log(jobLinks);
     let allJobs = [];
 
-
-
+    // for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Bad Driburg",
-        hospital: "Gräfliche Kliniken - Park Klinik Bad Hermannsborn",
+        location: "",
+        hospital: "Gynäkologische Tagesklinik Krefeld (GTK-Krefeld)",
         link: "",
         level: "",
         position: "",
+        city: "Krefeld",
+        email: "",
+        republic: "North Rhine-Westphalia",
       };
 
-    //   await page.waitForTimeout(3000)
-    //   await page.waitForSelector('h1')
-      let title = await page.evaluate(() => {
-        let ttitle = document.querySelector(".csc-textpic-text ");
-        return ttitle ? ttitle.innerText : "";
-      });
-      job.title = title;
+      // await page.goto(jobLink, {
+      //   waitUntil: "load",
+      //   timeout: 0,
+      // });
 
+      await page.waitForTimeout(1000);
+    //   let tit = 0;
+    //   if(tit){
+        let title = await page.evaluate(() => {
+          let ttitle = document.querySelector(".csc-textpic-text");
+          return ttitle ? ttitle.innerText.slice(57 ,268) : "";
+        });
+        job.title = title;
+    //   }else{
+    //     let title = await page.evaluate(() => {
+    //       let ttitle = document.querySelector(".news-single-item h2");
+    //       return ttitle ? ttitle.innerText : "";
+    //     });
+    //     job.title = title;
+    //   }
+    
+
+      job.location = await page.evaluate(() => {
+        let loc = document.querySelector("#footeradress-inner");
+        return loc ? loc.innerText.match(/[a-zA-Z-. ]+.[a-zA-Z-.]+ \d+ \w+ \d+ [a-zA-Z-.]+/) : ""
+        
+      });
+
+      if(typeof job.location == 'object' && job.location != null ){
+        job.location = job.location[0]
+      }
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -63,24 +95,37 @@ let gtkKrefeld = async () => {
       }
 
       if (!position in positions) {
-        console.log(ok)
+        console.log('fulltime ')
       }
 
-      //get link
-      let link = await page.evaluate(() => {
-        let applyLink = document.querySelector('.bodymain');
-        return applyLink ? applyLink.innerText.match(/[a-zaA-Z-.]+ [(][a-zaA-Z]+[)] [a-zaA-Z-.]+/) : "";
-      
-      })
-      
-        job.link = link
+      //get link\
 
-      
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/);
+      });
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
+      }
+      // job.email = email
+
+      // get link 
+      // let link1 = 0;
+      // if (link1) {
+      //   const link = await page.evaluate(() => {
+      //     let applyLink = document.querySelector('a.onlinebewerben.btn.btn--invert')
+      //     return applyLink ? applyLink.href : ""
+      //   })
+      //   job.link = link;
+      // } else {
+        job.link = "https://gtk-krefeld.de/jobs/"
+      // }
+
+
+
       allJobs.push(job);
-    
-    console.log(allJobs);
+ 
+    console.log(allJobs)
     await browser.close();
-    await page.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
     console.log(e);
@@ -102,9 +147,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-gtkKrefeld()
-// export default ugos_deParkKlinik;
-
-
-
+// gtkKrefeld()
+export default gfo_kliniken
