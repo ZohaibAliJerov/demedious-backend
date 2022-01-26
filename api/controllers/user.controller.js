@@ -3,7 +3,7 @@ import bcryptjs from "bcryptjs";
 import User from "../models/User.model.js";
 import Token from "../models/Token.js";
 import { registerValidation, loginValidation } from "../validation.js";
-
+import Job from "../models/Job.model.js";
 //register controller
 export const register = async (req, res) => {
   //validate user data
@@ -79,6 +79,46 @@ export const logout = async (req, res) => {
     let userId = decoded._id;
     await Token.findOneAndDelete({ userId: userId });
     return res.status(200).send({ message: "Logout successfully!" });
+  } catch (err) {
+    return res.status(500).send({ message: err.message });
+  }
+};
+
+//save job with job referenc
+export const saveJob = async (req, res) => {
+  try {
+    let { jobId, userId } = req.body;
+    let user = await User.findOne({ _id: userId });
+    let job = await Job.findOne({ _id: jobId });
+    if (!user || !job) {
+      return res.status(404).send("User or Job not found!");
+    }
+    //delete job if already exists
+    let index = user.savedJobs.indexOf(jobId);
+    if (index > -1) {
+      user.savedJobs.splice(index, 1);
+      User.save();
+      return res.status(200).send({ message: "Job deleted successfully!" });
+    }
+    user.savedJobs.push(job);
+    user.save();
+    return res.status(200).send("Job saved successfully!");
+  } catch (err) {
+    return res.status(500).send({ message: err.message });
+  }
+};
+
+// get saved jobs
+export const getSavedJobs = async (req, res) => {
+  try {
+    let userId = req.query.userId;
+    let user = await User.findOne({ _id: userId });
+    if (!user) {
+      return res.status(404).send("User not found!");
+    }
+    let savedJobs = user.savedJobs;
+    let jobs = await Job.find({ _id: { $in: savedJobs } });
+    return res.status(200).send(jobs);
   } catch (err) {
     return res.status(500).send({ message: err.message });
   }

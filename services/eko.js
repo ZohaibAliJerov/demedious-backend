@@ -27,16 +27,44 @@ let EKO = async () => {
     });
 
     console.log(jobLinks);
+
+let Ekode = async () => {
+  try {
+    let browser = await puppeteer.launch({
+      headless: true,
+    });
+
+    let page = await browser.newPage();
+
+
+    await page.goto("https://eko.de/unternehmen/stellenangebote.html", {
+        waitForTimeout : 0
+    })
+
+    await page.waitForTimeout(1000);
+    await scroll(page)
+  
+      // get all job links
+      const jobLinks = await page.evaluate(() => {
+        return Array.from(
+          document.querySelectorAll('.listitemtitle a')
+        ).map((el) => el.href);
+      });
+      console.log(jobLinks);
+
     let allJobs = [];
 
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Oberhausen",
+        location: "",
         hospital: "Evangelisches Krankenhaus Oberhausen",
         link: "",
         level: "",
         position: "",
+        city: "Oberhausen",
+        email: "",
+        republic: "	North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -51,6 +79,20 @@ let EKO = async () => {
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
+
+
+      job.location = await page.evaluate(() => {
+        let text = document.querySelector("body");
+        return text ? text.innerText.match(
+          /[a-zA-Z]+. \d+ [|] \d+ [a-zA-Z,]+ [a-zA-Z]+|[a-zA-Z]+. \d+ [|] \d+ [a-zA-Z.]+|[a-zA-Z.]+ .[a-zA-Z.]+. [a-zA-Z.]+ .[a-zA-Z.]+. [a-zA-Z.]+/
+        )
+          : null;
+      });
+
+      if(typeof job.location =="object" && job.location != null){
+        job.location = job.location[0];
+      }
+
 
       let text = await page.evaluate(() => {
         return document.body.innerText;
@@ -78,16 +120,28 @@ let EKO = async () => {
       }
 
       //get link
+      job.email = await page.evaluate(() => {
+        let text = document.querySelector(".mail");
+        return text ? text.href : null;
+      });
+
+     if(typeof job.email == "object" && job.email != null) {
+        job.email = job.email[0];
+     }
+
+      //   getting applylink
       let link = await page.evaluate(() => {
-          let links = document.querySelector('span.applylink a');
-        return links ? links.href : "";
-        // innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+/) : "";
+        let Link = document.querySelector('.applylink a');
+        return Link ? Link.href : "";
       })
-      
-      job.link = link
+     
+    job.link = link;
+//    if(typeof job.link == "object") {
+//         job.link = job.link;
+//     } 
       allJobs.push(job);
     }
-    console.log(allJobs)
+    console.log(allJobs);
     await page.close();
     await browser.close();
     return allJobs.filter((job) => job.position != "");
@@ -105,12 +159,12 @@ async function scroll(page) {
       if (
         document.scrollingElement.scrollTop + window.innerHeight >=
         document.scrollingElement.scrollHeight
-      ){
-          clearInterval(timer)
+      ) {
+        clearInterval(timer);
       }
-    }, delay)
-});
+    }, delay);
+  });
 }
-EKO()
 
-
+// Ekode()
+export default Ekode;
