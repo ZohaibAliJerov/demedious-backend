@@ -1,7 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
 import mainService from "./services/mainService.js";
-import cron from "node-cron";
+import { CronJob } from "cron";
 import userRoutes from "./api/routes/user.routes.js";
 import jobRoutes from "./api/routes/job.routes.js";
 import resetRoutes from "./api/routes/resetPassword.routes.js";
@@ -26,7 +26,7 @@ connect();
 async function run() {
   try {
     let allJobs = await mainService();
-    Job.insertMany(allJobs)
+    Job.insertMany(allJobs, { ordered: false })
       .then((data) => {
         console.log(data);
       })
@@ -57,11 +57,20 @@ app.use("/api/v1/jobs", jobRoutes);
 //reset password routes
 app.use("/api/v1/resetpassword", resetRoutes);
 
-const job = cron.schedule(" 0 35 * * * *", () => {
-  run().catch(console.dir);
-});
+const job = new CronJob(
+  " 0 0 7,12,15 * * *",
+  () => {
+    run().catch(console.dir);
+  },
+  null,
+  true,
+  "Europe/Berlin"
+);
 
-//job.start();
+job.start();
+
+run();
+
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
