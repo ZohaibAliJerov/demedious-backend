@@ -1,3 +1,4 @@
+
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
@@ -6,7 +7,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 const elisabeth = async () => {
   try {
     const browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const page = await browser.newPage();
@@ -68,8 +69,8 @@ const elisabeth = async () => {
     for (let jobLink of allJobLinks) {
       let job = {
         title: "",
-        location: "Sundern (Sauerland)",
-        hospital: "Neurologische Klinik Sorpe",
+        location: "Herne",
+        hospital: "St. Anna Hospital Herne ",
         link: "",
         level: "",
         position: "",
@@ -142,5 +143,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
+// elisabeth()
 export default elisabeth;

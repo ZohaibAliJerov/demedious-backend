@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 //get all jobs
-router.get("/all", [verifyToken], findAllJobs);
+router.get("/all", findAllJobs);
 
 //create a job
 router.post("/create", [verifyToken], createJob);

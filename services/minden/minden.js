@@ -30,8 +30,8 @@ let minden = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Minden",
-        hospital: "Johannes Wesling Klinikum",
+        location: "Munester",
+        hospital: "Herz-Jesu-Krankenhaus Munester",
         link: "",
         level: "",
         position: "",

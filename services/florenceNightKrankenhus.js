@@ -11,11 +11,13 @@ let florencNightKrank = async () => {
 
     let page = await browser.newPage();
     let alljobsLinks = [];
+
     let allLinks = [
         "https://www.florence-nightingale-krankenhaus.de/de/karriere/stellenausschreibungen.html?type=0%27a%3D0%27a%3D0%27a%3D0%27",
         "https://www.florence-nightingale-krankenhaus.de/de/karriere/stellenausschreibungen.html?type=0%27a%3D0%27a%3D0%27a%3D0%27&tx_ttnews%5Bpointer%5D=1&cHash=5acac32e6cd26b46843fc7ce24f87062",
         "https://www.florence-nightingale-krankenhaus.de/de/karriere/stellenausschreibungen.html?type=0%27a%3D0%27a%3D0%27a%3D0%27&tx_ttnews%5Bpointer%5D=2&cHash=e9db8017b61c163e555efe7db57bdcc4"
     ]
+
 
     let counter = 0;
     do {
@@ -24,13 +26,13 @@ let florencNightKrank = async () => {
       //get all job links
       let jobs = await page.evaluate(() => {
         return Array.from(
-          document.querySelectorAll("div.news-list-item.clearfix > span a")
+          document.querySelectorAll("h2.entry-title.fusion-post-title a")
         ).map((el) => el.href);
       });
       alljobsLinks.push(...jobs);
       counter++;
       await page.waitForTimeout(3000);
-    } while (counter < allLinks.length);
+ while (counter < allLinks);
     //console.log(allJobs);
 
     console.log(alljobsLinks);
@@ -40,8 +42,8 @@ let florencNightKrank = async () => {
     for (let jobLink of alljobsLinks) {
       let job = {
         title: "",
-        location: "Düsseldorf",
-        hospital: "Klinik für Psychiatrie und Psychotherapie am Florence-Nightingale-Krankenhaus",
+        location: "Solingen",
+        hospital: "Psychosoziale Trägerverein Solingen, Standort Eichenstraße",
         link: "",
         level: "",
         position: "",
