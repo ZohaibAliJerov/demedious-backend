@@ -1,16 +1,16 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let schmallenberg = async () => {
+let brilon = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
     let page = await browser.newPage();
 
-    await page.goto("https://www.johannesbad-karriere.com/Stellenangebote.aspx", {
+    await page.goto("https://karriere.krankenhaus-brilon.de/stellenangebote/", {
       waitUntil: "load",
       timeout: 0,
     });
@@ -18,8 +18,9 @@ let schmallenberg = async () => {
     await scroll(page);
 
     //get all jobLinks
+
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("a.position-title")).map(
+      return Array.from(document.querySelectorAll("#blockContentInner > div.elementSection.elementSection_var0.elementSectionPadding_var0.elementSectionMargin_var0.elementSectionInnerWidth_var90 > div > div > div.col.col1 > div > div.elementLink.elementLink_var10000.elementLinkPosition_var30 > a")).map(
         (el) => el.href
       );
     });
@@ -30,11 +31,14 @@ let schmallenberg = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Schmallenberg",
-        hospital: "Johannesbad Fachklinik  Fredeburg",
+        location: "Schönschede 1 59929 Brilon",
+        city: "Brilon",
+        hospital: "Städtisches Krankenhaus Maria-Hilf Brilon",
         link: "",
         level: "",
         position: "",
+        email: "",
+        republic: " North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -45,7 +49,7 @@ let schmallenberg = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("div.content-container > h1");
+        let ttitle = document.querySelector("div.elementHeadline.elementHeadline_var0.elementHeadlineAlign_var0.elementHeadlineLevel_varh1 > h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -53,6 +57,12 @@ let schmallenberg = async () => {
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
+      //get email
+      let email = await page.evaluate(()=>{
+        let eml = document.querySelector("a.wpst");
+        return eml ? eml.innerText : "";
+      })
+      job.email = email;
       //get level
       let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
       let position = text.match(/arzt|pflege/);
@@ -61,9 +71,8 @@ let schmallenberg = async () => {
         level == "Facharzt" ||
         level == "Chefarzt" ||
         level == "Assistenzarzt"||
-        level =="Arzt"||
+        level == "Arzt"||
         level == "Oberarzt"
-
       ) {
         job.position = "artz";
       }
@@ -75,11 +84,12 @@ let schmallenberg = async () => {
       if (!position in positions) {
         continue;
       }
-      let link = await page.evaluate(() => {
-        let lnk = document.querySelector("a#ctl01_cphInhalt_hBewerben1");
-        return lnk ? lnk.href : "";
-      });
-      job.link = link;
+      //applyLink
+      let link = await page.evaluate(()=>{
+        let loc = document.querySelector("div.elementLink.elementLink_var10000.elementLinkPosition_var30 > a")
+        return loc ? loc.innerText : "";
+      })
+      job.link = jobLink;
       allJobs.push(job);
     }
     console.log(allJobs);
@@ -104,5 +114,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-schmallenberg();
-export default schmallenberg;
+brilon();
+export default brilon;
