@@ -3,35 +3,36 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
 
-let schmallenberg = async () => {
+let paderborn = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
     let page = await browser.newPage();
 
-    await page.goto("https://www.johannesbad-karriere.com/Stellenangebote.aspx", {
-      waitUntil: "load",
-      timeout: 0,
-    });
+    await page.goto(
+      "https://www.lwl-klinik-paderborn.de/de/fuer-bewerber-mitarbeiter-job-karriere/fuer-bewerberinnen-bewerber-job-karriere/",
+      {
+        waitUntil: "load",
+        timeout: 0,
+      }
+    );
 
     await scroll(page);
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("a.position-title")).map(
-        (el) => el.href
-      );
+      return Array.from(document.querySelectorAll("div.col-md-8.pull-right-md > ul > li > a")).map(el => el.href)
     });
 
     console.log(jobLinks);
     let allJobs = [];
-
+    
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Schmallenberg",
-        hospital: "Johannesbad Fachklinik  Fredeburg",
+        location: "Paderborn",
+        hospital: "lwl-klinik-paderborn",
         link: "",
         level: "",
         position: "",
@@ -45,7 +46,7 @@ let schmallenberg = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("div.content-container > h1");
+        let ttitle = document.querySelector("h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -76,9 +77,9 @@ let schmallenberg = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("a#ctl01_cphInhalt_hBewerben1");
-        return lnk ? lnk.href : "";
-      });
+        let apply = document.querySelector("#tab1 > p.applyBtn.apply > a")
+        return apply ? apply.href : "";
+      }); 
       job.link = link;
       allJobs.push(job);
     }
@@ -104,5 +105,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-schmallenberg();
-export default schmallenberg;
+paderborn();
+export default paderborn;
