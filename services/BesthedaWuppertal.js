@@ -39,13 +39,13 @@ let besthadWuppertal = async () => {
       let job = {
         title: "",
         location: "",
-        hospital: "GFO Kliniken Rhein-Berg, Betriebsstätte Marien-Krankenhaus",
+        hospital: "Agaplesion Bethesda Krankenhaus Wuppertal",
         link: "",
         level: "",
         position: "",
-        city: "Bergisch Gladbach",
+        city: "Wuppertal",
         email: "",
-        republic: "North Rhine-Westphalia",
+        republic: "Czech Republic",
       };
 
       await page.goto(jobLink, {
@@ -153,5 +153,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-besthadWuppertal()
-// export default besthadWuppertal
+// besthadWuppertal()
+export default besthadWuppertal
