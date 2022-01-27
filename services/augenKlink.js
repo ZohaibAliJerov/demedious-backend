@@ -143,5 +143,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-gfo_kliniken()
-// export default gfo_kliniken
+// gfo_kliniken()
+export default gfo_kliniken
