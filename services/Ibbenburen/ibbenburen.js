@@ -32,8 +32,8 @@ let ibbenburen = async () => {
       let job = {
         title: "",
         location: "Frankenburgstraße 3148431 Rheine",
-        city: "Bad Driburg",
-        hospital: "Vital-Kliniken - Klinik Dreizehnlinden",
+        city: "Ibbenbüren",
+        hospital: "von Bodelschwingh-Krankenhaus",
         link: "",
         level: "",
         position: "",
@@ -59,8 +59,8 @@ let ibbenburen = async () => {
       });
       //get email
       let email = await page.evaluate(()=>{
-        let eml = documentdocument.getElementsByTagName("p")[28]
-        return eml ? eml.innerText.slice(14) : "";
+        let eml = document.querySelector("#c151 > p:nth-child(3) > a:nth-child(3)")
+        return eml ? eml.innerText.slice(1) : "";
       })
       job.email = email;
       //get level
