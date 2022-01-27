@@ -59,7 +59,7 @@ let badDriburg = async () => {
       });
       //get email
       let email = await page.evaluate(()=>{
-        let eml = documentdocument.getElementsByTagName("p")[28]
+        let eml = document.getElementsByTagName("p")[28]
         return eml ? eml.innerText.slice(14) : "";
       })
       job.email = email;
