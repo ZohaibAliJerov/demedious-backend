@@ -7,7 +7,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 let besthadIslerlohnde = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
     });
 
     let page = await browser.newPage();
@@ -42,13 +42,13 @@ let besthadIslerlohnde = async () => {
       let job = {
         title: "",
         location: "",
-        hospital: "GFO Kliniken Rhein-Berg, Betriebsstätte Marien-Krankenhaus",
+        hospital: "Agaplesion Evangelisches Krankenhaus Bethanien Iserlohn",
         link: "",
         level: "",
         position: "",
-        city: "Bergisch Gladbach",
+        city: "Iserlohn",
         email: "",
-        republic: "North Rhine-Westphalia",
+        republic: "Federal Republic",
       };
 
       await page.goto(jobLink, {
@@ -68,8 +68,7 @@ let besthadIslerlohnde = async () => {
     
 
       job.location = await page.evaluate(() => {
-        let loc = document.querySelector(".news-text-wrap.col-md-8.col-xs-12");
-        return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+ [a-zA-Z-.]+/) : ""
+        return document.body.innerText.match(/[a-zA-Z-.]+ \d+. \d+ [a-zA-Z-.]+|[a-zA-Z-.]+ \d+[\n]\d+ [a-zA-Z-.]+/) || "Bethanienallee 3 58644 Iserlohn";
         
       });
 
@@ -150,5 +149,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-besthadIslerlohnde()
-// export default besthadIslerlohnde
+// besthadIslerlohnde()
+export default besthadIslerlohnde
