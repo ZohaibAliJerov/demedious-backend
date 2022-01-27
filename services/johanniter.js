@@ -150,8 +150,3 @@ const johanniter = async () => {
 };
 
 export default johanniter;
-
-// (async () => {
-//   let res = await johanniter();
-//   console.log(res);
-// })();
