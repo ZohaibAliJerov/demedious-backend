@@ -54,8 +54,17 @@ export const deleteJob = async (req, res) => {
 export const searchJob = async (req, res) => {
   let { title, levels, positions, republics, cities, months } = req.body;
   //levels,positions,locations are arrays
+  //remove undefined parameters
+  
   let jobs = [];
-  if (title && levels && positions && republics && cities && months) {
+  if (
+    title &&
+    levels != undefined &&
+    positions != undefined &&
+    republics != undefined &&
+    cities != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
@@ -64,7 +73,13 @@ export const searchJob = async (req, res) => {
       city: { $in: cities },
       month: { $in: months },
     });
-  } else if (title && levels && positions && republics && cities) {
+  } else if (
+    title != undefined &&
+    levels != undefined &&
+    positions != undefined &&
+    republics != undefined &&
+    cities != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
@@ -72,7 +87,13 @@ export const searchJob = async (req, res) => {
       republic: { $in: republics },
       city: { $in: cities },
     });
-  } else if (title && levels && positions && republics && months) {
+  } else if (
+    title != undefined &&
+    levels != undefined &&
+    positions != undefined &&
+    republics != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
@@ -80,7 +101,13 @@ export const searchJob = async (req, res) => {
       republic: { $in: republics },
       month: { $in: months },
     });
-  } else if (title && levels && positions && cities && months) {
+  } else if (
+    title != undefined &&
+    levels != undefined &&
+    positions != undefined &&
+    cities != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
@@ -88,7 +115,13 @@ export const searchJob = async (req, res) => {
       city: { $in: cities },
       month: { $in: months },
     });
-  } else if (title && levels && republics && cities && months) {
+  } else if (
+    title != undefined &&
+    levels != undefined &&
+    republics != undefined &&
+    cities != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       levels: { $in: levels },
@@ -96,7 +129,13 @@ export const searchJob = async (req, res) => {
       city: { $in: cities },
       month: { $in: months },
     });
-  } else if (title && positions && republics && cities && months) {
+  } else if (
+    title != undefined &&
+    positions != undefined &&
+    republics != undefined &&
+    cities != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       position: { $in: positions },
@@ -104,7 +143,13 @@ export const searchJob = async (req, res) => {
       city: { $in: cities },
       month: { $in: months },
     });
-  } else if (levels && positions && republics && cities && months) {
+  } else if (
+    levels != undefined &&
+    positions != undefined &&
+    republics != undefined &&
+    cities != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       level: { $in: levels },
       position: { $in: positions },
@@ -112,277 +157,381 @@ export const searchJob = async (req, res) => {
       city: { $in: cities },
       month: { $in: months },
     });
-  } else if (title && levels && positions && republics) {
+  } else if (
+    title != undefined &&
+    levels != undefined &&
+    positions != undefined &&
+    republics != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
       position: { $in: positions },
       republic: { $in: republics },
     });
-  } else if (title && levels && positions && cities) {
+  } else if (
+    title != undefined &&
+    levels != undefined &&
+    positions != undefined &&
+    cities != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
       position: { $in: positions },
       city: { $in: cities },
     });
-  } else if (title && levels && republics && cities) {
+  } else if (
+    title != undefined &&
+    levels != undefined &&
+    republics != undefined &&
+    cities != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
       republic: { $in: republics },
       city: { $in: cities },
     });
-  } else if (title && levels && positions && months) {
+  } else if (
+    title != undefined &&
+    levels != undefined &&
+    positions != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
       position: { $in: positions },
       month: { $in: months },
     });
-  } else if (title && levels && cities && months) {
+  } else if (
+    title != undefined &&
+    levels != undefined &&
+    cities != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
       city: { $in: cities },
       month: { $in: months },
     });
-  } else if (title && positions && republics && months) {
-    jobs = await Job.find({
-      title: { $regex: title, $options: "i" },
-      position: { $in: positions },
-      republic: { $in: republics },
-      month: { $in: months },
-    });
-  } else if (title && positions && cities && months) {
-    jobs = await Job.find({
-      title: { $regex: title, $options: "i" },
-      position: { $in: positions },
-      city: { $in: cities },
-      month: { $in: months },
-    });
-  } else if (title && republics && cities && months) {
-    jobs = await Job.find({
-      title: { $regex: title, $options: "i" },
-      republic: { $in: republics },
-      city: { $in: cities },
-      month: { $in: months },
-    });
-  } else if (title && levels && positions) {
-    jobs = await Job.find({
-      title: { $regex: title, $options: "i" },
-      level: { $in: levels },
-      position: { $in: positions },
-    });
-  } else if (title && levels && cities) {
-    jobs = await Job.find({
-      title: { $regex: title, $options: "i" },
-      level: { $in: levels },
-      city: { $in: cities },
-    });
-  } else if (title && levels && republics) {
-    jobs = await Job.find({
-      title: { $regex: title, $options: "i" },
-      level: { $in: levels },
-      republic: { $in: republics },
-    });
-  } else if (title && levels && months) {
-    jobs = await Job.find({
-      title: { $regex: title, $options: "i" },
-      level: { $in: levels },
-      month: { $in: months },
-    });
-  } else if (title && positions && cities) {
-    jobs = await Job.find({
-      title: { $regex: title, $options: "i" },
-      position: { $in: positions },
-      city: { $in: cities },
-    });
-  } else if (title && positions && republics) {
+  } else if (
+    title != undefined &&
+    positions != undefined &&
+    republics != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       position: { $in: positions },
       republic: { $in: republics },
+      month: { $in: months },
     });
-  } else if (title && positions && months) {
+  } else if (
+    title != undefined &&
+    positions != undefined &&
+    cities != undefined &&
+    months != undefined
+  ) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      position: { $in: positions },
+      city: { $in: cities },
+      month: { $in: months },
+    });
+  } else if (
+    title != undefined &&
+    republics != undefined &&
+    cities != undefined &&
+    months != undefined
+  ) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      republic: { $in: republics },
+      city: { $in: cities },
+      month: { $in: months },
+    });
+  } else if (
+    title != undefined &&
+    levels != undefined &&
+    positions != undefined
+  ) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      level: { $in: levels },
+      position: { $in: positions },
+    });
+  } else if (title != undefined && levels != undefined && cities != undefined) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      level: { $in: levels },
+      city: { $in: cities },
+    });
+  } else if (
+    title != undefined &&
+    levels != undefined &&
+    republics != undefined
+  ) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      level: { $in: levels },
+      republic: { $in: republics },
+    });
+  } else if (title != undefined && levels != undefined && months != undefined) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      level: { $in: levels },
+      month: { $in: months },
+    });
+  } else if (
+    title != undefined &&
+    positions != undefined &&
+    cities != undefined
+  ) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      position: { $in: positions },
+      city: { $in: cities },
+    });
+  } else if (
+    title != undefined &&
+    positions != undefined &&
+    republics != undefined
+  ) {
+    jobs = await Job.find({
+      title: { $regex: title, $options: "i" },
+      position: { $in: positions },
+      republic: { $in: republics },
+    });
+  } else if (
+    title != undefined &&
+    positions != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       position: { $in: positions },
       month: { $in: months },
     });
-  } else if (title && cities && republics) {
+  } else if (
+    title != undefined &&
+    cities != undefined &&
+    republics != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       city: { $in: cities },
       republic: { $in: republics },
     });
-  } else if (title && cities && months) {
+  } else if (title != undefined && cities != undefined && months != undefined) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       city: { $in: cities },
       month: { $in: months },
     });
-  } else if (title && republics && months) {
+  } else if (
+    title != undefined &&
+    republics != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       republic: { $in: republics },
       month: { $in: months },
     });
-  } else if (levels && positions && cities) {
+  } else if (
+    levels != undefined &&
+    positions != undefined &&
+    cities != undefined
+  ) {
     jobs = await Job.find({
       level: { $in: levels },
       position: { $in: positions },
       city: { $in: cities },
     });
-  } else if (levels && positions && republics) {
+  } else if (
+    levels != undefined &&
+    positions != undefined &&
+    republics != undefined
+  ) {
     jobs = await Job.find({
       level: { $in: levels },
       position: { $in: positions },
       republic: { $in: republics },
     });
-  } else if (levels && positions && months) {
+  } else if (
+    levels != undefined &&
+    positions != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       level: { $in: levels },
       position: { $in: positions },
       month: { $in: months },
     });
-  } else if (levels && cities && republics) {
+  } else if (
+    levels != undefined &&
+    cities != undefined &&
+    republics != undefined
+  ) {
     jobs = await Job.find({
       level: { $in: levels },
       city: { $in: cities },
       republic: { $in: republics },
     });
-  } else if (levels && cities && months) {
+  } else if (
+    levels != undefined &&
+    cities != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       level: { $in: levels },
       city: { $in: cities },
       month: { $in: months },
     });
-  } else if (levels && republics && months) {
+  } else if (
+    levels != undefined &&
+    republics != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       level: { $in: levels },
       republic: { $in: republics },
       month: { $in: months },
     });
-  } else if (positions && cities && months) {
+  } else if (
+    positions != undefined &&
+    cities != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       position: { $in: positions },
       city: { $in: cities },
       month: { $in: months },
     });
-  } else if (positions && republics && months) {
+  } else if (
+    positions != undefined &&
+    republics != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       position: { $in: positions },
       republic: { $in: republics },
       month: { $in: months },
     });
-  } else if (cities && republics && months) {
+  } else if (
+    cities != undefined &&
+    republics != undefined &&
+    months != undefined
+  ) {
     jobs = await Job.find({
       city: { $in: cities },
       republic: { $in: republics },
       month: { $in: months },
     });
-  } else if (title && levels) {
+  } else if (title != undefined && levels != undefined) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       level: { $in: levels },
     });
-  } else if (title && positions) {
+  } else if (title != undefined && positions != undefined) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       position: { $in: positions },
     });
-  } else if (title && cities) {
+  } else if (title != undefined && cities != undefined) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       city: { $in: cities },
     });
-  } else if (title && republics) {
+  } else if (title != undefined && republics != undefined) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       republic: { $in: republics },
     });
-  } else if (title && months) {
+  } else if (title != undefined && months != undefined) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
       month: { $in: months },
     });
-  } else if (levels && positions) {
+  } else if (levels != undefined && positions != undefined) {
     jobs = await Job.find({
       level: { $in: levels },
       position: { $in: positions },
     });
-  } else if (levels && cities) {
+  } else if (levels != undefined && cities != undefined) {
     jobs = await Job.find({
       level: { $in: levels },
       city: { $in: cities },
     });
-  } else if (levels && republics) {
+  } else if (levels != undefined && republics != undefined) {
     jobs = await Job.find({
       level: { $in: levels },
-      republics: { $in: republics },
+      republic: { $in: republics },
     });
-  } else if (levels && months) {
+  } else if (levels != undefined && months != undefined) {
     jobs = await Job.find({
       level: { $in: levels },
       month: { $in: months },
     });
-  } else if (positions && cities) {
+  } else if (positions != undefined && cities != undefined) {
     jobs = await Job.find({
       position: { $in: positions },
       city: { $in: cities },
     });
-  } else if (positions && republics) {
+  } else if (positions != undefined && republics != undefined) {
     jobs = await Job.find({
       position: { $in: positions },
       republic: { $in: republics },
     });
-  } else if (positions && months) {
+  } else if (positions != undefined && months != undefined) {
     jobs = await Job.find({
       position: { $in: positions },
       month: { $in: months },
     });
-  } else if (cities && republics) {
+  } else if (cities != undefined && republics != undefined) {
     jobs = await Job.find({
       city: { $in: cities },
       republic: { $in: republics },
     });
-  } else if (cities && months) {
+  } else if (cities != undefined && months != undefined) {
     jobs = await Job.find({
       city: { $in: cities },
       month: { $in: months },
     });
-  } else if (republics && months) {
+  } else if (republics != undefined && months != undefined) {
     jobs = await Job.find({
       republic: { $in: republics },
       month: { $in: months },
     });
-  } else if (republics && cities) {
+  } else if (republics != undefined && cities != undefined) {
     jobs = await Job.find({
       republic: { $in: republics },
       city: { $in: cities },
     });
-  } else if (title) {
+  } else if (title != undefined) {
     jobs = await Job.find({
       title: { $regex: title, $options: "i" },
     });
-  } else if (levels) {
+  } else if (levels != undefined) {
     jobs = await Job.find({
       level: { $in: levels },
     });
-  } else if (positions) {
+  } else if (positions != undefined) {
     jobs = await Job.find({
       position: { $in: positions },
     });
-  } else if (cities) {
+  } else if (cities != undefined) {
     jobs = await Job.find({
       city: { $in: cities },
     });
-  } else if (republics) {
+  } else if (republics != undefined) {
     jobs = await Job.find({
-      republics: { $in: republics },
+      republic: { $in: republics },
     });
-  } else if (months) {
+  } else if (months != undefined) {
     jobs = await Job.find({
       month: { $in: months },
     });
@@ -390,8 +539,8 @@ export const searchJob = async (req, res) => {
     res.status(200).send({
       message: "No valid search parameters provided",
     });
+    // return res.status(200).send(req);
   }
-
   try {
     res.status(200).send(jobs);
   } catch (err) {
