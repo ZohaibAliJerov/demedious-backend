@@ -112,3 +112,7 @@ let krankenhausPlettenberg = async () => {
     console.error(err);
   }
 };
+
+
+
+export default krankenhausPlettenberg;
