@@ -25,10 +25,16 @@ let gfo_kliniken = async () => {
         document.querySelectorAll(".right a")
       ).map((el) => el.href);
     });
+    //get titles
+    let titles = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll(".right h2")
+        ).map(el => el.innerText);
+      });
+      console.log(titles)
 
     console.log(jobLinks);
     let allJobs = [];
-
+    let counter = 0;
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
@@ -49,12 +55,9 @@ let gfo_kliniken = async () => {
 
       await page.waitForTimeout(1000);
     
-        let title = await page.evaluate(() => {
-          let ttitle = document.querySelector("h1");
-          return ttitle ? ttitle.innerText : "";
-        });
-        job.title = title;
-    
+      job.title = titles[counter];
+      counter++;
+   
     
 
       job.location = await page.evaluate(() => {
