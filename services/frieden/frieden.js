@@ -3,15 +3,14 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let aatalklinik = async () => {
+let frieden = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
-
     let page = await browser.newPage();
 
-    await page.goto("https://www.aatalklinik.de/", {
+    await page.goto("https://www.maria-frieden-telgte.de/karriere/stellenmarkt.html", {
       waitUntil: "load",
       timeout: 0,
     });
@@ -19,10 +18,11 @@ let aatalklinik = async () => {
     await scroll(page);
 
     //get all jobLinks
+
     const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll("div.shortcode-jobs > ul > li > a")
-      ).map((el) => el.href);
+      return Array.from(document.querySelectorAll("h3.media-heading.visible-xs > a")).map(
+        (el) => el.href
+      );
     });
 
     console.log(jobLinks);
@@ -31,47 +31,53 @@ let aatalklinik = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "",
-        hospital: "Neurologische Klinik Sorpe",
+        location: "Klinik Maria Frieden Telgte",
+        city: "Münster",
+        hospital: " Franziskus-Stiftung Münster",
         link: "",
         level: "",
         position: "",
-        city: "Sundern",
         email: "",
-        republic: "North Rhine-Westphalia",
+        republic: " North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
         waitUntil: "load",
         timeout: 0,
       });
-    
+
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1#page-title");
+        let ttitle = document.querySelector("h2.news-heading");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
 
-      job.location = await page.evaluate(() => {
-        let loc = document.querySelector(".sidebar-widget").innerText;
-        loc = loc.replace("\n", " ");
-        return loc.replace(/\w+@\w+\.\w+/, "");
-      });
-
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
+      //get email
+      let email = await page.evaluate(()=>{
+        let eml = document.querySelector("a.mail");
+        return eml ? eml.innerText : "";
+      })
+      job.email = String()+ email;
+      //get apply link
+      let link = await page.evaluate(()=>{
+        let applylnk = document.querySelector("a.btn.btn-info")
+        return applylnk ? applylnk.href : "";
+      })
+      job.link = link;
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt" ||
-        level == "Arzt" ||
+        level == "Assistenzarzt"||
+        level == "Arzt"||
         level == "Oberarzt"
       ) {
         job.position = "artz";
@@ -85,22 +91,10 @@ let aatalklinik = async () => {
         continue;
       }
 
-      //get link
-      job.email = await page.evaluate(() => {
-        return document.body.innerText.match(/\w+@\w+\.\w+/);
-      });
-      if (typeof job.email == "object") {
-        job.email = job.email[0];
-      }
-
-      job.link = jobLink;
-
       allJobs.push(job);
     }
     console.log(allJobs);
-    await browser.close()
     return allJobs.filter((job) => job.position != "");
-
   } catch (e) {
     console.log(e);
   }
@@ -121,5 +115,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-aatalklinik();
+frieden();
+export default frieden;

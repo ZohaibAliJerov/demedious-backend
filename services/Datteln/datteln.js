@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let aatalklinik = async () => {
+let dalleln = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -11,7 +11,7 @@ let aatalklinik = async () => {
 
     let page = await browser.newPage();
 
-    await page.goto("https://www.aatalklinik.de/", {
+    await page.goto("https://karriere.vck-gmbh.de/stellenangebote.html?filter%5Bclient_id%5D%5B%5D=2", {
       waitUntil: "load",
       timeout: 0,
     });
@@ -21,7 +21,7 @@ let aatalklinik = async () => {
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
-        document.querySelectorAll("div.shortcode-jobs > ul > li > a")
+        document.querySelectorAll("div.content.articletype-0 > h3 > a")
       ).map((el) => el.href);
     });
 
@@ -31,35 +31,29 @@ let aatalklinik = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "",
-        hospital: "Neurologische Klinik Sorpe",
+        location: "Domagkstraße 5 48149 Münster",
+        hospital: "Vestische Kinder- und Jugendklinik Datteln",
         link: "",
         level: "",
         position: "",
-        city: "Sundern",
+        city: "Datteln",
         email: "",
-        republic: "North Rhine-Westphalia",
+        republic: " North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
         waitUntil: "load",
         timeout: 0,
       });
-    
+
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1#page-title");
+        let ttitle = document.querySelector("div.scheme-content.scheme-title > h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
-
-      job.location = await page.evaluate(() => {
-        let loc = document.querySelector(".sidebar-widget").innerText;
-        loc = loc.replace("\n", " ");
-        return loc.replace(/\w+@\w+\.\w+/, "");
-      });
-
+      
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -85,22 +79,18 @@ let aatalklinik = async () => {
         continue;
       }
 
-      //get link
-      job.email = await page.evaluate(() => {
-        return document.body.innerText.match(/\w+@\w+\.\w+/);
+      //get email
+      let email = await page.evaluate(() => {
+        let eml = document.querySelector("div.text > p > a");
+        return eml ? eml.innerText : "";
       });
-      if (typeof job.email == "object") {
-        job.email = job.email[0];
-      }
+    job.email = String() + email;
 
       job.link = jobLink;
 
       allJobs.push(job);
     }
-    console.log(allJobs);
-    await browser.close()
     return allJobs.filter((job) => job.position != "");
-
   } catch (e) {
     console.log(e);
   }
@@ -121,5 +111,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-aatalklinik();
+dalleln()
+export default dalleln;
