@@ -112,3 +112,4 @@ let LIFESPRING_Privatklinik = async () => {
   }
 };
 
+export default LIFESPRING_Privatklinik;
