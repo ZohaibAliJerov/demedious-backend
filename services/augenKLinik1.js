@@ -1,57 +1,78 @@
+
 import puppeteer from "puppeteer";
+
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
-let erkelenz = async () => {
+
+let gfo_kliniken = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
+
     let page = await browser.newPage();
-    await page.goto("https://www.hjk-erkelenz.de/Mitarbeiter-Karriere-Ausbildung/Karriere/Offene-Stellen", {
+
+    await page.goto("https://www.augenklinik-moers.de/ueber-uns/karriere/", {
       waitUntil: "load",
       timeout: 0,
     });
+
     await scroll(page);
+
+    await page.waitForSelector('.right a')
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
-        document.querySelectorAll("div.headline > h3 > a")
+        document.querySelectorAll(".right a")
       ).map((el) => el.href);
     });
+    //get titles
+    let titles = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll(".right h2")
+        ).map(el => el.innerText);
+      });
+      console.log(titles)
+
     console.log(jobLinks);
     let allJobs = [];
+    let counter = 0;
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
         location: "",
-        city : "Erkelenz",
-        hospital: "Hermann-Josef-Krankenhaus Erkelenz",
+        hospital: "Augenklinik Moers",
         link: "",
-        email: "",
         level: "",
         position: "",
-        republic : "Rhenish Republic"
+        city: "Moers",
+        email: "",
+        republic: "Dutch Republic",
       };
+
       await page.goto(jobLink, {
         waitUntil: "load",
         timeout: 0,
       });
+
       await page.waitForTimeout(1000);
-      let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("body > div.container.p-b-25 > div > div.col-md-9 > div:nth-child(1) > div:nth-child(1) > h1");
-        return ttitle ? ttitle.innerText : "";
+    
+      job.title = titles[counter];
+      counter++;
+   
+    
+
+      job.location = await page.evaluate(() => {
+      
+        return document.body.innerText.match(/[a-zA-Z-.]+ \d+. \d+ [a-zA-Z-.]+|[a-zA-Z-.].+ \d+[\n]\d+ [a-zA-Z-.].+|[a-zA-Z-.].+ \d+ .[\n]\d+ [a-zA-Z-.].+|[a-zA-Z-.].+ \d+[-.]\d+[\n]\w+.\d+ [a-zA-Z-.]+|[a-zA-Z-.]+ \w+ \d+[\n]\n\d+ [a-zA-Z-.].+/) || "Moers"
+        
       });
-      job.title = title;
+
+      if(typeof job.location == 'object' && job.location != null ){
+        job.location = job.location[0]
+      }
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
-
-      //get location 
-      let location = await page.evaluate(()=>{
-          let loc = document.querySelector("body > footer > div > div > div.col-md-3 > p:nth-child(2)");
-          return loc ? loc.innerText.trim() : "";
-      })
-      job.location = location;
       //get level
       let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
       let position = text.match(/arzt|pflege/);
@@ -69,29 +90,45 @@ let erkelenz = async () => {
         job.position = "pflege";
         job.level = "Nicht angegeben";
       }
+
       if (!position in positions) {
         continue;
       }
-      //get link
-      let link = await page.evaluate(() => {
-          let applyLink = document.querySelector("div.col-md-12.pt-20.mb-50 > a");
-          return applyLink ? applyLink.href : null;
+
+      //get link\
+
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+|[a-zA-Z-.]+[[]\w+.[a-zA-Z-.]+/) || "ed.ennedrad@relleum" ;
       });
-      job.link = link
-      //get email 
-      let email = await page.evaluate(()=> {
-        let eml = document.querySelector('a.spamspan');
-        return eml ? eml.innerText.toString() : null;
-      })
-      job.email = email;
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
+      }
+      // job.email = email
+
+      // get link 
+      let link1 = 0;
+      if (link1) {
+        const link = await page.evaluate(() => {
+          let applyLink = document.querySelector('a.btn')
+          return applyLink ? applyLink.href : ""
+        })
+        job.link = link;
+      } else {
+        job.link = jobLink
+      }
+
+
+
       allJobs.push(job);
     }
-    console.log(allJobs);
+    console.log(allJobs)
+    await browser.close();
     return allJobs.filter((job) => job.position != "");
-} catch (e) {
+  } catch (e) {
     console.log(e);
-}
+  }
 };
+
 async function scroll(page) {
   await page.evaluate(() => {
     const distance = 100;
@@ -107,5 +144,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-erkelenz()
-export default erkelenz;
+// gfo_kliniken()
+export default gfo_kliniken
