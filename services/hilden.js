@@ -1,9 +1,9 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let beraLinaKlinik = async () => {
+let hilden = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -12,7 +12,7 @@ let beraLinaKlinik = async () => {
     let page = await browser.newPage();
 
     await page.goto(
-      "https://www.berolinaklinik.de/aktuelles/stellenangebote/",
+      "https://www.st-josefs-krankenhaus.de/karriere/stellenangebote",
       {
         waitUntil: "load",
         timeout: 0,
@@ -23,11 +23,9 @@ let beraLinaKlinik = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(
-          ".news-list-container > ul > li > .news-list-item > h3 a"
-        )
-      ).map((el) => el.href);
+      return Array.from(document.querySelectorAll(".name a")).map(
+        (el) => el.href
+      );
     });
 
     console.log(jobLinks);
@@ -35,12 +33,15 @@ let beraLinaKlinik = async () => {
 
     for (let jobLink of jobLinks) {
       let job = {
+        city: "hilden",
         title: "",
-        location: "Löhne",
-        hospital: "Berolina Klinik Löhne",
+        location: "HRM  Walder 34-38 40724 Hilden",
+        hospital: "St. Josefs Krankenhaus Hil ",
         link: "",
         level: "",
         position: "",
+        republic: "North Rhine-Westphalia",
+        email: "",
       };
 
       await page.goto(jobLink, {
@@ -52,15 +53,23 @@ let beraLinaKlinik = async () => {
 
       let title = await page.evaluate(() => {
         let ttitle = document.querySelector("h1");
-        return ttitle ? ttitle.innerText : "";
+        return ttitle ? ttitle.innerText : null;
       });
       job.title = title;
+      // get email
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(
+          /[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/
+        );
+      });
 
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
+      let level = text.match(
+        /Facharzt|Chefarzt|Assistenzarzt/ | "Arzt" | "Oberarzt"
+      );
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
@@ -79,21 +88,19 @@ let beraLinaKlinik = async () => {
         continue;
       }
 
-      //get link
+      // get link
       let link = await page.evaluate(() => {
-        return document.body.innerText.match(
-          /[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+|[a-zA-Z0-9]+ @[a-zA-Z0-9-]+\ [a-z]\w+ \.[a-z]+/
-        );
+        return document.querySelector(
+          "#c1556 > div > div > div > div > div.btn-toolbar > a:nth-child(3)"
+        ).href;
       });
-      if (typeof link == "object") {
-        job.link = link;
-      }
-      // console.log(job);
+      job.link = link;
+      // if (typeof link == "object") {
+      //   job.link = link[0];
+      // }
       allJobs.push(job);
     }
     console.log(allJobs);
-    await page.close();
-    await browser.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
     console.log(e);
@@ -116,4 +123,4 @@ async function scroll(page) {
   });
 }
 
-beraLinaKlinik();
+export default hilden;

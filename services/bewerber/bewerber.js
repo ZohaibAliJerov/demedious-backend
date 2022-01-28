@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let ugos_deParkKlinik = async () => {
+let bewerber = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -11,49 +11,40 @@ let ugos_deParkKlinik = async () => {
 
     let page = await browser.newPage();
 
-    let url = [ "https://www.ugos.de/karriere/park-klinik?id=2066&tx_kesearch_pi1%5Bpage%5D=1&tx_kesearch_pi1%5BresetFilters%5D=0&tx_kesearch_pi1%5BsortByField%5D=&tx_kesearch_pi1%5BsortByDir%5D=&tx_kesearch_pi1%5Bfilter%5D%5B1%5D=&tx_kesearch_pi1%5Bfilter%5D%5B2%5D=Bad-Hermannsborn&tx_kesearch_pi1%5Bfilter%5D%5B3%5D=",
-                "https://www.ugos.de/karriere/park-klinik/seite-2" ]
+    await page.goto("https://kmrdd.pi-asp.de/bewerber-web/?companyEid=*&lang=D&position_cats=8bbc455b-44f6-4cfd-bbfa-860daa9e75ca#positions", {
+      waitUntil: "load",
+      timeout: 0,
+    });
 
-        let allJobLinks = []
-        let counter = 0
-        do {
-            await page.goto(url[counter], {
-                waitUntil: "load",
-                timeout: 0,
-            });
-            //wait for a while
-            await page.waitForTimeout(1000);
+    await scroll(page);
 
-            //scroll the page
-            await scroll(page)
+    //get all jobLinks
+    const jobLinks = await page.evaluate(() => {
+      return Array.from(
+        document.querySelectorAll(".ng-scope.ng-isolate-scope > div > a")
+      ).map((el) => el.href);
+    });
 
-            //get all jobLinks
-            let jobLinks = await page.evaluate(() => {
-                return Array.from(
-                    document.querySelectorAll(".articletype-0.jobs > h3 a")
-                ).map((el) => el.href);
-            });
-            allJobLinks.push(...jobLinks)
-            counter++;
-
-        } while (counter < url.length);
-        console.log(allJobLinks);
-
+    console.log(jobLinks);
     let allJobs = [];
 
-    for (let jobLink of allJobLinks) {
+    for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Bad Driburg",
-        hospital: "Gräfliche Kliniken - Park Klinik Bad Hermannsborn",
+        location: "Düsseldorf",
+        hospital: "St. Vinzenz",
         link: "",
         level: "",
         position: "",
       };
 
-      await page.goto(jobLink)
-      await page.waitForTimeout(3000)
-      await page.waitForSelector('h1')
+      await page.goto(jobLink, {
+        waitUntil: "load",
+        timeout: 0,
+      });
+
+      await page.waitForTimeout(1000);
+
       let title = await page.evaluate(() => {
         let ttitle = document.querySelector("h1");
         return ttitle ? ttitle.innerText : "";
@@ -87,23 +78,17 @@ let ugos_deParkKlinik = async () => {
 
       //get link
       let link = await page.evaluate(() => {
-        let applyLink = document.querySelector('body');
-        return applyLink ? applyLink.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+/) : "";
-      
-      })
-      
-        job.link = link
-
-      
+          let applyLink = document.querySelector("a.btn.btn-primary");
+          return applyLink ? applyLink.href : null;
+      });
+      job.link = link
       allJobs.push(job);
     }
     console.log(allJobs);
-    await browser.close();
-    await page.close();
     return allJobs.filter((job) => job.position != "");
-  } catch (e) {
+} catch (e) {
     console.log(e);
-  }
+}
 };
 
 async function scroll(page) {
@@ -121,9 +106,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-// ugos_deParkKlinik()
-export default ugos_deParkKlinik;
-
-
-
+bewerber()
+export default bewerber;

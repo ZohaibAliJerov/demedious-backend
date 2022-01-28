@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt","Arzt", "Oberarzt"];
 
 let bochum = async () => {
   try {
@@ -11,7 +11,7 @@ let bochum = async () => {
     let page = await browser.newPage();
 
     await page.goto(
-      "https://www.hyperthermie-tagesklinik.de/index.html/",
+      "https://bewerbung.kk-bochum.de/angebote.aspx?bInstitution=1",
       {
         waitUntil: "load",
         timeout: 0,
@@ -22,7 +22,7 @@ let bochum = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("div.headline > h3 > a")).map(
+      return Array.from(document.querySelectorAll("a.link-eintrag")).map(
         (el) => el.href
       );
     });
@@ -48,7 +48,7 @@ let bochum = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h3");
+        let ttitle = document.querySelector("a.link-eintrag");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -63,7 +63,10 @@ let bochum = async () => {
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"
+        level == "Assistenzarzt"||
+        level =="Arzt"||
+        level == "Oberarzt"
+
       ) {
         job.position = "artz";
       }
@@ -76,7 +79,7 @@ let bochum = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.col-md-12 > a");
+        let lnk = document.querySelector(".btn.btn-blue");
         return lnk ? lnk.href : "";
       });
       job.link = link;

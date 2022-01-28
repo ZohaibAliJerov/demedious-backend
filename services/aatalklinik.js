@@ -6,7 +6,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 let aatalklinik = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
     });
 
     let page = await browser.newPage();
@@ -45,7 +45,7 @@ let aatalklinik = async () => {
         waitUntil: "load",
         timeout: 0,
       });
-
+    
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
@@ -97,7 +97,10 @@ let aatalklinik = async () => {
 
       allJobs.push(job);
     }
+    console.log(allJobs);
+    await browser.close()
     return allJobs.filter((job) => job.position != "");
+
   } catch (e) {
     console.log(e);
   }
@@ -119,4 +122,4 @@ async function scroll(page) {
   });
 }
 
-export default aatalklinik;
+aatalklinik();

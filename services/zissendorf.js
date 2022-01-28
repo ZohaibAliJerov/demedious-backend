@@ -1,5 +1,3 @@
-
-
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
@@ -24,7 +22,7 @@ let zissedorf = async () => {
     const jobLinks = await page.evaluate(() => {
       return Array.from(
         document.querySelectorAll("h2.entry-title a")
-      ).map((el) => el.href).slice(0 , 6)
+      ).map((el) => el.href);
     });
 
     console.log(jobLinks);
@@ -33,11 +31,14 @@ let zissedorf = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Hennef, Sieg",
+        location: "Gut Zissendorf, 53773 Hennef (Sieg), Germany",
         hospital: "Fachklink Gut Zissendorf",
         link: "",
         level: "",
         position: "",
+        city: "Hennef, Sieg",
+        email: "",
+        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -49,9 +50,15 @@ let zissedorf = async () => {
 
       let title = await page.evaluate(() => {
         let ttitle = document.querySelector("h1");
-            return ttitle ? ttitle.innerText : "";
+        return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
+
+      // job.location = await page.evaluate(() => {
+      //   let loc = document.querySelector(".sidebar-widget").innerText;
+      //   loc = loc.replace("\n", " ");
+      //   return loc.replace(/\w+@\w+\.\w+/, "");
+      // });
 
       let text = await page.evaluate(() => {
         return document.body.innerText;
@@ -78,21 +85,32 @@ let zissedorf = async () => {
         continue;
       }
 
-      //get link
-      let link = await page.evaluate(() => {
-        let applink = document.querySelector('.box.arrow-box');
-        return applink ? applink.href : "";
-        // return document.body.innerText.match(/\w+@\w+\.\w+/);
+      //get link\
+
+      const email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+/);
       });
-    //   if (typeof link == "object") {
-    //     job.link = link[0];
-    //   }
-    job.link = link
+
+      job.email = email
+
+      // get link 
+      let link1 = 0;
+      if (link1) {
+        const link = await page.evaluate(() => {
+          let applyLink = document.querySelector('.box.arrow-box')
+          return applyLink ? applyLink.href : ""
+        })
+        job.link = link;
+      } else {
+        job.link = jobLink
+      }
+
+
+
       allJobs.push(job);
     }
-    console.log(allJobs);
+    console.log(allJobs)
     await browser.close();
-    await page.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
     console.log(e);
@@ -114,6 +132,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-
+// zissedorf()
 export default zissedorf;

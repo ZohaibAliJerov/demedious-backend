@@ -61,6 +61,7 @@ let badDriburg = async () => {
       let email = await page.evaluate(()=>{
         let eml = document.querySelector("#c151 > p:nth-child(3) > a:nth-child(3)")
         return eml ? eml.innerText.slice(1): "";
+
       })
       job.email = email;
       //get level
