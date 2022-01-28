@@ -117,3 +117,4 @@ let luisenhospital_Aachen = async () => {
 
 
 
+export default luisenhospital_Aachen;
