@@ -1,101 +1,121 @@
 import puppeteer from "puppeteer";
 
-const kalkon = async () => {
-    try {
-        const browser = await puppeteer.launch({ headless: false });
-        const page = await browser.newPage();
-        page.setDefaultNavigationTimeout(0);
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-        let allJobs = [];
-        let link = ["https://www.fachklinik360grad.de/karriere/aktuelle-stellenangebote/aerztliches-personal/"]
-
-        let counter = 0;
-        do {
-            await page.goto(link[counter], { timeout: 0 })
-            scroll(page);
-
-            //getting all the jobs links 
-
-
-            await page.waitForTimeout(3000)
-            const jobs = await page.evaluate(() => {
-                return Array.from(
-                    document.querySelectorAll('.outerJob.activmap-place a')
-                ).map(el => el.href)
-            });
-            console.log(jobs);
-            allJobs.push(...jobs);
-            counter++;
-        } while (counter < link);
-
-        const allJobDetails = []
-
-        for (const url of allJobs) {
-            await page.goto(url)
-            await scroll(page)
-            /// getting all the title
-            await page.waitForSelector('h1')
-            const title = await page.evaluate(() => {
-                return document.querySelector('h1').innerText || null;
-            })
-
-            /// getting all the cell no.
-            const cell = await page.evaluate(() => {
-                let text = document.querySelector('.vacancy-single');
-                return text ? text.innerText.match(/\d+.\d+[- ]\d+/) : null;
-            });
-
-            // getting all the location from the links 
-            const location = await page.evaluate(() => {
-                let text = document.querySelector('.value');
-                return text ? text.innerText: null;
-            });
-
-            /// getting all the emails 
-            const email = await page.evaluate(() => {
-                let text = document.querySelector('.vacancy-single');
-                return text ? text.innerText.match(/[a-zA-Z.-]+@[a-zA-Z.]+/) : null;
-            });
-
-            // getting all the applylinks
-            const applyLink = await page.evaluate(() => {
-                let text = document.querySelector('.cta a');
-                return text ? text.href : null;
-            })
-
-            const jobDetails = {
-                title,
-                cell,
-                location,
-                email,
-                applyLink
-            };
-            allJobDetails.push(jobDetails);
-            await page.waitForTimeout(3000);
-        }
-        console.log(allJobDetails);
-        await page.close();
-        await browser.close();
-        return allJobDetails;
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-async function scroll(page) {
-    await page.evaluate(() => {
-        const distance = 100;
-        const delay = 100;
-        const timer = setInterval(() => {
-            document.scrollingElement.scrollBy(0, distance);
-            if (
-                document.scrollingElement.scrollTop + window.innerHeight >=
-                document.scrollingElement.scrollHeight
-            ) {
-                clearInterval(timer);
-            }
-        }, delay);
+let  fachklinik360 = async () => {
+  try {
+    let browser = await puppeteer.launch({
+      headless: false,
     });
+
+    let page = await browser.newPage();
+
+    await page.goto("https://www.med360grad.de/karriere/aktuelle-stellenangebote/aerzte/", {
+      waitUntil: "load",
+      timeout: 0,
+    });
+
+    await scroll(page);
+    
+    
+    let allJobLinks = [];
+
+   
+              let jobLinks = await page.evaluate(() => {
+                return Array.from(
+                  document.querySelectorAll(".outerJob.activmap-place a")
+                ).map((el) => el.href);
+              });
+              allJobLinks.push(...jobLinks);
+              await page.waitForTimeout(3000);
+  
+    console.log(allJobLinks);
+    let allJobs = [];
+
+    for (let jobLink of allJobLinks) {
+      let job = {
+        title: "",
+        location: "Ratingen",
+        hospital: "Fachklinik 360°",
+        link: "",
+        level: "",
+        position: "",
+      };
+
+      await page.goto(jobLink, {
+        waitUntil: "load",
+        timeout: 0,
+      });
+
+      await page.waitForTimeout(1000);
+
+      let title = await page.evaluate(() => {
+        let ttitle = document.querySelector("h1");
+        return ttitle ? ttitle.innerText : "";
+      });
+      job.title = title;
+
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
+        continue;
+      }
+
+      //get link
+      let link = await page.evaluate(() => {
+          let links = document.querySelector('.cta a');
+        return links ? links.href : "";
+        // innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+/) : "";
+      })
+      
+      job.link = link
+      allJobs.push(job);
+    }
+    console.log(allJobs)
+    await page.close();
+    await browser.close();
+    return allJobs.filter((job) => job.position != "");
+  } catch (e) {
+    console.log(e);
+  }
 };
 
-kalkon();
+async function scroll(page) {
+  await page.evaluate(() => {
+    const distance = 100;
+    const delay = 100;
+    const timer = setInterval(() => {
+      document.scrollingElement.scrollBy(0, distance);
+      if (
+        document.scrollingElement.scrollTop + window.innerHeight >=
+        document.scrollingElement.scrollHeight
+      ){
+          clearInterval(timer)
+      }
+    }, delay)
+});
+}
+fachklinik360()
+
+
+
