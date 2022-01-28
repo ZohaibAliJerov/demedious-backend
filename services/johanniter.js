@@ -206,5 +206,3 @@ johanniter()
 
 
 export default johanniter;
-
-

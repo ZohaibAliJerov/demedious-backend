@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let aatalklinik = async () => {
+let good = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -11,7 +11,7 @@ let aatalklinik = async () => {
 
     let page = await browser.newPage();
 
-    await page.goto("https://www.aatalklinik.de/", {
+    await page.goto("https://fachklinik-hornheide.de/karriere/stellenmarkt/index_ger.html", {
       waitUntil: "load",
       timeout: 0,
     });
@@ -21,58 +21,59 @@ let aatalklinik = async () => {
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
-        document.querySelectorAll("div.shortcode-jobs > ul > li > a")
+        document.querySelectorAll(".jotitle a")
       ).map((el) => el.href);
     });
 
-    //console.log(jobLinks);
+    console.log(jobLinks);
     let allJobs = [];
 
     for (let jobLink of jobLinks) {
       let job = {
+        city: "",
         title: "",
-        location: "",
-        hospital: "Neurologische Klinik Sorpe",
+        location: "Dorbaumstraße 300 48157 Münster",
+        hospital: "fachklinik-hornheide",
         link: "",
         level: "",
         position: "",
-        city: "Sundern",
+        republic:"North Rhine-Westphalia",
         email: "",
-        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
         waitUntil: "load",
         timeout: 0,
       });
-    
+
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1#page-title");
-        return ttitle ? ttitle.innerText : "";
+        let ttitle = document.querySelector("body > div.wrapper > div.container.content > div:nth-child(2) > div.col-md-9 > h1");
+        return ttitle ? ttitle.innerText : null;
       });
       job.title = title;
-
-      job.location = await page.evaluate(() => {
-        let loc = document.querySelector(".sidebar-widget").innerText;
-        loc = loc.replace("\n", " ");
-        return loc.replace(/\w+@\w+\.\w+/, "");
-      });
-
+      // get email
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/);
+       }); 
+        // get location
+      // job.location = await page.evaluate(() => {
+      // let loc = document.querySelector(".joaddress").innerText;
+      // loc = loc.replace("\n", " ");
+      // return loc.replace(/[a-zA-Z-.].+ \d+[\n]\d+ [a-zA-Z-.].+/, "");
+      // });
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/|"Arzt"|"Oberarzt");
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt" ||
-        level == "Arzt" ||
-        level == "Oberarzt"
+        level == "Assistenzarzt"
       ) {
         job.position = "artz";
       }
@@ -84,23 +85,31 @@ let aatalklinik = async () => {
       if (!position in positions) {
         continue;
       }
+          // get link
+          let link1 = 0;
+          if (link1) {
+            const link = await page.evaluate(() => {
+              let applyLink = document.querySelector('.jotitle a')
+              return applyLink ? applyLink.href : ""
+            })
+            job.link = link;
+          } else {
+            job.link = jobLink
+          }
 
-      //get link
-      job.email = await page.evaluate(() => {
-        return document.body.innerText.match(/\w+@\w+\.\w+/);
+      // get link
+      let link = await page.evaluate(() => {
+       let app = document.querySelector("#jo > div:nth-child(4) > a");
+       return app ? app.href :null
       });
-      if (typeof job.email == "object") {
-        job.email = job.email[0];
-      }
-
-      job.link = jobLink;
-
+      job.link = link
+      // if (typeof link == "object") {
+      //   job.link = link[0];
+      // }
       allJobs.push(job);
     }
     console.log(allJobs);
-    await browser.close()
     return allJobs.filter((job) => job.position != "");
-
   } catch (e) {
     console.log(e);
   }
@@ -122,4 +131,9 @@ async function scroll(page) {
   });
 }
 
-aatalklinik();
+good()
+
+
+
+
+
