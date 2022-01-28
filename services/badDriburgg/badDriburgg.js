@@ -59,8 +59,9 @@ let badDriburg = async () => {
       });
       //get email
       let email = await page.evaluate(()=>{
-        let eml = document.getElementsByTagName("p")[28]
-        return eml ? eml.innerText.slice(14) : "";
+        let eml = document.querySelector("#c151 > p:nth-child(3) > a:nth-child(3)")
+        return eml ? eml.innerText.slice(1): "";
+
       })
       job.email = email;
       //get level
