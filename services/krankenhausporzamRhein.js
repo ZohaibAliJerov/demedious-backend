@@ -114,3 +114,4 @@ let krankenhausporzamRhein = async () => {
 };
 
 
+export default krankenhausporzamRhein;
