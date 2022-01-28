@@ -4,7 +4,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let gfo_kliniken = async () => {
+let augestaKlinik = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -26,15 +26,16 @@ let gfo_kliniken = async () => {
         document.querySelectorAll("a.full-link")
       ).map((el) => el.href);
     });
-   
-    let titles = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll("h1.text-center > font")
-        ).map(el => el.innerText)
-      });
-
+    
+    // await page.waitForSelector('.text > h4')
+    // let titles = await page.evaluate(() => {
+    //     return Array.from(document.querySelectorAll("h4")
+    //     ).map(el => el.innerText)
+    //   });
+// console.log(titles);
     console.log(jobLinks);
     let allJobs = [];
-      let counter = 0
+
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
@@ -56,10 +57,11 @@ let gfo_kliniken = async () => {
       await page.waitForTimeout(1000);
     
      //get titles
-    
-      job.title = titles[counter]
-      counter++
-
+     await page.waitForSelector("h1");
+     let title = await page.evaluate(() =>{
+       return document.querySelector("h1").innerText;
+     });
+    job.title = title
       job.location = await page.evaluate(() => {
       
         return document.body.innerText.match(/[a-zA-Z-.].+ \d+. \d+ [a-zA-Z-.]+/) || "Moers"
@@ -143,5 +145,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-gfo_kliniken()
-// export default gfo_kliniken
+// augestaKlinik()
+export default augestaKlinik
