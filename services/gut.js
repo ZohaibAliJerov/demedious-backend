@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let good = async () => {
+let gut = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -20,9 +20,7 @@ let good = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll("h2 a")
-      ).map((el) => el.href);
+      return Array.from(document.querySelectorAll("h2 a")).map((el) => el.href);
     });
 
     console.log(jobLinks);
@@ -37,8 +35,8 @@ let good = async () => {
         link: "",
         level: "",
         position: "",
-        epublic:"North Rhine-Westphalia",
-        email: "info@zissendorf.de"
+        epublic: "North Rhine-Westphalia",
+        email: "info@zissendorf.de",
       };
 
       await page.goto(jobLink, {
@@ -53,21 +51,23 @@ let good = async () => {
         return ttitle ? ttitle.innerText : null;
       });
       job.title = title;
- // get email
-//  job.email = await page.evaluate(() => {
-//   return document.body.innerText.match(/[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/);
-//  }); 
-  // get location
-// job.location = await page.evaluate(() => {
-// let loc = document.querySelector(".joaddress").innerText;
-// loc = loc.replace("\n", " ");
-// return loc.replace(/[a-zA-Z-.].+ \d+[\n]\d+ [a-zA-Z-.].+/, "");
-// });
+      // get email
+      //  job.email = await page.evaluate(() => {
+      //   return document.body.innerText.match(/[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/);
+      //  });
+      // get location
+      // job.location = await page.evaluate(() => {
+      // let loc = document.querySelector(".joaddress").innerText;
+      // loc = loc.replace("\n", " ");
+      // return loc.replace(/[a-zA-Z-.].+ \d+[\n]\d+ [a-zA-Z-.].+/, "");
+      // });
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/|"Arzt"|"Oberarzt");
+      let level = text.match(
+        /Facharzt|Chefarzt|Assistenzarzt/ | "Arzt" | "Oberarzt"
+      );
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
@@ -88,20 +88,20 @@ let good = async () => {
       let link1 = 0;
       if (link1) {
         const link = await page.evaluate(() => {
-          let applyLink = document.querySelector('.jotitle a')
-          return applyLink ? applyLink.href : ""
-        })
+          let applyLink = document.querySelector(".jotitle a");
+          return applyLink ? applyLink.href : "";
+        });
         job.link = link;
       } else {
-        job.link = jobLink
+        job.link = jobLink;
       }
 
       // get link
       let link = await page.evaluate(() => {
-       let app = document.querySelector(".h2 a");
-       return app ? app.href :null
+        let app = document.querySelector(".h2 a");
+        return app ? app.href : null;
       });
-      job.link = link
+      job.link = link;
       // if (typeof link == "object") {
       //   job.link = link[0];
       // }
@@ -130,9 +130,4 @@ async function scroll(page) {
   });
 }
 
-good()
-
-
-
-
-
+export default gut;
