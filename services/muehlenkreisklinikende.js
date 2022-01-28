@@ -4,9 +4,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-
-let karankenEnger = async () => {
-
+let muehlenkreisklinikende = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -14,24 +12,27 @@ let karankenEnger = async () => {
 
     let page = await browser.newPage();
 
-    await page.goto("https://www.krankenhaus-enger.de/khe/klinik/karriere.php", {
+    await page.goto("https://www.muehlenkreiskliniken.de/muehlenkreiskliniken/karriere/stellenangebote", {
       waitUntil: "load",
       timeout: 0,
     });
 
     await scroll(page);
 
-
-    
-    await page.waitForSelector('h3 a ')
+    await page.waitForSelector('a.career-overview-item')
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
-        document.querySelectorAll('h3 a ')
-
+        document.querySelectorAll("a.career-overview-item")
       ).map((el) => el.href);
     });
-
+    
+    // await page.waitForSelector('.text > h4')
+    // let titles = await page.evaluate(() => {
+    //     return Array.from(document.querySelectorAll("h4")
+    //     ).map(el => el.innerText)
+    //   });
+// console.log(titles);
     console.log(jobLinks);
     let allJobs = [];
 
@@ -39,13 +40,13 @@ let karankenEnger = async () => {
       let job = {
         title: "",
         location: "",
-        hospital: "Evangelisches Krankenhaus Enger",
+        hospital: "Auguste-Viktoria-Klinik",
         link: "",
         level: "",
         position: "",
-        city: "Enger",
+        city: "Bad Oeynhausen",
         email: "",
-        republic: "North Rhine-Westphalia",
+        republic: "Czech Republic",
       };
 
       await page.goto(jobLink, {
@@ -54,17 +55,19 @@ let karankenEnger = async () => {
       });
 
       await page.waitForTimeout(1000);
-
-      let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h2");
-        return ttitle ? ttitle.innerText : "";
-      });
-      job.title = title;
-
+    
+     //get titles
+     await page.waitForSelector("h2");
+     let title = await page.evaluate(() =>{
+       return document.querySelector("h2").innerText;
+     });
+    job.title = title
       job.location = await page.evaluate(() => {
-        let loc = document.body.innerText.match(/[A-Za-z-.]+ \d+[\n]\d+ [A-Za-z]+|[A-Za-z-.]+ \d+[\n][\n]\d+ [A-Za-z]+/)
-        return loc;
+      
+        return document.body.innerText.match(/[a-zA-Z-.ßüö]+ \d+. \d+ [a-zA-Z-.ßüö]+/) || ""
+        
       });
+
       if(typeof job.location == 'object' && job.location != null ){
         job.location = job.location[0]
       }
@@ -92,20 +95,34 @@ let karankenEnger = async () => {
       if (!position in positions) {
         continue;
       }
+
+      //get link\
+
       job.email = await page.evaluate(() => {
-        return document.body.innerText.match(/[A-Za-z-.]+@[A-Za-z-.]+/) || "bewerbung@krankenhaus-enger.de";
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+|[a-zA-Z-.]+[[]\w+.[a-zA-Z-.]+/) || "" ;
       });
-  
       if(typeof job.email == "object" && job.email != null ){
         job.email = job.email[0]
       }
-  
-      job.link = jobLink;
+      // job.email = email
+
+      // get link 
+    //   let link1 = 0;
+    //   if (link1) {
+    //     const link = await page.evaluate(() => {
+    //       let applyLink = document.querySelector('a.btn.btn-primary-arrow')
+    //       return applyLink ? applyLink.href : ""
+    //     })
+    //     job.link = link;
+    //   } else {
+        job.link = jobLink
+    //   }
+
+
 
       allJobs.push(job);
     }
-    console.log(allJobs);
-    await page.close();
+    console.log(allJobs)
     await browser.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
@@ -128,6 +145,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-export default karankenEnger;
-
+muehlenkreisklinikende()
+// export default augestaKlinik
