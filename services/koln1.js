@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let good = async () => {
+let koln1 = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -11,18 +11,21 @@ let good = async () => {
 
     let page = await browser.newPage();
 
-    await page.goto("https://www.st-agatha-krankenhaus.de/ueber-uns/karriere/offene-stellen", {
-      waitUntil: "load",
-      timeout: 0,
-    });
+    await page.goto(
+      "https://www.st-agatha-krankenhaus.de/ueber-uns/karriere/offene-stellen",
+      {
+        waitUntil: "load",
+        timeout: 0,
+      }
+    );
 
     await scroll(page);
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(".ce-bodytext a")
-      ).map((el) => el.href);
+      return Array.from(document.querySelectorAll(".ce-bodytext a")).map(
+        (el) => el.href
+      );
     });
 
     console.log(jobLinks);
@@ -32,13 +35,14 @@ let good = async () => {
       let job = {
         city: "bunde",
         title: "",
-        location: "St. Agatha Hospital Cologne Feldgartenstraße 9750735 Cologne",
+        location:
+          "St. Agatha Hospital Cologne Feldgartenstraße 9750735 Cologne",
         hospital: "Sozial-Psychiatrische Rehab",
         link: "",
         level: "",
         position: "",
-        republic:"North Rhine-Westphalia",
-        email: ""
+        republic: "North Rhine-Westphalia",
+        email: "",
       };
 
       await page.goto(jobLink, {
@@ -53,15 +57,19 @@ let good = async () => {
         return ttitle ? ttitle.innerText : null;
       });
       job.title = title;
-// get email
-job.email = await page.evaluate(() => {
-  return document.body.innerText.match(/[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/);
- });
+      // get email
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(
+          /[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/
+        );
+      });
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/|"Arzt"|"Oberarzt");
+      let level = text.match(
+        /Facharzt|Chefarzt|Assistenzarzt/ | "Arzt" | "Oberarzt"
+      );
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
@@ -82,22 +90,22 @@ job.email = await page.evaluate(() => {
 
       // get link
       let link = await page.evaluate(() => {
-       let app = document.querySelector(".button");
-       return app ? app.href : null
+        let app = document.querySelector(".button");
+        return app ? app.href : null;
       });
-      job.link = link
+      job.link = link;
       // if (typeof link == "object") {
       //   job.link = link[0];
       // }
       let link1 = 0;
       if (link1) {
         const link = await page.evaluate(() => {
-          let applyLink = document.querySelector('.jotitle a')
-          return applyLink ? applyLink.href : ""
-        })
+          let applyLink = document.querySelector(".jotitle a");
+          return applyLink ? applyLink.href : "";
+        });
         job.link = link;
       } else {
-        job.link = jobLink
+        job.link = jobLink;
       }
       allJobs.push(job);
     }
@@ -124,9 +132,4 @@ async function scroll(page) {
   });
 }
 
-good()
-
-
-
-
-
+export default koln1;
