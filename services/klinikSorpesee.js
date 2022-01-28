@@ -1,5 +1,8 @@
 import puppeteer from "puppeteer";
 
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
 const klinikSorpesee = async () => {
   let browser = await puppeteer.launch({ headless: true });
   let page = await browser.newPage();
@@ -10,45 +13,69 @@ const klinikSorpesee = async () => {
 
   page.waitForTimeout(3000);
 
-  //get all jobs
+  //get all job links
   await page.evaluate(() => {
     let jobCollection = [];
-    let jobs = Array.from(
+    let jobLinks = Array.from(
       document.querySelectorAll(
         "h3.accordionHeader.accordionHeaderCollapsible.accordionHeaderHidden"
       )
     );
 
-    for (let job of jobs) {
+    for (let jobLink of jobLinks) {
+      let job = {
+        title: "",
+        location: "Sundern (Sauerland)",
+        hospital: "Neurologische Klinik Sorpe",
+        link: "",
+        level: "",
+        position: "",
+      };
+
       for (let i = 0; i < 2 * i; i++) {
         document.scrollingElement.scrollBy(0, 100);
         setTimeout(1000);
       }
-      job.click();
-      let title = job.innerText;
 
-      let location = document
-        .querySelector(
-          "div.elementText.elementText_var0.elementTextListStyle_var0.first-child > p"
-        )
-        .innerText.split("\n")[0];
-      let cell = document.querySelector(
-        ".elementText.elementText_var0.elementTextListStyle_var0.first-child.last-child > p > strong > a"
-      ).innerText;
-      if (typeof cell == "object" && cell == null) {
-        cell = cell[0];
-      } else if (cell == null) {
-        cell = "";
+      jobLink.click();
+      //get title
+      job.title = jobLink.innerText;
+      let text = document.body.innerText;
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
       }
 
-      let email = "";
-      let applyLink = document
+      if (!position in positions) {
+        continue;
+      }
+
+      //get applyLink
+      job.link = document
         .querySelector(".elementLink.elementLink_var10.isInverseBackground > a")
         .onclick();
       jobCollection.push({ title, location, cell, email, applyLink });
     }
+
     return jobCollection;
   });
 };
 
-export default klinikSorpesee;
+// export default klinikSorpesee;
+
+(async () => {
+  let res = await klinikSorpesee();
+  console.log(res);
+})();
