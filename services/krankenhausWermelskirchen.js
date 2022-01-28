@@ -113,3 +113,8 @@ let krankenhaus_Wermelskirchen = async () => {
   }
 };
 
+
+
+
+
+export default krankenhaus_Wermelskirchen;
