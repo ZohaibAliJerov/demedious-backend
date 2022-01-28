@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let good = async () => {
+let hilden = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -11,18 +11,21 @@ let good = async () => {
 
     let page = await browser.newPage();
 
-    await page.goto("https://www.st-josefs-krankenhaus.de/karriere/stellenangebote", {
-      waitUntil: "load",
-      timeout: 0,
-    });
+    await page.goto(
+      "https://www.st-josefs-krankenhaus.de/karriere/stellenangebote",
+      {
+        waitUntil: "load",
+        timeout: 0,
+      }
+    );
 
     await scroll(page);
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(".name a")
-      ).map((el) => el.href);
+      return Array.from(document.querySelectorAll(".name a")).map(
+        (el) => el.href
+      );
     });
 
     console.log(jobLinks);
@@ -37,8 +40,8 @@ let good = async () => {
         link: "",
         level: "",
         position: "",
-        republic:"North Rhine-Westphalia",
-        email: ""
+        republic: "North Rhine-Westphalia",
+        email: "",
       };
 
       await page.goto(jobLink, {
@@ -55,14 +58,18 @@ let good = async () => {
       job.title = title;
       // get email
       job.email = await page.evaluate(() => {
-        return document.body.innerText.match(/[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/);
-       });
-      
+        return document.body.innerText.match(
+          /[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/
+        );
+      });
+
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/|"Arzt"|"Oberarzt");
+      let level = text.match(
+        /Facharzt|Chefarzt|Assistenzarzt/ | "Arzt" | "Oberarzt"
+      );
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
@@ -83,9 +90,11 @@ let good = async () => {
 
       // get link
       let link = await page.evaluate(() => {
-        return document.querySelector("#c1556 > div > div > div > div > div.btn-toolbar > a:nth-child(3)").href;
+        return document.querySelector(
+          "#c1556 > div > div > div > div > div.btn-toolbar > a:nth-child(3)"
+        ).href;
       });
-      job.link = link
+      job.link = link;
       // if (typeof link == "object") {
       //   job.link = link[0];
       // }
@@ -114,9 +123,4 @@ async function scroll(page) {
   });
 }
 
-good()
-
-
-
-
-
+export default hilden;
