@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let good = async () => {
+let haan = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -11,8 +11,7 @@ let good = async () => {
 
     let page = await browser.newPage();
 
-    await page.goto("http://www.st-josef-haan.de/karriere/stellenangebote",
-     {
+    await page.goto("http://www.st-josef-haan.de/karriere/stellenangebote", {
       waitUntil: "load",
       timeout: 0,
     });
@@ -21,9 +20,9 @@ let good = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(".name a")
-      ).map((el) => el.href);
+      return Array.from(document.querySelectorAll(".name a")).map(
+        (el) => el.href
+      );
     });
 
     console.log(jobLinks);
@@ -31,15 +30,15 @@ let good = async () => {
 
     for (let jobLink of jobLinks) {
       let job = {
-        city:"haan",
+        city: "haan",
         title: "",
         location: "HRM Walder 34-38 40724 Hilden",
         hospital: "St. Josef Krankenhaus Haan",
         link: "",
         level: "",
         position: "",
-        republic:"North Rhine-Westphalia",
-        email: ""
+        republic: "North Rhine-Westphalia",
+        email: "",
       };
 
       await page.goto(jobLink, {
@@ -55,9 +54,11 @@ let good = async () => {
       });
       job.title = title;
       job.email = await page.evaluate(() => {
-        return document.body.innerText.match(/[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/);
-       }); 
-        // get location
+        return document.body.innerText.match(
+          /[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/
+        );
+      });
+      // get location
       // job.location = await page.evaluate(() => {
       // let loc = document.querySelector(".joaddress").innerText;
       // loc = loc.replace("\n", " ");
@@ -67,7 +68,9 @@ let good = async () => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/|"Arzt"|"Oberarzt");
+      let level = text.match(
+        /Facharzt|Chefarzt|Assistenzarzt/ | "Arzt" | "Oberarzt"
+      );
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
@@ -88,9 +91,11 @@ let good = async () => {
 
       // get link
       let link = await page.evaluate(() => {
-        return document.querySelector("#c3186 > div > div > div > div > div.btn-toolbar > a:nth-child(3)").href;
+        return document.querySelector(
+          "#c3186 > div > div > div > div > div.btn-toolbar > a:nth-child(3)"
+        ).href;
       });
-      job.link = link
+      job.link = link;
       // if (typeof link == "object") {
       //   job.link = link[0];
       // }
@@ -119,9 +124,4 @@ async function scroll(page) {
   });
 }
 
-good()
-
-
-
-
-
+export default haan;

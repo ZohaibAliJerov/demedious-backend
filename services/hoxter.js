@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let good = async () => {
+let hoxter = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -30,15 +30,15 @@ let good = async () => {
 
     for (let jobLink of jobLinks) {
       let job = {
-        city:"hoxter",
+        city: "hoxter",
         title: "",
         location: "Danziger Str. 1733034 Brakel",
         hospital: "St. Ansgar Krankenhaus",
         link: "",
         level: "",
         position: "",
-        republic:"North Rhine-Westphalia",
-        email: ""
+        republic: "North Rhine-Westphalia",
+        email: "",
       };
 
       await page.goto(jobLink, {
@@ -55,13 +55,17 @@ let good = async () => {
       job.title = title;
       // get email
       job.email = await page.evaluate(() => {
-        return document.body.innerText.match(/[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/);
-       });
+        return document.body.innerText.match(
+          /[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/
+        );
+      });
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/|"Arzt"|"Oberarzt");
+      let level = text.match(
+        /Facharzt|Chefarzt|Assistenzarzt/ | "Arzt" | "Oberarzt"
+      );
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
@@ -82,10 +86,10 @@ let good = async () => {
 
       // get link
       let link = await page.evaluate(() => {
-       let app = document.querySelector("#btn_online_application > a");
-       return app ? app.href : null
+        let app = document.querySelector("#btn_online_application > a");
+        return app ? app.href : null;
       });
-      job.link = link
+      job.link = link;
       // if (typeof link == "object") {
       //   job.link = link[0];
       // }
@@ -114,9 +118,4 @@ async function scroll(page) {
   });
 }
 
-good()
-
-
-
-
-
+export default hoxter;

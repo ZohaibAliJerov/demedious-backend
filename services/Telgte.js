@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let good = async () => {
+let telgte = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -20,9 +20,9 @@ let good = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(".media > h3 > a")
-      ).map((el) => el.href);
+      return Array.from(document.querySelectorAll(".media > h3 > a")).map(
+        (el) => el.href
+      );
     });
 
     console.log(jobLinks);
@@ -30,16 +30,15 @@ let good = async () => {
 
     for (let jobLink of jobLinks) {
       let job = {
-        city:"Telgte",
+        city: "Telgte",
         title: "",
         location: "Am Krankenhaus 1, 48291 Telgte,",
         hospital: "Klinik Maria Frieden Telgte",
         link: "",
         level: "",
         position: "",
-        republic:"North Rhine-Westphalia",
-        email: ""
-        
+        republic: "North Rhine-Westphalia",
+        email: "",
       };
 
       await page.goto(jobLink, {
@@ -54,15 +53,19 @@ let good = async () => {
         return ttitle ? ttitle.innerText : null;
       });
       job.title = title;
-// get email
-job.email = await page.evaluate(() => {
-  return document.body.innerText.match(/[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/);
-  })
+      // get email
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(
+          /[a-zA-Z-. ]+[(][\w]+[)]\w+.\w+|[a-zA-Z-. ]+@[a-zA-Z-. ]+/
+        );
+      });
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/|"Arzt"|"Oberarzt");
+      let level = text.match(
+        /Facharzt|Chefarzt|Assistenzarzt/ | "Arzt" | "Oberarzt"
+      );
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
@@ -83,20 +86,22 @@ job.email = await page.evaluate(() => {
       let link1 = 0;
       if (link1) {
         const link = await page.evaluate(() => {
-          let applyLink = document.querySelector('.media > h3 > a a')
-          return applyLink ? applyLink.href : ""
-        })
+          let applyLink = document.querySelector(".media > h3 > a a");
+          return applyLink ? applyLink.href : "";
+        });
         job.link = link;
       } else {
-        job.link = jobLink
+        job.link = jobLink;
       }
       // get link
       let link = await page.evaluate(() => {
-        let app = document.querySelector("#c39219 > div > div > div > p:nth-child(21) > a");
-        return app ? app.href : null
+        let app = document.querySelector(
+          "#c39219 > div > div > div > p:nth-child(21) > a"
+        );
+        return app ? app.href : null;
       });
-      job.link = link
-     
+      job.link = link;
+
       allJobs.push(job);
     }
     console.log(allJobs);
@@ -122,9 +127,4 @@ async function scroll(page) {
   });
 }
 
-good()
-
-
-
-
-
+export default telgte;

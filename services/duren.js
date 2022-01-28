@@ -3,28 +3,29 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let good = async () => {
+let duren = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
 
     let page = await browser.newPage();
-// "https://www.marien-hospital-dueren.de/index.php?id=140&seite=1",
+    // "https://www.marien-hospital-dueren.de/index.php?id=140&seite=1",
     await page.goto(
-    "https://www.marien-hospital-dueren.de/index.php?id=140&seite=2&inarchiv=2021",
-   {
-      waitUntil: "load",
-      timeout: 0,
-    });
+      "https://www.marien-hospital-dueren.de/index.php?id=140&seite=2&inarchiv=2021",
+      {
+        waitUntil: "load",
+        timeout: 0,
+      }
+    );
 
     await scroll(page);
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(".newWindow.newslink")
-      ).map((el) => el.href);
+      return Array.from(document.querySelectorAll(".newWindow.newslink")).map(
+        (el) => el.href
+      );
     });
 
     console.log(jobLinks);
@@ -55,24 +56,25 @@ let good = async () => {
         return ttitle ? ttitle.innerText : null;
       });
       job.title = title;
-  // get email
-  job.email = await page.evaluate(() => {
-    let emi = document.body.innerText.match(/\w+.\w+@\w+.\w+.\w+./g);
-     return emi[0]
+      // get email
+      job.email = await page.evaluate(() => {
+        let emi = document.body.innerText.match(/\w+.\w+@\w+.\w+.\w+./g);
+        return emi[0];
+      });
 
-  });
-
-// get location
-// job.location = await page.evaluate(() => {
-// let loc = document.querySelector(".grid3").innerText;
-// loc = loc.replace("\n", " ");
-// return loc.replace(/[a-zA-Z-.].+ \d+[\n]\d+ [a-zA-Z-.].+/, "");
-// });  
+      // get location
+      // job.location = await page.evaluate(() => {
+      // let loc = document.querySelector(".grid3").innerText;
+      // loc = loc.replace("\n", " ");
+      // return loc.replace(/[a-zA-Z-.].+ \d+[\n]\d+ [a-zA-Z-.].+/, "");
+      // });
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/|"Arzt"|"Oberarzt");
+      let level = text.match(
+        /Facharzt|Chefarzt|Assistenzarzt/ | "Arzt" | "Oberarzt"
+      );
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
@@ -93,13 +95,13 @@ let good = async () => {
 
       // get link
 
-      // let link = await page.evaluate(() => {       
+      // let link = await page.evaluate(() => {
       //      return document.body.innerText.match(/\w+@\w+\.\w+/);      });
       //       if (typeof link == "object") { job.link = link;}
-    //   let link = await page.evaluate(() => {
-    //     return document.querySelector("#c1556 > div > div > div > div > div.btn-toolbar > a:nth-child(3)").href;
-    //   });
-    //   job.link = link
+      //   let link = await page.evaluate(() => {
+      //     return document.querySelector("#c1556 > div > div > div > div > div.btn-toolbar > a:nth-child(3)").href;
+      //   });
+      //   job.link = link
       // if (typeof link == "object") {
       //   job.link = link[0];
       // }
@@ -107,12 +109,12 @@ let good = async () => {
       let link1 = 0;
       if (link1) {
         const link = await page.evaluate(() => {
-          let applyLink = document.querySelector('.newWindow.newslink')
-          return applyLink ? applyLink.href : ""
-        })
+          let applyLink = document.querySelector(".newWindow.newslink");
+          return applyLink ? applyLink.href : "";
+        });
         job.link = link;
       } else {
-        job.link = jobLink
+        job.link = jobLink;
       }
       allJobs.push(job);
     }
@@ -139,9 +141,4 @@ async function scroll(page) {
   });
 }
 
-good()
-
-
-
-
-
+export default duren;
