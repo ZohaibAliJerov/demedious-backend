@@ -31,18 +31,21 @@ let aatalklinik = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Sundern (Sauerland)",
+        location: "",
         hospital: "Neurologische Klinik Sorpe",
         link: "",
         level: "",
         position: "",
+        city: "Sundern",
+        email: "",
+        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
         waitUntil: "load",
         timeout: 0,
       });
-
+    
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
@@ -50,6 +53,12 @@ let aatalklinik = async () => {
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
+
+      job.location = await page.evaluate(() => {
+        let loc = document.querySelector(".sidebar-widget").innerText;
+        loc = loc.replace("\n", " ");
+        return loc.replace(/\w+@\w+\.\w+/, "");
+      });
 
       let text = await page.evaluate(() => {
         return document.body.innerText;
@@ -77,16 +86,21 @@ let aatalklinik = async () => {
       }
 
       //get link
-      let link = await page.evaluate(() => {
+      job.email = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
-      if (typeof link == "object") {
-        job.link = link[0];
+      if (typeof job.email == "object") {
+        job.email = job.email[0];
       }
-      // console.log(job);
+
+      job.link = jobLink;
+
       allJobs.push(job);
     }
+    console.log(allJobs);
+    await browser.close()
     return allJobs.filter((job) => job.position != "");
+
   } catch (e) {
     console.log(e);
   }
@@ -108,4 +122,4 @@ async function scroll(page) {
   });
 }
 
-export default aatalklinik;
+aatalklinik();

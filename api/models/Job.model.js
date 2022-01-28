@@ -20,9 +20,22 @@ const jobSchema = new mongoose.Schema({
   position: {
     type: String,
   },
+  city: {
+    type: String,
+  },
+  email: {
+    type: String,
+  },
+  republic: {
+    type: String,
+  },
+  month: {
+    type: Number,
+    default: new Date().getMonth(),
+  },
   date: {
     type: Date,
-    default: Date.now,
+    default: new Date().toLocaleDateString(),
   },
 });
 

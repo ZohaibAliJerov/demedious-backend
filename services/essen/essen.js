@@ -1,9 +1,9 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt",  "Arzt", "Oberarzt"];
 
-let wuppertal = async () => {
+let essen = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -61,7 +61,9 @@ let wuppertal = async () => {
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"
+        level == "Assistenzarzt" ||
+        level =="Arzt"||
+        level == "Oberarzt"
       ) {
         job.position = "artz";
       }
@@ -102,5 +104,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-wuppertal();
-export default wuppertal;
+essen();
+export default essen;

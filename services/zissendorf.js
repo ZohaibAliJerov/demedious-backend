@@ -1,104 +1,136 @@
 import puppeteer from "puppeteer";
 
-const kalkon = async () => {
-    try {
-        const browser = await puppeteer.launch({ headless: false });
-        const page = await browser.newPage();
-        page.setDefaultNavigationTimeout(0);
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-        let allJobs = []
-        let link = ["https://www.zissendorf.de/stellenanzeigen/"];
-
-        let counter = 0;
-
-        do {
-            await page.goto(link[counter], { timeout: 0 });
-            scroll(page);
-
-            ///getting all the links
-            const job = await page.evaluate(() => {
-                return Array.from(
-                    document.querySelectorAll('h2.entry-title a')
-                ).map(el => el.href)
-            });
-            console.log(job);
-
-            allJobs.push(...job)
-            counter++
-        } while (counter < link);
-
-        console.log(allJobs)
-
-        const allJobDetails = []
-
-        for (const url of allJobs) {
-            await page.goto(url)
-
-            await scroll(page)
-            /// getting all the title
-            // await page.waitForSelector('h1')
-            const title = await page.evaluate(() => {
-                let text = document.querySelector('h1')
-                return text ? text.innerText : null;
-            })
-
-            /// getting all the cell no.
-            const cell = await page.evaluate(() => {
-                let text = document.querySelector('body');
-                return text ? text.innerText.match(/\d+ [/] \d+.\d+/) : null;
-            });
-
-            // getting all the location from the links 
-            const location = await page.evaluate(() => {
-                let text = document.querySelector('body');
-                return text ? text.innerText.match(/[a-zA-Z. ]+-[a-zA-Z.]+, [a-zA-Z. ]+/) : null;
-            });
-
-            /// getting all the emails 
-            const email = await page.evaluate(() => {
-                let text = document.querySelector('body');
-                return text ? text.innerText.match(/[a-zA-Z.]+.[a-zA-Z]+@[a-zA-Z-.]+/) : null;
-            });
-
-            // getting all the applylinks
-            const applyLink = await page.evaluate(() => {
-                let text = document.querySelector('.box.arrow-box');
-                return text ? text.href : null;
-            })
-
-            const jobDetails = {
-                title,
-                cell,
-                location,
-                email,
-                applyLink
-            };
-            allJobDetails.push(jobDetails);
-            await page.waitForTimeout(3000);
-        }
-        console.log(allJobDetails);
-        await page.close();
-        await browser.close();
-        return allJobDetails;
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-async function scroll(page) {
-    await page.evaluate(() => {
-        const distance = 100;
-        const delay = 100;
-        const timer = setInterval(() => {
-            document.scrollingElement.scrollBy(0, distance);
-            if (
-                document.scrollingElement.scrollTop + window.innerHeight >=
-                document.scrollingElement.scrollHeight
-            ) {
-                clearInterval(timer);
-            }
-        }, delay);
+let zissedorf = async () => {
+  try {
+    let browser = await puppeteer.launch({
+      headless: false,
     });
+
+    let page = await browser.newPage();
+
+    await page.goto("https://www.zissendorf.de/stellenanzeigen/", {
+      waitUntil: "load",
+      timeout: 0,
+    });
+
+    await scroll(page);
+
+    //get all jobLinks
+    const jobLinks = await page.evaluate(() => {
+      return Array.from(
+        document.querySelectorAll("h2.entry-title a")
+      ).map((el) => el.href);
+    });
+
+    console.log(jobLinks);
+    let allJobs = [];
+
+    for (let jobLink of jobLinks) {
+      let job = {
+        title: "",
+        location: "Gut Zissendorf, 53773 Hennef (Sieg), Germany",
+        hospital: "Fachklink Gut Zissendorf",
+        link: "",
+        level: "",
+        position: "",
+        city: "Hennef, Sieg",
+        email: "",
+        republic: "North Rhine-Westphalia",
+      };
+
+      await page.goto(jobLink, {
+        waitUntil: "load",
+        timeout: 0,
+      });
+
+      await page.waitForTimeout(1000);
+
+      let title = await page.evaluate(() => {
+        let ttitle = document.querySelector("h1");
+        return ttitle ? ttitle.innerText : "";
+      });
+      job.title = title;
+
+      // job.location = await page.evaluate(() => {
+      //   let loc = document.querySelector(".sidebar-widget").innerText;
+      //   loc = loc.replace("\n", " ");
+      //   return loc.replace(/\w+@\w+\.\w+/, "");
+      // });
+
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
+        continue;
+      }
+
+      //get link\
+
+      const email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+/);
+      });
+
+      job.email = email
+
+      // get link 
+      let link1 = 0;
+      if (link1) {
+        const link = await page.evaluate(() => {
+          let applyLink = document.querySelector('.box.arrow-box')
+          return applyLink ? applyLink.href : ""
+        })
+        job.link = link;
+      } else {
+        job.link = jobLink
+      }
+
+
+
+      allJobs.push(job);
+    }
+    console.log(allJobs)
+    await browser.close();
+    return allJobs.filter((job) => job.position != "");
+  } catch (e) {
+    console.log(e);
+  }
 };
 
-kalkon();
+async function scroll(page) {
+  await page.evaluate(() => {
+    const distance = 100;
+    const delay = 100;
+    const timer = setInterval(() => {
+      document.scrollingElement.scrollBy(0, distance);
+      if (
+        document.scrollingElement.scrollTop + window.innerHeight >=
+        document.scrollingElement.scrollHeight
+      ) {
+        clearInterval(timer);
+      }
+    }, delay);
+  });
+}
+// zissedorf()
+export default zissedorf;

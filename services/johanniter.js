@@ -1,70 +1,66 @@
+
+
+
+
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const johanniter = async () => {
+
+let johanniter = async () => {
+
   try {
-    let browser = await puppeteer.launch({ headless: false });
+    let browser = await puppeteer.launch({
+      headless: false,
+    });
+
     let page = await browser.newPage();
-    let url =
-      "https://www.johanniter.de/johanniter-kliniken/neurologisches-rehabilitationszentrum-godeshoehe/karriere/";
+            let jobLinks = []
+            let allLinks = [
+            "https://www.johanniter.de/johanniter-kliniken/neurologisches-rehabilitationszentrum-godeshoehe/karriere/"
+            ]
+            let counter = 0;
+            do {
+                await page.goto(allLinks[counter], { timeout: 0 })
+                
+               await scroll(page)
+             
+                
+                // getting all the links 
+                const links = await page.evaluate(() => {
+                    return Array.from(
+                        document.querySelectorAll('.c-content-list__text > h3 a' )
+                        )
+                        .map(el => el.href)
+                });
+                // console.log(links)
+                jobLinks.push(...links);
+                counter++
+            } while (counter > allLinks.length);
+            console.log(jobLinks)
+    let allJobs = [];
 
-    await page.goto(url, { timeout: 0, waitUntil: "load" });
-    await page.waitForTimeout(3000);
-    //remove the dialog box
-    await page.waitForSelector("#uc-btn-accept-banner");
-    await page.click("#uc-btn-accept-banner");
+    for (let jobLink of jobLinks) {
+      let job = {
+        title: "",
+        location: "Mönchengladbach",
+        hospital: "Evangelisches Krankenhaus Bethesda Mönchengladbach",
+        link: "",
+        level: "",
+        position: "",
+      };
 
-    await page.waitForTimeout(1000);
-    //scroll the page
-    await page.evaluate(() => {
-      for (let i = 0; i < 100; i++) {
-        if (
-          document.scrollingElement.scrollTop + window.innerHeight >=
-          document.scrollingElement.scrollHeight
-        ) {
-          break;
-        }
-        document.scrollingElement.scrollBy(0, 100);
-        setTimeout(10000);
-      }
-    });
-    //get all pages
-    let pages = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(".c-pagination__list > li > a")
-      ).map((el) => el.href);
-    });
-
-    //get all job links
-    let allJobLinks = [];
-    for (let pg of pages) {
-      //visit each page
-      await page.goto(`${pg}`, { timeout: 0, waitUntil: "load" });
-      //scroll the each page
-      //scroll the page
-      await page.evaluate(() => {
-        for (let i = 0; i < 100; i++) {
-          if (
-            document.scrollingElement.scrollTop + window.innerHeight >=
-            document.scrollingElement.scrollHeight
-          ) {
-            break;
-          }
-          document.scrollingElement.scrollBy(0, 100);
-
-          setTimeout(1000);
-        }
+      await page.goto(jobLink, {
+        waitUntil: "load",
+        timeout: 0,
       });
 
-      let jobLinks = await page.evaluate(() => {
-        return Array.from(
-          document.querySelectorAll("div.c-content-list__text > h3 > a")
-        ).map((el) => el.href);
-      });
-      allJobLinks.push(...jobLinks);
-    }
+      await scroll(page)
+
+      let title = await page.evaluate(() => {
+        let ttitle = document.querySelector(".c-page-title > h1");
+        return ttitle ? ttitle.innerText : "";
 
     // get all job details
     let allJobs = [];
@@ -87,11 +83,14 @@ const johanniter = async () => {
       });
       let job = {
         title: "",
-        location: "Bonn",
+        location: "",
         hospital: "Neurologisches Rehabilita ",
         link: "",
         level: "",
         position: "",
+        city: "Bonn",
+        email: "",
+        republic: "North Rhine-Westphalia",
       };
 
       await page.waitForSelector("h1");
@@ -99,8 +98,58 @@ const johanniter = async () => {
         return document.querySelector("h1").innerText;
       });
 
-      job.link = await page.evaluate(() => {
+      job.location = await page.evaluate(() => {
+        return document.querySelector(".c-contact__content").innerText;
+
+      });
+      job.title = title;
+
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
+        continue;
+      }
+
+      //get link
+      let link = await page.evaluate(() => {
+       let applink = document.querySelector('a.c-button.c-button--main.c-button--large');
+       return applink ? applink.href : null;
+    });
+      // if (typeof link == "object") {
+      //   job.link = link;
+      // }
+      // console.log(job);
+      job.link = link
+      
+      job.email = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
+      });
+      if (typeof job.email == "object" && job.email != null) {
+        job.email = job.email[0];
+      }
+      job.link = await page.evaluate(() => {
+        return document.querySelector(
+          ".c-button.c-button--main.c-button--large"
+        ).href;
       });
       //get level and position
       let text = job.title;
@@ -126,17 +175,34 @@ const johanniter = async () => {
       }
       allJobs.push(job);
     }
+    console.log(allJobs)
     await page.close();
     await browser.close();
-    return allJobs;
-  } catch (error) {
-    console.log(error);
+    return allJobs.filter((job) => job.position != "");
+  } catch (e) {
+    console.log(e);
   }
 };
+    
+async function scroll(page) {
+  await page.evaluate(() => {
+    const distance = 100;
+    const delay = 100;
+    const timer = setInterval(() => {
+      document.scrollingElement.scrollBy(0, distance);
+      if (
+        document.scrollingElement.scrollTop + window.innerHeight >=
+        document.scrollingElement.scrollHeight
+      ) {
+        clearInterval(timer);
+      }
+    }, delay);
+  });
+}
 
-//export default johanniter;
+johanniter()
 
-(async () => {
-  let res = await johanniter();
-  console.log(res);
-})();
+
+
+
+export default johanniter;
