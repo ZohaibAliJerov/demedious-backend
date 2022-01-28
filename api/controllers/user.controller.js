@@ -97,6 +97,7 @@ export const saveJob = async (req, res) => {
     let index = user.savedJobs.indexOf(jobId);
     if (index > -1) {
       user.savedJobs.splice(index, 1);
+      User.save();
       return res.status(200).send({ message: "Job deleted successfully!" });
     }
     user.savedJobs.push(job);

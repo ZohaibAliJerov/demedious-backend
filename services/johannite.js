@@ -1,99 +1,133 @@
+
 import puppeteer from "puppeteer";
 
-const johanneiter = async () => {
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
+let Karrer_evkb = async () => {
   try {
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(0);
-    //scroll the page
-    let allJobs = [];
+    let browser = await puppeteer.launch({
+      headless: false,
+    });
+
+    let page = await browser.newPage();
+    let allJobsLinks = []
     let allLinks = [
-      "https://www.johanniter.de/johanniter-kliniken/johanniter-klinik-am-rombergpark-dortmund/",
-      "https://www.johanniter.de/jo hanniter-kliniken/johanniter-klinik-am-rombergpark-dortmund/karriere/?page=2&cHash=7ea1ac21af90d15dc61fea4a1e1fcc7b",
-      "https://www.johanniter.de/johanniter-kliniken/johanniter-klinik-am-rombergpark-dortmund/karriere/?page=3&cHash=29fa0d4566af249941be02c6837d67f1",
-      "https://www.johanniter.de/johanniter-kliniken/johanniter-klinik-am-rombergpark-dortmund/karriere/?page=4&cHash=f4952cb1f467cf5ff54d3dba6509eac5",
-      "https://www.johanniter.de/johanniter-kliniken/johanniter-klinik-am-rombergpark-dortmund/karriere/?page=5&cHash=f2c3f31c88e41918566b7e8251f53c3b",
+      "https://www.johanniter.de/johanniter-kliniken/ev-krankenhaus-bethesda-moenchengladbach/karriere/offene-stellen/?page=1&cHash=c9e9ec0b2164ae1357df7009e0dd341b",
+      "https://www.johanniter.de/johanniter-kliniken/ev-krankenhaus-bethesda-moenchengladbach/karriere/offene-stellen/?page=2&cHash=9045079842118667c15e5eb0262b13e6",
+      "https://www.johanniter.de/johanniter-kliniken/ev-krankenhaus-bethesda-moenchengladbach/karriere/offene-stellen/?page=3&cHash=e0a3061f74d1921ecc343be30579f521",
     ];
 
     let counter = 0;
     do {
       await page.goto(allLinks[counter], { timeout: 0 });
       scroll(page);
-      //  get all job links
-      let jobs = await page.evaluate(() => {
+      // get all job links
+      const jobLinks = await page.evaluate(() => {
         return Array.from(
-          document.querySelectorAll(".c-content-list__text > h3 > a")
+          document.querySelectorAll('.c-content-list__text > h3 > a')
         ).map((el) => el.href);
       });
-      console.log(jobs);
-      allJobs.push(...jobs);
+      console.log(jobLinks);
+      allJobsLinks.push(...jobLinks);
       counter++;
       await page.waitForTimeout(3000);
     } while (counter < allLinks.length);
-    console.log(allJobs.length);
-    let allJobDetails = [];
-    // get data from every job post
-    for (const url of allJobs) {
-      await page.goto(url);
-      scroll(page);
+    console.log(allJobsLinks);
 
-      await page.waitForSelector("h1");
-      const title = await page.evaluate(() => {
-        return document.querySelector("h1").innerText || null;
+
+    let allJobs = [];
+
+    for (let jobLink of allJobsLinks) {
+      let job = {
+        title: "",
+        location: "",
+        hospital: "Evangelisches Krankenhaus Bethesda Mönchengladbach",
+        link: "",
+        level: "",
+        position: "",
+        city: "Mönchengladbach",
+        email: "",
+        republic: "North Rhine-Westphalia",
+      };
+
+      await page.goto(jobLink, {
+        waitUntil: "load",
+        timeout: 0,
       });
 
-      //   get contacts
-      await page.waitForSelector("a.c-link.u-icon.u-icon.u-icon--phone");
-      let cell = await page.evaluate(() => {
-        let num = document.querySelector(
-          "a.c-link.u-icon.u-icon.u-icon--phone"
-        );
-        return num ? num.href : null;
+      await page.waitForTimeout(1000);
+
+      let title = await page.evaluate(() => {
+        let ttitle = document.querySelector("h1");
+        return ttitle ? ttitle.innerText : "";
       });
-      // get email
-      await page.waitForSelector("div.o-grid__row");
+      job.title = title;
+
+      const location = await page.evaluate(() => {
+        let text = document.querySelector(".o-grid__row");
+        return text ? text.innerText.match(
+          /[a-zA-Z-.].+\d+[\n]\w+[-.]\d+ [a-zA-Z-.].+/
+        )
+          : null;
+      });
+      job.location = location
+
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
+        continue;
+      }
+
+      //get link
       let email = await page.evaluate(() => {
         let text = document.querySelector("div.o-grid__row");
-        return text
-          ? text.innerText.match(
-              /[a-zA-Z0-9]+@[a-zA-Z0-9]+.[a-zA-Z0-9]+-[a-zA-Z0-9]+.[a-zA-Z0-9]+/g
-            )
+        return text ? text.innerText.match(
+            /[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/
+          )
           : null;
       });
 
-      // get address
-      let location = await page.evaluate(() => {
-        let text = document.querySelector(".o-grid__row");
+      job.email = email
 
-        return text
-          ? text.innerText.match(
-              /[a-zA-Z0-9]+ [a-zA-Z0-9]+[\n\][a-zA-Z0-9]+ [a-zA-Z0-9]+ \d+[\n][\n]\d+ [a-zA-Z0-9]+/
-            )
-          : null;
-      });
-      let applyLink = await page.evaluate(() => {
-        let text = document.querySelector(
-          "a.c-button.c-button--main.c-button--large"
-        );
-        return text ? text.href : null;
-      });
-      const jobDetails = {
-        title,
-        cell,
-        email,
-        location,
-        applyLink,
-      };
-      allJobDetails.push(jobDetails);
-      await page.waitForTimeout(3000);
+      //   getting applylink
+      // let link = page.evaluate(() => {
+      //   let Link = document.querySelector('a.c-button.c-button--main.c-button--large');
+      //   return Link ? Link.href : "";
+      // })
+      // job.link = link
+        job.link = jobLink;
+
+      allJobs.push(job);
     }
-    console.log(allJobDetails);
+    console.log(allJobs);
     await page.close();
-    return allJobDetails;
-  } catch (err) {
-    console.log(err);
+    await browser.close();
+    return allJobs.filter((job) => job.position != "");
+  } catch (e) {
+    console.log(e);
   }
 };
+
 async function scroll(page) {
   await page.evaluate(() => {
     const distance = 100;
@@ -110,4 +144,9 @@ async function scroll(page) {
   });
 }
 
-export default johanneiter;
+Karrer_evkb()
+// export default Karrer_evkb;
+
+
+
+

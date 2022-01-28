@@ -88,7 +88,7 @@ const florenceService = async () => {
         let email = document.body.innerText.match(/\w+@\w+\.\w+/);
         return email ? email : document.body.innerText.match(/.+\(at\).+\.\w+/);
       });
-      if (typeof job.email == "object") {
+      if (typeof job.email == "object" && job.email != null) {
         job.email = job.email[0];
       }
       //get level and position
