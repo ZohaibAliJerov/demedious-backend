@@ -45,9 +45,11 @@ const wessel = async () => {
       return document.body.innerText.match(/\w+@.*\.\w/).toString();
     });
     job.location = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".news.news-single > p")).map(
-        (el) => el.innerText
-      )[1];
+      return Array.from(document.querySelectorAll(".news.news-single > p"))
+        .map((el) => el.innerText)[1]
+        .split("\n")
+        .slice(0, 3)
+        .join(" ");
     });
     let text = await page.evaluate(() => {
       return document.body.innerText;
