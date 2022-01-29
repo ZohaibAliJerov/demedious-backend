@@ -46,9 +46,8 @@ const celenus = async () => {
       return document.body.innerText.match(/\w+@.*\.\w/).toString();
     });
     job.location = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("p"))
+      return Array.from(document.querySelectorAll(".nc-company-address"))
         .map((el) => el.innerText)
-        .filter((el) => el.match(/.+@.+\.\w+/))
         .join(",")
         .split("\n")
         .slice(0, 3)
@@ -79,7 +78,9 @@ const celenus = async () => {
     if (!position in positions) {
       continue;
     }
-    job.link = link;
+    job.link = await page.evaluate(() => {
+      return document.querySelector(".nc-action-button.nc-link-form > a").href;
+    });
     if (typeof job.link == "object") {
       job.link = job.link[0];
     }
