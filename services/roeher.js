@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const remeo = async () => {
+const roeher = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
@@ -13,47 +13,39 @@ const remeo = async () => {
   //scroll the page
   await scroll(page);
   await page.waitForTimeout(5000);
-  //get all links
-  let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".matchValue.title > a")).map(
-      (el) => el.href
+
+  //TODO:get titles
+  let titles = await page.evaluate(() => {
+    return Array.from(document.querySelectorAll(".fusion-toggle-heading")).map(
+      (el) => el.innerText
     );
   });
-  console.log(links);
-  //slice the links
-
+  console.log(titles);
   //get all job details
   let allJobs = [];
-  for (let link of links) {
-    await page.goto(link, { timeout: 0, waitUntil: "load" });
-    await page.waitForTimeout(5000);
+  for (let title of titles) {
+    // await page.goto(link, { timeout: 0, waitUntil: "load" });
+    // await page.waitForTimeout(5000);
     let job = {
       title: "",
-      location: "",
-      hospital: "REMEO® Center Dortmund",
-      link: "",
+      location:
+        "ZAP – Center for Outpatient Psychotherapy,Röher Str. 55,52249 Eschweiler",
+      hospital: "Röher Parkklinik",
+      link: url,
       level: "",
       position: "",
-      city: "Dortmund",
+      city: "Eschweiler",
       email: "",
       republic: "North Rhine-Westphalia",
     };
     await scroll(page);
-    job.title = await page.evaluate(() => {
-      return document.querySelector("h1").innerText;
-    });
+    job.title = title;
     console.log(job.title);
     job.email = await page.evaluate(() => {
       return document.body.innerText.match(/\w+@.*\.\w/).toString();
     });
-    job.location = await page.evaluate(() => {
-      return document.querySelector(
-        ".job-location.location.location-light-icon"
-      ).innerText;
-    });
-    let text = await page.evaluate(() => {
-      return document.body.innerText;
-    });
+
+    let text = title;
 
     //get level and positions
     let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
@@ -76,13 +68,7 @@ const remeo = async () => {
     if (!position in positions) {
       continue;
     }
-    job.link = await page.evaluate(() => {
-      return document.querySelector(".btn").href;
-    });
 
-    if (typeof job.link == "object") {
-      job.link = job.link[0];
-    }
     allJobs.push(job);
   } //end of for loop
   await page.close();
@@ -108,6 +94,6 @@ async function scroll(page) {
 
 // export default wessel;
 (async () => {
-  let res = await remeo();
+  let res = await roeher();
   console.log(res);
 })();
