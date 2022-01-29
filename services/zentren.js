@@ -7,7 +7,8 @@ const celenus = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://www.celenus-karriere.de/salvea/aktuellejobs/aerzte/";
+  let url =
+    "https://salzetal.deutsche-rentenversicherung-reha-zentren.de/subsites/Salzetal/de/Navigation/04_Service/Stellenangebote/Stellenangebote_node.html";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
