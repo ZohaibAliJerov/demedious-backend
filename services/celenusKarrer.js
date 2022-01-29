@@ -17,7 +17,7 @@ let ugos_de = async () => {
     let url = [ 
       'https://www.klinik-hilchenbach.de/karriere/',
       'https://www.celenus-karriere.de/jobs/aktuellejobs/aerzte/',
-      'https://www.celenus-karriere.de/salvea/aktuellejobs/aerzte/'
+      'https://www.celenus-karriere.de/salvea/aktuellejobs/ aerzte/'
     ]
             let allJobLinks = []
             let counter = 0
@@ -78,8 +78,7 @@ let ugos_de = async () => {
     
 
       job.location = await page.evaluate(() => {
-        let loc = document.querySelector(".cols.cols-3");
-        return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+[\n][\n]\d+[a-zA-Z-. ].+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+/) : ""
+        return document.body.innerText.match(/[a-zA-Z-.].+ \d+[\n][\n]\d+[a-zA-Z-. ].+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+/) || "Moltkestraße 27 77654 Offenburg"
         
       });
 
@@ -122,16 +121,16 @@ let ugos_de = async () => {
       // job.email = email
 
       // get link 
-      // let link1 = 0;
-      // if (link1) {
-      //   const link = await page.evaluate(() => {
-      //     let applyLink = document.querySelector('a.onlinebewerben.btn.btn--invert')
-      //     return applyLink ? applyLink.href : ""
-      //   })
-      //   job.link = link;
-      // } else {
+      let link1 = 0;
+      if (link1) {
+        const link = await page.evaluate(() => {
+          let applyLink = document.querySelector('.nc-action-button.nc-link-form a')
+          return applyLink ? applyLink.href : ""
+        })
+        job.link = link;
+      } else {
         job.link = jobLink
-      // }
+      }
 
 
 
@@ -160,8 +159,8 @@ async function scroll(page) {
     }, delay);
   });
 }
-ugos_de()
-// export default ugos_de
+// ugos_de()
+export default ugos_de
 
 
 
