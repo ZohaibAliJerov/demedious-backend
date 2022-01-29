@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const wessel = async () => {
+const celenus = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
@@ -20,9 +20,8 @@ const wessel = async () => {
       document.querySelectorAll(".ce-bodytext > ul > li > a")
     ).map((el) => el.href);
   });
-
+  print(links);
   //slice the links
-  links = links.slice(0, 10);
   //get all job details
   let allJobs = [];
   for (let link of links) {
@@ -31,7 +30,7 @@ const wessel = async () => {
     let job = {
       title: "",
       location: "",
-      hospital: "reha-Klinik Panorama",
+      hospital: "salvea Gesundheitszentrum",
       link: "",
       level: "",
       position: "",
@@ -109,7 +108,7 @@ async function scroll(page) {
 
 // export default wessel;
 (async () => {
-  let res = await wessel();
+  let res = await celenus();
   console.log(res);
 })();
 
