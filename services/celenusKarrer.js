@@ -1,6 +1,4 @@
 
-
-
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
