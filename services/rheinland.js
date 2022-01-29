@@ -61,6 +61,9 @@ const rheinland = async () => {
     });
     counter++;
     job.email = text.match(/\w+@\w+\.\w+/);
+    if (typeof job.email === "object" && job.email != null) {
+      job.email = job.email[0];
+    }
     //get level and positions
     let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
     let position = text.match(/arzt|pflege/);
