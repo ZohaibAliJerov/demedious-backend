@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const salus = async () => {
+const salus2 = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
@@ -25,13 +25,14 @@ const salus = async () => {
     await page.goto(pg, { timeout: 0, waitUntil: "load" });
     await page.waitForTimeout(5000);
     await scroll(page);
-    let links = await page.evaluate(() => {
+    let jobLinks = await page.evaluate(() => {
       return Array.from(document.querySelectorAll(".list-item-header > a")).map(
         (el) => el.href
       );
     });
-    links.push(...links);
+    links.push(...jobLinks);
   }
+  print(links);
   //get all job details
   let allJobs = [];
   for (let link of links) {
@@ -56,9 +57,11 @@ const salus = async () => {
       return document.body.innerText.match(/\w+@.*\.\w/).toString();
     });
     job.location = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".news.news-single > p")).map(
-        (el) => el.innerText
-      )[1];
+      return Array.from(document.querySelectorAll(".news.news-single > p"))
+        .map((el) => el.innerText)[1]
+        .split("\n")
+        .slice(0, 3)
+        .join(" ");
     });
     let text = await page.evaluate(() => {
       return document.body.innerText;
@@ -117,3 +120,7 @@ async function scroll(page) {
   let res = await salus2();
   console.log(res);
 })();
+
+function print(...args) {
+  console.log(...args);
+}
