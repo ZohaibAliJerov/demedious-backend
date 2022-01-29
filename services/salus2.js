@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const wessel = async () => {
+const salus = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
@@ -15,12 +15,23 @@ const wessel = async () => {
   await scroll(page);
 
   //get all links
-  let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".list-item-header > a")).map(
+  let pages = await page.evaluate(() => {
+    return Array.from(document.querySelectorAll(".pagination > li > a")).map(
       (el) => el.href
     );
   });
-
+  let links = [];
+  for (let pg of pages) {
+    await page.goto(pg, { timeout: 0, waitUntil: "load" });
+    await page.waitForTimeout(5000);
+    await scroll(page);
+    let links = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll(".list-item-header > a")).map(
+        (el) => el.href
+      );
+    });
+    links.push(...links);
+  }
   //get all job details
   let allJobs = [];
   for (let link of links) {
@@ -29,11 +40,11 @@ const wessel = async () => {
     let job = {
       title: "",
       location: "",
-      hospital: "salus klinik Castrop Rauxel",
+      hospital: "salus klinik Hürth",
       link: "",
       level: "",
       position: "",
-      city: "Castrop-Rauxel",
+      city: "Hürth",
       email: "",
       republic: "North Rhine-Westphalia",
     };
@@ -103,6 +114,6 @@ async function scroll(page) {
 
 // export default wessel;
 (async () => {
-  let res = await wessel();
+  let res = await salus2();
   console.log(res);
 })();
