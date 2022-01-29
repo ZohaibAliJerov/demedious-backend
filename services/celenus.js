@@ -40,7 +40,7 @@ const celenus = async () => {
     };
     await scroll(page);
     job.title = await page.evaluate(() => {
-      return document.querySelector(".uk-article-title").innerText;
+      return document.querySelector("h1").innerText;
     });
     job.email = await page.evaluate(() => {
       return document.body.innerText.match(/\w+@.*\.\w/).toString();
