@@ -35,7 +35,7 @@ const celenus = async () => {
       link: "",
       level: "",
       position: "",
-      city: "Krefeld",
+      city: "Bad Salzuflen",
       email: "",
       republic: "North Rhine-Westphalia",
     };
