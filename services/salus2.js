@@ -3,67 +3,70 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const rheinlandklinikum = async () => {
+const salus2 = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://karriere.rheinlandklinikum.de/jobs";
-
+  let url =
+    "https://www.salus-kliniken.de/aktuelles/karriere-und-beruf/list/huerth/";
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
   //scroll the page
   await scroll(page);
-  //get links titles, locations, hospitals
-  let [titles, locations, hospitals] = await page.evaluate(() => {
-    let text = Array.from(document.querySelectorAll(".portfolio-desc"))
-      .map((el) => el.innerText)
-      .map((el) => el.split("\n"));
-    let titles = text.map((el) => el[0]);
-    let locations = text.map((el) => el[1]);
-    let hospitals = text.map((el) => el[3]);
-    return [titles, locations, hospitals];
-  });
 
-  console.log(titles);
-  console.log(locations);
-  console.log(hospitals);
-  await page.waitForTimeout(3000);
   //get all links
-  let links = await page.evaluate(() => {
-    return Array.from(
-      document.querySelectorAll(".portfolio-desc >  h3 > a")
-    ).map((el) => el.href);
+  let pages = await page.evaluate(() => {
+    return Array.from(document.querySelectorAll(".pagination > li > a")).map(
+      (el) => el.href
+    );
   });
-  //slice the links
+  let links = [];
+  for (let pg of pages) {
+    await page.goto(pg, { timeout: 0, waitUntil: "load" });
+    await page.waitForTimeout(5000);
+    await scroll(page);
+    let jobLinks = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll(".list-item-header > a")).map(
+        (el) => el.href
+      );
+    });
+    links.push(...jobLinks);
+  }
+  print(links);
   //get all job details
   let allJobs = [];
-  let counter = 0;
   for (let link of links) {
     await page.goto(link, { timeout: 0, waitUntil: "load" });
     await page.waitForTimeout(5000);
     let job = {
       title: "",
       location: "",
-      hospital: "",
+      hospital: "salus klinik Hürth",
       link: "",
       level: "",
       position: "",
-      city: "Würselen",
+      city: "Hürth",
       email: "",
       republic: "North Rhine-Westphalia",
     };
     await scroll(page);
-    job.title = titles[counter];
-    job.hospital = hospitals[counter];
-    job.location = locations[counter];
+    job.title = await page.evaluate(() => {
+      return document.querySelector("h2.fgColorOverride").innerText;
+    });
+    job.email = await page.evaluate(() => {
+      return document.body.innerText.match(/\w+@.*\.\w/).toString();
+    });
+    job.location = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll(".news.news-single > p"))
+        .map((el) => el.innerText)[1]
+        .split("\n")
+        .slice(0, 3)
+        .join(" ");
+    });
     let text = await page.evaluate(() => {
       return document.body.innerText;
     });
-    counter++;
-    job.email = text.match(/\w+@\w+\.\w+/);
-    if (typeof job.email === "object" && job.email != null) {
-      job.email = job.email[0];
-    }
+
     //get level and positions
     let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
     let position = text.match(/arzt|pflege/);
@@ -86,7 +89,9 @@ const rheinlandklinikum = async () => {
       continue;
     }
     job.link = link;
-
+    if (typeof job.link == "object") {
+      job.link = job.link[0];
+    }
     allJobs.push(job);
   } //end of for loop
   await page.close();
@@ -112,6 +117,10 @@ async function scroll(page) {
 
 // export default wessel;
 (async () => {
-  let res = await rheinlandklinikum();
+  let res = await salus2();
   console.log(res);
 })();
+
+function print(...args) {
+  console.log(...args);
+}
