@@ -32,19 +32,35 @@ const wessel = async () => {
     await page.waitForTimeout(5000);
     let job = {
       title: "",
-      location: "Lippstadt",
+      location: "",
       hospital: "reha-Klinik Panorama",
       link: "",
       level: "",
       position: "",
+      city: "Lippstadt",
+      email: "",
+      republic: "North Rhine-Westphalia",
     };
     await scroll(page);
     job.title = await page.evaluate(() => {
       return document.querySelector(".uk-article-title").innerText;
     });
+    job.email = await page.evaluate(() => {
+      return document.body.innerText.match(/\w+@.*\.\w/).toString();
+    });
+    job.location = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll("p"))
+        .map((el) => el.innerText)
+        .filter((el) => el.match(/.+@.+\.\w+/))
+        .join(",")
+        .split("\n")
+        .slice(0, 3)
+        .join(",");
+    });
     let text = await page.evaluate(() => {
       return document.body.innerText;
     });
+
     //get level and positions
     let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
     let position = text.match(/arzt|pflege/);
@@ -66,9 +82,7 @@ const wessel = async () => {
     if (!position in positions) {
       continue;
     }
-    job.link = await page.evaluate(() => {
-      return document.body.innerText.match(/\w+@.+\.\w+/);
-    });
+    job.link = link;
     if (typeof job.link == "object") {
       job.link = job.link[0];
     }
@@ -95,4 +109,8 @@ async function scroll(page) {
   });
 }
 
-export default wessel;
+// export default wessel;
+(async () => {
+  let res = await wessel();
+  console.log(res);
+})();
