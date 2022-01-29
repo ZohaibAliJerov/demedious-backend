@@ -69,7 +69,7 @@ app.use("/api/v1/resetpassword", resetRoutes);
 
 // job.start();
 
-run();
+// run();
 
 app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
