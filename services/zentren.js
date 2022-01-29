@@ -17,9 +17,9 @@ const celenus = async () => {
   await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(
-      document.querySelectorAll(".ce-bodytext > ul > li > a")
-    ).map((el) => el.href);
+    return Array.from(document.querySelectorAll(".odd > a")).map(
+      (el) => el.href
+    );
   });
   print(links);
   //slice the links
