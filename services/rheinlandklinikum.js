@@ -60,7 +60,7 @@ const rheinlandklinikum = async () => {
       return document.body.innerText;
     });
     counter++;
-    job.email = text.match(/\w+@\w+\.\w+/)[0];
+    job.email = text.match(/\w+@\w+\.\w+/);
     //get level and positions
     let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
     let position = text.match(/arzt|pflege/);
