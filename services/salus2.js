@@ -8,7 +8,7 @@ const wessel = async () => {
   let page = await browser.newPage();
 
   let url =
-    "https://www.salus-kliniken.de/aktuelles/karriere-und-beruf/list/castrop-rauxel/";
+    "https://www.salus-kliniken.de/aktuelles/karriere-und-beruf/list/huerth/";
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
   //scroll the page
