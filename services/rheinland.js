@@ -3,11 +3,11 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const rheinlandklinikum = async () => {
+const rheinland = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://karriere.rheinlandklinikum.de/jobs";
+  let url = "https://karriere.rheinlandklinikum.de/jobs#arztlicher-bereich";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
@@ -109,6 +109,6 @@ async function scroll(page) {
 
 // export default wessel;
 (async () => {
-  let res = await rheinlandklinikum();
+  let res = await rheinland();
   console.log(res);
 })();
