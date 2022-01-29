@@ -3,64 +3,64 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const wessel = async () => {
+const rheinlandklinikum = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url =
-    "https://www.wessel-gruppe.de/offene-stellen/?company_name=Fachklinik+Spielwigge&job_types=vollzeit,teilzeit";
+  let url = "https://karriere.rheinlandklinikum.de/jobs";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
   //scroll the page
   await scroll(page);
-  await page.waitForSelector("ui > li > input");
-  await page.click("ui > li > input");
+  //get links titles, locations, hospitals
+  let [titles, locations, hospitals] = await page.evaluate(() => {
+    let text = Array.from(document.querySelectorAll(".portfolio-desc"))
+      .map((el) => el.innerText)
+      .map((el) => el.split("\n"));
+    let titles = text.map((el) => el[0]);
+    let locations = text.map((el) => el[1]);
+    let hospitals = text.map((el) => el[3]);
+    return [titles, locations, hospitals];
+  });
+
+  console.log(titles);
+  console.log(locations);
+  console.log(hospitals);
   await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".job_listings > li > a")).map(
-      (el) => el.href
-    );
+    return Array.from(
+      document.querySelectorAll(".portfolio-desc >  h3 > a")
+    ).map((el) => el.href);
   });
   //slice the links
-  links = links.slice(0, 10);
   //get all job details
   let allJobs = [];
+  let counter = 0;
   for (let link of links) {
     await page.goto(link, { timeout: 0, waitUntil: "load" });
     await page.waitForTimeout(5000);
     let job = {
       title: "",
       location: "",
-      hospital: "reha-Klinik Panorama",
+      hospital: "",
       link: "",
       level: "",
       position: "",
-      city: "Lippstadt",
+      city: "Würselen",
       email: "",
       republic: "North Rhine-Westphalia",
     };
     await scroll(page);
-    job.title = await page.evaluate(() => {
-      return document.querySelector(".uk-article-title").innerText;
-    });
-    job.email = await page.evaluate(() => {
-      return document.body.innerText.match(/\w+@.*\.\w/).toString();
-    });
-    job.location = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("p"))
-        .map((el) => el.innerText)
-        .filter((el) => el.match(/.+@.+\.\w+/))
-        .join(",")
-        .split("\n")
-        .slice(0, 3)
-        .join(",");
-    });
+    job.title = titles[counter];
+    job.hospital = hospitals[counter];
+    job.location = locations[counter];
     let text = await page.evaluate(() => {
       return document.body.innerText;
     });
-
+    counter++;
+    job.email = text.match(/\w+@\w+\.\w+/)[0];
     //get level and positions
     let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
     let position = text.match(/arzt|pflege/);
@@ -83,9 +83,7 @@ const wessel = async () => {
       continue;
     }
     job.link = link;
-    if (typeof job.link == "object") {
-      job.link = job.link[0];
-    }
+
     allJobs.push(job);
   } //end of for loop
   await page.close();
@@ -111,6 +109,6 @@ async function scroll(page) {
 
 // export default wessel;
 (async () => {
-  let res = await wessel();
+  let res = await rheinlandklinikum();
   console.log(res);
 })();

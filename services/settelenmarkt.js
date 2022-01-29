@@ -3,28 +3,26 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const wessel = async () => {
+const settelenmarkt = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
   let url =
-    "https://www.wessel-gruppe.de/offene-stellen/?company_name=Fachklinik+Spielwigge&job_types=vollzeit,teilzeit";
+    "https://jobs.drv-bund-karriere.de/stellenmarkt/?wpv-jobort=bad-salzuflen&wpv_aux_current_post_id=763&wpv_aux_parent_post_id=763&wpv_view_count=761";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
   //scroll the page
   await scroll(page);
-  await page.waitForSelector("ui > li > input");
-  await page.click("ui > li > input");
   await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".job_listings > li > a")).map(
-      (el) => el.href
-    );
+    return Array.from(document.querySelectorAll("a"))
+      .map((el) => el.href)
+      .slice(45, 49);
   });
   //slice the links
-  links = links.slice(0, 10);
+
   //get all job details
   let allJobs = [];
   for (let link of links) {
@@ -33,29 +31,23 @@ const wessel = async () => {
     let job = {
       title: "",
       location: "",
-      hospital: "reha-Klinik Panorama",
+      hospital: "Rehabilitationsklinik Am Langenbach",
       link: "",
       level: "",
       position: "",
-      city: "Lippstadt",
+      city: "Bad Salzuflen",
       email: "",
       republic: "North Rhine-Westphalia",
     };
     await scroll(page);
     job.title = await page.evaluate(() => {
-      return document.querySelector(".uk-article-title").innerText;
+      return document.querySelector("h1").innerText;
     });
     job.email = await page.evaluate(() => {
       return document.body.innerText.match(/\w+@.*\.\w/).toString();
     });
     job.location = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("p"))
-        .map((el) => el.innerText)
-        .filter((el) => el.match(/.+@.+\.\w+/))
-        .join(",")
-        .split("\n")
-        .slice(0, 3)
-        .join(",");
+      return document.querySelector("h4").innerText;
     });
     let text = await page.evaluate(() => {
       return document.body.innerText;
@@ -83,6 +75,7 @@ const wessel = async () => {
       continue;
     }
     job.link = link;
+
     if (typeof job.link == "object") {
       job.link = job.link[0];
     }
@@ -111,6 +104,6 @@ async function scroll(page) {
 
 // export default wessel;
 (async () => {
-  let res = await wessel();
+  let res = await settelenmarkt();
   console.log(res);
 })();
