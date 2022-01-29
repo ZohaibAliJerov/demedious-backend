@@ -7,22 +7,20 @@ const wessel = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url =
-    "https://www.wessel-gruppe.de/offene-stellen/?company_name=Fachklinik+Spielwigge&job_types=vollzeit,teilzeit";
+  let url = "https://www.celenus-karriere.de/salvea/aktuellejobs/aerzte/";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
   //scroll the page
   await scroll(page);
-  await page.waitForSelector("ui > li > input");
-  await page.click("ui > li > input");
   await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".job_listings > li > a")).map(
-      (el) => el.href
-    );
+    return Array.from(
+      document.querySelectorAll(".ce-bodytext > ul > li > a")
+    ).map((el) => el.href);
   });
+
   //slice the links
   links = links.slice(0, 10);
   //get all job details
@@ -114,3 +112,7 @@ async function scroll(page) {
   let res = await wessel();
   console.log(res);
 })();
+
+function print(...args) {
+  console.log(...args);
+}
