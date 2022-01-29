@@ -7,7 +7,7 @@ const remeo = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://www.remeo.de/beruf-karriere/";
+  let url = "https://www.roeher-parkklinik.de/klinik/karriere/";
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
   //scroll the page
