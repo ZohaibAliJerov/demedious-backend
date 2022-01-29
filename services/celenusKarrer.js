@@ -46,11 +46,11 @@ let ugos_de = async () => {
       let job = {
         title: "",
         location: "",
-        hospital: "Gräfliche Kliniken - Caspar Heinrich Klinik",
+        hospital: "CELENUS Fachklinik Hilchenbach",
         link: "",
         level: "",
         position: "",
-        city: "Bad Driburg",
+        city: "Hilchenbach",
         email: "",
         republic: "North Rhine-Westphalia",
       };
