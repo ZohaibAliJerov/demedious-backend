@@ -115,12 +115,8 @@ async function scroll(page) {
   });
 }
 
-// export default wessel;
-(async () => {
-  let res = await celenus();
-  console.log(res);
-})();
-
 function print(...args) {
   console.log(...args);
 }
+
+export default wessel;
