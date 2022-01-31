@@ -47,7 +47,9 @@ const celenus = async () => {
       return document.querySelector("h1").innerText;
     });
     job.email = await page.evaluate(() => {
-      return document.body.innerText.match(/\w+@.*\.\w/).toString();
+      if (document.querySelector("a[href^='mailto:']")) {
+        return document.querySelector("a[href^='mailto:']").innerText;
+      }
     });
     job.location = await page.evaluate(() => {
       return Array.from(
@@ -56,7 +58,9 @@ const celenus = async () => {
         )
       )
         .map((el) => el.innerText)
-        .slice(0, 3)
+        .join(",")
+        .split("\n")
+        .slice(0, 2)
         .join(",");
     });
     let text = await page.evaluate(() => {
