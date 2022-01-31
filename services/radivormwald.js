@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const gerrieshiem = async () => {
+const radivormwald = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
@@ -116,4 +116,4 @@ function print(...args) {
   console.log(...args);
 }
 
-export default gerrieshiem;
+export default radivormwald;
