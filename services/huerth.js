@@ -7,7 +7,7 @@ const remschied = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://www.sana.de/remscheid/karriere/stellenangebote/#c63039";
+  let url = "https://www.sana.de/huerth/karriere/stellenangebote/#c77101";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
