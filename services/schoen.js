@@ -39,7 +39,7 @@ const schoen = async () => {
         link: "",
         level: "",
         position: "",
-        city: "Borken",
+        city: "Düsseldorf",
         email: "",
         republic: "North Rhine-Westphalia",
       };
