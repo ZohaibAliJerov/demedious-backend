@@ -35,7 +35,7 @@ const marien = async () => {
       let job = {
         title: "",
         location: "Duisburg",
-        hospital: "Sankt Marien Krankenhaus",
+        hospital: "Schlossklinik Pröbsting",
         link: "",
         level: "",
         position: "",
