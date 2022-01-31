@@ -50,10 +50,12 @@ const celenus = async () => {
       return document.body.innerText.match(/\w+@.*\.\w/).toString();
     });
     job.location = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll(".nc-company-address"))
+      return Array.from(
+        document.querySelectorAll(
+          "div.rc_box_content.rc_box_content_special > p"
+        )
+      )
         .map((el) => el.innerText)
-        .join(",")
-        .split("\n")
         .slice(0, 3)
         .join(",");
     });
@@ -82,9 +84,7 @@ const celenus = async () => {
     if (!position in positions) {
       continue;
     }
-    job.link = await page.evaluate(() => {
-      return document.querySelector(".nc-action-button.nc-link-form > a").href;
-    });
+    job.link = link;
     if (typeof job.link == "object") {
       job.link = job.link[0];
     }
