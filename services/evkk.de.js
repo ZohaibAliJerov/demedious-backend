@@ -41,11 +41,11 @@ let karrierKrapp= async () => {
       let job = {
         title: "",
         location: "",
-        hospital: "Alfried Krupp Krankenhaus Rüttenscheid",
+        hospital: "Evangelisches Krankenhaus Kalk",
         link: "",
         level: "",
         position: "",
-        city: "Essen",
+        city: "Köln",
         email: "",
         republic: "Federal Republic of Germany",
       };
