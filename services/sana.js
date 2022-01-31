@@ -7,8 +7,7 @@ const celenus = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url =
-    "https://salzetal.deutsche-rentenversicherung-reha-zentren.de/subsites/Salzetal/de/Navigation/04_Service/Stellenangebote/Stellenangebote_node.html";
+  let url = "https://www.sana.de/koeln/karriere/stellenangebote/#c63039";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
