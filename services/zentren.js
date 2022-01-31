@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const celenus = async () => {
+const zentern = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
@@ -119,4 +119,4 @@ function print(...args) {
   console.log(...args);
 }
 
-export default wessel;
+export default zentern;
