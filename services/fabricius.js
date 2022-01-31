@@ -34,12 +34,12 @@ const fabricius = async () => {
       await page.waitForTimeout(5000);
       let job = {
         title: "",
-        location: "Köln",
+        location: "Remscheid",
         hospital: "Sana Fabricius-Klinik Remschied",
         link: "",
         level: "",
         position: "",
-        city: "Köln",
+        city: "Remscheid",
         email: "",
         republic: "North Rhine-Westphalia",
       };
