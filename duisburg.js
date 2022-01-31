@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const fabricius = async () => {
+const duisburg = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
@@ -116,4 +116,4 @@ function print(...args) {
   console.log(...args);
 }
 
-export default fabricius;
+export default duisburg;
