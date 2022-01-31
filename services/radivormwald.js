@@ -39,7 +39,7 @@ const gerrieshiem = async () => {
         link: "",
         level: "",
         position: "",
-        city: "Düsseldorf",
+        city: "Radevormwald",
         email: "",
         republic: "North Rhine-Westphalia",
       };
