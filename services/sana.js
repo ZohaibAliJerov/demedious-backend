@@ -32,7 +32,7 @@ const celenus = async () => {
     let job = {
       title: "",
       location: "",
-      hospital: "Salzetalklinik der Deutsche Rentenversicherung",
+      hospital: "Sana Dreifaltigkeits-Krank",
       link: "",
       level: "",
       position: "",
