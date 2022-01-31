@@ -39,7 +39,7 @@ const marien = async () => {
         link: "",
         level: "",
         position: "",
-        city: "Ratingen",
+        city: "Borken",
         email: "",
         republic: "North Rhine-Westphalia",
       };
