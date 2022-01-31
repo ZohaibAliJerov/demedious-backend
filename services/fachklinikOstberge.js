@@ -105,4 +105,5 @@ async function scroll(page) {
     }, delay)
 });
 }
-fachKlinikOstberge()
+// fachKlinikOstberge()
+export default fachKlinikOstberge
