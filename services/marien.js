@@ -7,7 +7,8 @@ const duisburg = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://www.sana.de/duisburg/karriere/stellenangebote/#c63039";
+  let url =
+    "https://www.sankt-marien-ratingen.de/sankt-marien/beruf-und-karriere/stellenangebote";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
