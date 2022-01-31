@@ -17,9 +17,11 @@ const celenus = async () => {
   await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".odd > a")).map(
-      (el) => el.href
-    );
+    return Array.from(document.querySelectorAll(".odd > a")).map((el) => {
+      if (el) {
+        return el.href;
+      }
+    });
   });
   print(links);
   //slice the links
@@ -39,6 +41,7 @@ const celenus = async () => {
       email: "",
       republic: "North Rhine-Westphalia",
     };
+
     await scroll(page);
     job.title = await page.evaluate(() => {
       return document.querySelector("h1").innerText;
