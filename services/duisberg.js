@@ -39,7 +39,7 @@ const duisburg = async () => {
         link: "",
         level: "",
         position: "",
-        city: "Duisburg",
+        city: "Sundern",
         email: "",
         republic: "North Rhine-Westphalia",
       };
