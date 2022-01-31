@@ -17,7 +17,7 @@ const schoen = async () => {
   //get all links
   let links = await page.evaluate(() => {
     return Array.from(
-      document.querySelectorAll(".joboffer_title_text.joboffer_box > a ")
+      document.querySelectorAll(".et_pb_text_inner > ul > li")
     ).map((el) => {
       if (el) {
         return el.href;
