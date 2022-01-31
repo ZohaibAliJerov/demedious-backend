@@ -36,7 +36,7 @@ const bernath = async () => {
       let job = {
         title: "",
         location: "Duisburg",
-        hospital: "Sana Kliniken Duisburg",
+        hospital: "Sana Krankenhaus Benrat",
         link: "",
         level: "",
         position: "",
