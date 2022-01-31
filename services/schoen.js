@@ -35,7 +35,7 @@ const schoen = async () => {
       let job = {
         title: "",
         location: "",
-        hospital: "Schlossklinik Pröbsting",
+        hospital: "Schön Klinik Düsseldorf",
         link: "",
         level: "",
         position: "",
