@@ -7,8 +7,7 @@ const marien = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url =
-    "https://www.sankt-marien-ratingen.de/sankt-marien/beruf-und-karriere/stellenangebote";
+  let url = "https://jobs.schoen-klinik.de/stellenangebote.html";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
