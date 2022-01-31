@@ -16,7 +16,7 @@ const duisburg = async () => {
   await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll("#container_2315 > a")).map(
+    return Array.from(document.querySelectorAll(".wrapper > h2 > a")).map(
       (el) => {
         if (el) {
           return el.href;
