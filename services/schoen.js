@@ -16,13 +16,13 @@ const marien = async () => {
   await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".bite-title > a")).map(
-      (el) => {
-        if (el) {
-          return el.href;
-        }
+    return Array.from(
+      document.querySelectorAll(".joboffer_title_text.joboffer_box > a ")
+    ).map((el) => {
+      if (el) {
+        return el.href;
       }
-    );
+    });
   });
   if (links.length > 0) {
     print(links);
