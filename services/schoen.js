@@ -34,7 +34,7 @@ const marien = async () => {
       await page.waitForTimeout(5000);
       let job = {
         title: "",
-        location: "Duisburg",
+        location: "",
         hospital: "Schlossklinik Pröbsting",
         link: "",
         level: "",
