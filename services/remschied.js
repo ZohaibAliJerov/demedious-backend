@@ -35,7 +35,7 @@ const remschied = async () => {
       let job = {
         title: "",
         location: "Duisburg",
-        hospital: "Sana Krankenhaus Gerreshiem",
+        hospital: "Sana-Klinikum Remscheid",
         link: "",
         level: "",
         position: "",
