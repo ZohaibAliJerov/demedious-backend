@@ -55,10 +55,7 @@ const marien = async () => {
         job.email = job.email[0];
       }
       job.location = await page.evaluate(() => {
-        return document
-          .querySelector(".container")
-          .innerText.split("\n")
-          .join(",");
+        return document.querySelector(".scheme-additional-data").innerText;
       });
       let text = await page.evaluate(() => {
         return document.body.innerText;
