@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const marien = async () => {
+const schoen = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
@@ -116,8 +116,4 @@ function print(...args) {
   console.log(...args);
 }
 
-//export default marien;
-(async () => {
-  let res = await marien();
-  console.log(res);
-})();
+export default schoen;
