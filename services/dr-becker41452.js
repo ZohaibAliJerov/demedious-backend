@@ -4,44 +4,42 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let drBeaker3 = async () => {
+let gfo_kliniken = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
 
     let page = await browser.newPage();
-            let jobLinks = []
-            let allLinks = [
-                "https://dr-becker-karriere.de/jobs/?filter[client_id][]=2&%20filter[client_id][]=3&filter[client_id][]=4&filter[client_id][]=5&filter[client_id][]=6&filter[client_id][]=8&filter[client_id][]=9&filter[client_id][]=13&filter[client_id][]=14&filter[client_id][]=15&filter[client_id][]=16&filter[client_id][]=17"
-            ]
-            let counter = 0;
-            do {
-                await page.goto(allLinks[counter], { timeout: 0 })
-                scroll(page)
-    
-                // getting all the links 
-                const links = await page.evaluate(() => {
-                    return Array.from(
-                        document.querySelectorAll('.joboffer_title_text.joboffer_box a')
-                        )
-                        .map(el => el.href)
-                });
-                // console.log(links)
-                jobLinks.push(...links);
-                counter++
-            } while (counter > allLinks.length);
-            console.log(jobLinks)
+
+    await page.goto("https://dr-becker-karriere.de/jobs/?filter[client_id][]=2&%20filter[client_id][]=3&filter[client_id][]=4&filter[client_id][]=5&filter[client_id][]=6&filter[client_id][]=8&filter[client_id][]=9&filter[client_id][]=13&filter[client_id][]=14&filter[client_id][]=15&filter[client_id][]=16&filter[client_id][]=17", {
+      waitUntil: "load",
+      timeout: 0,
+    });
+
+    await scroll(page);
+
+    //get all jobLinks
+    const jobLinks = await page.evaluate(() => {
+      return Array.from(
+        document.querySelectorAll(".joboffer_title_text.joboffer_box a")
+      ).map((el) => el.href);
+    });
+
+    console.log(jobLinks);
     let allJobs = [];
 
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Nümbrecht",
+        location: "",
         hospital: "Dr. Becker Rhein-Sieg-Klinik",
         link: "",
         level: "",
         position: "",
+        city: "Nümbrecht",
+        email: "",
+        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -50,13 +48,27 @@ let drBeaker3 = async () => {
       });
 
       await page.waitForTimeout(1000);
+    //   let tit = 0;
+    //   if(tit){
+        let title = await page.evaluate(() => {
+          let ttitle = document.querySelector(".scheme-content.scheme-title > h1");
+          return ttitle ? ttitle.innerText : "";
+        });
+        job.title = title;
+    
 
-      let title = await page.evaluate(() => {
-        let ttitle = document.querySelector(".scheme-content.scheme-title > h1");
-        return ttitle ? ttitle.innerText : "";
+      job.location = await page.evaluate(() => {
+        let loc = [...document.querySelectorAll(".content_text")]
+        loc = loc.map(el => el.innerText);
+        loc = loc[4].split("\n")
+        let loc1 = loc[2];
+        return loc1
       });
-      job.title = title;
 
+      if(typeof job.location == 'object' && job.location != null ){
+        job.location = job.location[0]
+      }
+   
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -82,20 +94,33 @@ let drBeaker3 = async () => {
         continue;
       }
 
-      //get link
-      let link = await page.evaluate(() => {
-        let applink = document.querySelector('.css_button a')
-        return applink ? applink.href : "";
-    });
-    //   if (typeof link == "object") {
-    //     job.link = link;
-    //   }
-      // console.log(job);
-      job.link = link
+      //get link\
+
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/) || "gborsum@dbkg.de"
+      });
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
+      }
+      // job.email = email
+
+      // get link 
+      let link1 = 0;
+      if (link1) {
+        const link = await page.evaluate(() => {
+          let applyLink = document.querySelector('.css_button a')
+          return applyLink ? applyLink.href : ""
+        })
+        job.link = link;
+      } else {
+        job.link = jobLink
+      }
+
+
+
       allJobs.push(job);
     }
     console.log(allJobs)
-    await page.close();
     await browser.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
@@ -118,5 +143,6 @@ async function scroll(page) {
     }, delay);
   });
 }
+gfo_kliniken()
+// export default gfo_kliniken
 
-drBeaker3()
