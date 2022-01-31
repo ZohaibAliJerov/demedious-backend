@@ -34,12 +34,12 @@ const duisburg = async () => {
       await page.waitForTimeout(5000);
       let job = {
         title: "",
-        location: "Duisburg",
+        location: "Sundern",
         hospital: "Sana Kliniken Duisburg",
         link: "",
         level: "",
         position: "",
-        city: "Duisburg",
+        city: "Sundern",
         email: "",
         republic: "North Rhine-Westphalia",
       };
