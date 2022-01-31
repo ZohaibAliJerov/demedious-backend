@@ -50,8 +50,11 @@ const sana = async () => {
     job.email = await page.evaluate(() => {
       return document.body.innerText.match(/\w+@\w+\.\w+/);
     });
+    if (typeof job.email == "object") {
+      job.email = job.email[0];
+    }
     job.location = await page.evaluate(() => {
-      return document.querySelector("jobmeta > li").innerText;
+      return document.querySelector(".jobmeta > li").innerText;
     });
     let text = await page.evaluate(() => {
       return document.body.innerText;
