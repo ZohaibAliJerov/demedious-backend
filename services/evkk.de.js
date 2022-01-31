@@ -6,7 +6,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 let evkk_de = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
     });
 
     let page = await browser.newPage();
