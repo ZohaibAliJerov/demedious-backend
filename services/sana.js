@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const celenus = async () => {
+const sana = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
@@ -16,11 +16,13 @@ const celenus = async () => {
   await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".odd > a")).map((el) => {
-      if (el) {
-        return el.href;
+    return Array.from(document.querySelectorAll("#container_2315 > a")).map(
+      (el) => {
+        if (el) {
+          return el.href;
+        }
       }
-    });
+    );
   });
   print(links);
   //slice the links
@@ -31,12 +33,12 @@ const celenus = async () => {
     await page.waitForTimeout(5000);
     let job = {
       title: "",
-      location: "",
+      location: "Köln",
       hospital: "Sana Dreifaltigkeits-Krank",
       link: "",
       level: "",
       position: "",
-      city: " Köln",
+      city: "Köln",
       email: "",
       republic: "North Rhine-Westphalia",
     };
@@ -46,21 +48,10 @@ const celenus = async () => {
       return document.querySelector("h1").innerText;
     });
     job.email = await page.evaluate(() => {
-      if (document.querySelector("a[href^='mailto:']")) {
-        return document.querySelector("a[href^='mailto:']").innerText;
-      }
+      return document.body.innerText.match(/\w+@\w+\.\w+/);
     });
     job.location = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(
-          "div.rc_box_content.rc_box_content_special > p"
-        )
-      )
-        .map((el) => el.innerText)
-        .join(",")
-        .split("\n")
-        .slice(0, 2)
-        .join(",");
+      return document.querySelector("jobmeta > li").innerText;
     });
     let text = await page.evaluate(() => {
       return document.body.innerText;
