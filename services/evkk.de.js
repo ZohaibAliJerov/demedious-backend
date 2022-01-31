@@ -1,9 +1,11 @@
+
+
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let evkk_de = async () => {
+let karrierKrapp= async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -25,17 +27,27 @@ let evkk_de = async () => {
       ).map((el) => el.href);
     });
 
+    let titles = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll("ul.csc-menu.csc-menu-1 > li a")
+        ).map(el => el.innerText);
+      });
+      console.log(titles)
+  
+
     console.log(jobLinks);
     let allJobs = [];
-
+      let counter = 0;
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Enger",
-        hospital: "Evangelisches Krankenhaus Enger",
+        location: "",
+        hospital: "Evangelisches Krankenhaus Kalk",
         link: "",
         level: "",
         position: "",
+        city: "Köln",
+        email: "",
+        republic: "Federal Republic of Germany",
       };
 
       await page.goto(jobLink, {
@@ -44,13 +56,18 @@ let evkk_de = async () => {
       });
 
       await page.waitForTimeout(1000);
-
-      let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1");
-        return ttitle ? ttitle.innerText : "";
+    
+       job.title = titles[counter];
+       counter++;
+    
+      job.location = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.ö]+ \d+.\d+[\n]\d+ [a-zA-Z-.ö]+|[a-zA-Z-.ö].+ \d+[\n]\d+ [a-zA-Z-.ö]+/) || ""
+        
       });
-      job.title = title;
 
+      if(typeof job.location == 'object' && job.location != null ){
+        job.location = job.location[0]
+      }
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -76,17 +93,33 @@ let evkk_de = async () => {
         continue;
       }
 
-      //get link
-      let link = await page.evaluate(() => {
-          let links = document.querySelector('main');
-        return links ? links.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+/) : "";
-      })
-      
-      job.link = link
+      //get link\
+
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/) || "info@krupp-krankenhaus.de";
+      });
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
+      }
+      // job.email = email
+
+      // get link 
+      // let link1 = 0;
+      // if (link1) {
+      //   const link = await page.evaluate(() => {
+      //     let applyLink = document.querySelector('.css_button a')
+      //     return applyLink ? applyLink.href : ""
+      //   })
+      //   job.link = link;
+      // } else {
+        job.link = jobLink
+      // }
+
+
+
       allJobs.push(job);
     }
     console.log(allJobs)
-    await page.close();
     await browser.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
@@ -109,6 +142,7 @@ async function scroll(page) {
     }, delay);
   });
 }
+karrierKrapp()
+// export default karrierKrapp
 
-evkk_de();
 

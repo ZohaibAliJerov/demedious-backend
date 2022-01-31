@@ -1,4 +1,3 @@
-
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
@@ -44,6 +43,7 @@ const elisabeth = async () => {
     //    console.log(allPageLinks);
 
     let allJobLinks = [];
+    let allLocations = [];
     //get all joblinks
     for (let pageLink of allPageLinks) {
       //visit each page
@@ -62,6 +62,12 @@ const elisabeth = async () => {
         ].map((job) => job.href);
       });
       allJobLinks.push(...JobLinks);
+      let locations = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll("span.kurzb")).map(
+          (el) => el.innerText
+        );
+      });
+
       await page.waitForTimeout(3000);
     }
     //    console.log(allJobLinks);
@@ -69,11 +75,14 @@ const elisabeth = async () => {
     for (let jobLink of allJobLinks) {
       let job = {
         title: "",
-        location: "Herne",
+        location: "",
         hospital: "St. Anna Hospital Herne ",
         link: "",
         level: "",
         position: "",
+        city: "Herne",
+        email: "",
+        republic: "North Rhine-Westphalia",
       };
       //visit each job link
       await page.goto(jobLink, { waitUntil: "load", timeout: 0 });
@@ -143,5 +152,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-// elisabeth()
-export default elisabeth;
+elisabeth();
+//export default elisabeth;

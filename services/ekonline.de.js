@@ -7,9 +7,32 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 let ekonline_de = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
     });
 
+    let page = await browser.newPage();
+            let jobLinks = []
+            let allLinks = [
+                "https://www.ekonline.de/karriere/fuer-bewerber/stellenangebote.html"
+            ]
+            let counter = 0;
+            do {
+                await page.goto(allLinks[counter], { timeout: 0 })
+                scroll(page)
+                
+                // getting all the links 
+                const links = await page.evaluate(() => {
+                    return Array.from(
+                        document.querySelectorAll('h3.media-heading.visible-xs a' )
+                        )
+                        .map(el => el.href)
+                });
+                // console.log(links)
+                jobLinks.push(...links);
+                counter++
+            } while (counter > allLinks.length);
+            console.log(jobLinks)
+   
     let page = await browser.newPage();
 
     await page.goto("https://www.ekonline.de/karriere/fuer-bewerber/stellenangebote.html", {
@@ -47,21 +70,14 @@ let ekonline_de = async () => {
         timeout: 0,
       });
 
-      await page.waitForTimeout(1000);
-    //   let tit = 0;
-    //   if(tit){
+ 
+   
         let title = await page.evaluate(() => {
           let ttitle = document.querySelector("h2");
           return ttitle ? ttitle.innerText : "";
         });
         job.title = title;
-    //   }else{
-    //     let title = await page.evaluate(() => {
-    //       let ttitle = document.querySelector(".news-single-item h2");
-    //       return ttitle ? ttitle.innerText : "";
-    //     });
-    //     job.title = title;
-    //   }
+
     
 
       job.location = await page.evaluate(() => {
@@ -97,8 +113,7 @@ let ekonline_de = async () => {
       if (!position in positions) {
         continue;
       }
-
-      //get link\
+ 
 
       job.email = await page.evaluate(() => {
         return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/);
@@ -106,25 +121,11 @@ let ekonline_de = async () => {
       if(typeof job.email == "object" && job.email != null ){
         job.email = job.email[0]
       }
-      // job.email = email
-
-      // get link 
-    //   let link1 = 0;
-    //   if (link1) {
-    //     const link = await page.evaluate(() => {
-    //       let applyLink = document.querySelector('a.onlinebewerben.btn.btn--invert')
-    //       return applyLink ? applyLink.href : ""
-    //     })
-    //     job.link = link;
-    //   } else {
-        job.link = jobLink
-    //   }
-
-
-
+    
+        job.link = jobLink;
       allJobs.push(job);
     }
-    console.log(allJobs)
+    console.log(allJobs);
     await browser.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
@@ -147,6 +148,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-// ekonline_de()
-export default ekonline_de
 
+ekonline_de()

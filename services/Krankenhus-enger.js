@@ -4,9 +4,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-
-let karankenEnger = async () => {
-
+let gfo_kliniken = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
@@ -21,14 +19,10 @@ let karankenEnger = async () => {
 
     await scroll(page);
 
-
-    
-    await page.waitForSelector('h3 a ')
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
-        document.querySelectorAll('h3 a ')
-
+        document.querySelectorAll("h3 a")
       ).map((el) => el.href);
     });
 
@@ -54,20 +48,24 @@ let karankenEnger = async () => {
       });
 
       await page.waitForTimeout(1000);
-
-      let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h2");
-        return ttitle ? ttitle.innerText : "";
-      });
-      job.title = title;
+    //   let tit = 0;
+    //   if(tit){
+        let title = await page.evaluate(() => {
+          let ttitle = document.querySelector("h2");
+          return ttitle ? ttitle.innerText : "";
+        });
+        job.title = title;
+    
 
       job.location = await page.evaluate(() => {
-        let loc = document.body.innerText.match(/[A-Za-z-.]+ \d+[\n]\d+ [A-Za-z]+|[A-Za-z-.]+ \d+[\n][\n]\d+ [A-Za-z]+/)
-        return loc;
+        return document.body.innerText.match(/[A-Za-z-.]+ \d+[\n]\d+ [A-Za-z]+|[A-Za-z-.]+ \d+[\n][\n]\d+ [A-Za-z]+|[A-Za-z-.ü]+ \d+. \d+ [A-Za-z-.ü]+/) || "info@krankenhaus-enger.de"
       });
+
+
       if(typeof job.location == 'object' && job.location != null ){
         job.location = job.location[0]
       }
+   
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -92,20 +90,36 @@ let karankenEnger = async () => {
       if (!position in positions) {
         continue;
       }
+
+
+      //get link\
+
       job.email = await page.evaluate(() => {
-        return document.body.innerText.match(/[A-Za-z-.]+@[A-Za-z-.]+/) || "bewerbung@krankenhaus-enger.de";
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/) || "gborsum@dbkg.de"
       });
-  
       if(typeof job.email == "object" && job.email != null ){
         job.email = job.email[0]
       }
-  
-      job.link = jobLink;
+      // job.email = email
+
+      // get link 
+      // let link1 = 0;
+      // if (link1) {
+      //   const link = await page.evaluate(() => {
+      //     let applyLink = document.querySelector('.css_button a')
+      //     return applyLink ? applyLink.href : ""
+      //   })
+      //   job.link = link;
+      // } else {
+        job.link = jobLink
+      // }
+
+
+
 
       allJobs.push(job);
     }
-    console.log(allJobs);
-    await page.close();
+    console.log(allJobs)
     await browser.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
@@ -128,6 +142,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-export default karankenEnger;
-
+// gfo_kliniken()
+export default gfo_kliniken
