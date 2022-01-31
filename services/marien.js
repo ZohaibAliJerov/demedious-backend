@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const duisburg = async () => {
+const marien = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
@@ -40,7 +40,7 @@ const duisburg = async () => {
         link: "",
         level: "",
         position: "",
-        city: "Duisburg",
+        city: "Ratingen",
         email: "",
         republic: "North Rhine-Westphalia",
       };
@@ -56,7 +56,10 @@ const duisburg = async () => {
         job.email = job.email[0];
       }
       job.location = await page.evaluate(() => {
-        return document.querySelector(".jobmeta > li").innerText;
+        return document
+          .querySelector(".container")
+          .innerText.split("\n")
+          .join(",");
       });
       let text = await page.evaluate(() => {
         return document.body.innerText;
@@ -117,4 +120,4 @@ function print(...args) {
   console.log(...args);
 }
 
-export default duisburg;
+export default marien;
