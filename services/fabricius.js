@@ -7,7 +7,7 @@ const fabricius = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://www.sana.de/koeln/karriere/stellenangebote/#c63039";
+  let url = "https://www.sana.de/fabricius-remscheid/karriere/#c97471";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
