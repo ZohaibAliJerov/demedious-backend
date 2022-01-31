@@ -3,12 +3,11 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const zentern = async () => {
+const sana = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url =
-    "https://salzetal.deutsche-rentenversicherung-reha-zentren.de/subsites/Salzetal/de/Navigation/04_Service/Stellenangebote/Stellenangebote_node.html";
+  let url = "https://www.sana.de/koeln/karriere/stellenangebote/#c63039";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
@@ -17,11 +16,13 @@ const zentern = async () => {
   await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".odd > a")).map((el) => {
-      if (el) {
-        return el.href;
+    return Array.from(document.querySelectorAll("#container_2315 > a")).map(
+      (el) => {
+        if (el) {
+          return el.href;
+        }
       }
-    });
+    );
   });
   print(links);
   //slice the links
@@ -32,12 +33,12 @@ const zentern = async () => {
     await page.waitForTimeout(5000);
     let job = {
       title: "",
-      location: "",
-      hospital: "Salzetalklinik der Deutsche Rentenversicherung",
+      location: "Köln",
+      hospital: "Sana Dreifaltigkeits-Krank",
       link: "",
       level: "",
       position: "",
-      city: "Bad Salzuflen",
+      city: "Köln",
       email: "",
       republic: "North Rhine-Westphalia",
     };
@@ -47,21 +48,13 @@ const zentern = async () => {
       return document.querySelector("h1").innerText;
     });
     job.email = await page.evaluate(() => {
-      if (document.querySelector("a[href^='mailto:']")) {
-        return document.querySelector("a[href^='mailto:']").innerText;
-      }
+      return document.body.innerText.match(/\w+@\w+\.\w+/);
     });
+    if (typeof job.email == "object") {
+      job.email = job.email[0];
+    }
     job.location = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(
-          "div.rc_box_content.rc_box_content_special > p"
-        )
-      )
-        .map((el) => el.innerText)
-        .join(",")
-        .split("\n")
-        .slice(0, 2)
-        .join(",");
+      return document.querySelector(".jobmeta > li").innerText;
     });
     let text = await page.evaluate(() => {
       return document.body.innerText;
@@ -119,4 +112,4 @@ function print(...args) {
   console.log(...args);
 }
 
-export default zentern;
+export default sana;
