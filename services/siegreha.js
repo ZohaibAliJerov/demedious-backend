@@ -7,7 +7,7 @@ const schoen = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://jobs.schoen-klinik.de/stellenangebote.html";
+  let url = "https://siegreha.de/aktuelle-stellenangebote/";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
