@@ -7,7 +7,7 @@ const duisburg = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://www.sana.de/duisburg/karriere/stellenangebote/#c63039";
+  let url = "https://www.sauerlandklinik-hachen.de/karriere.html";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
