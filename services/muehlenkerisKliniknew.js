@@ -12,7 +12,7 @@ let gfo_kliniken = async () => {
 
     let page = await browser.newPage();
 
-    await page.goto("https://www.krankenhaus-enger.de/khe/klinik/karriere.php", {
+    await page.goto("https://www.muehlenkreiskliniken.de/muehlenkreiskliniken/karriere/stellenangebote", {
       waitUntil: "load",
       timeout: 0,
     });
@@ -22,7 +22,7 @@ let gfo_kliniken = async () => {
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
-        document.querySelectorAll("h3 a")
+        document.querySelectorAll("a.career-overview-item")
       ).map((el) => el.href);
     });
 
@@ -33,11 +33,11 @@ let gfo_kliniken = async () => {
       let job = {
         title: "",
         location: "",
-        hospital: "Evangelisches Krankenhaus Enger",
+        hospital: "GFO Kliniken Rhein-Berg, Betriebsstätte Marien-Krankenhaus",
         link: "",
         level: "",
         position: "",
-        city: "Enger",
+        city: "Bergisch Gladbach",
         email: "",
         republic: "North Rhine-Westphalia",
       };
@@ -55,17 +55,23 @@ let gfo_kliniken = async () => {
           return ttitle ? ttitle.innerText : "";
         });
         job.title = title;
+    //   }else{
+    //     let title = await page.evaluate(() => {
+    //       let ttitle = document.querySelector(".news-single-item h2");
+    //       return ttitle ? ttitle.innerText : "";
+    //     });
+    //     job.title = title;
+    //   }
     
 
       job.location = await page.evaluate(() => {
-        return document.body.innerText.match(/[A-Za-z-.]+ \d+[\n]\d+ [A-Za-z]+|[A-Za-z-.]+ \d+[\n][\n]\d+ [A-Za-z]+|[A-Za-z-.ü]+ \d+. \d+ [A-Za-z-.ü]+/) || "info@krankenhaus-enger.de"
+         return document.body.innerText.match(/[a-zA-Z-.ßüö]+ \d+. \d+ [a-zA-Z-.ßüö]+/) ||  ""
+        
       });
-
 
       if(typeof job.location == 'object' && job.location != null ){
         job.location = job.location[0]
       }
-   
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -91,11 +97,10 @@ let gfo_kliniken = async () => {
         continue;
       }
 
-
       //get link\
 
       job.email = await page.evaluate(() => {
-        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/) || "gborsum@dbkg.de"
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/);
       });
       if(typeof job.email == "object" && job.email != null ){
         job.email = job.email[0]
@@ -103,18 +108,9 @@ let gfo_kliniken = async () => {
       // job.email = email
 
       // get link 
-      // let link1 = 0;
-      // if (link1) {
-      //   const link = await page.evaluate(() => {
-      //     let applyLink = document.querySelector('.css_button a')
-      //     return applyLink ? applyLink.href : ""
-      //   })
-      //   job.link = link;
-      // } else {
+      
         job.link = jobLink
-      // }
-
-
+      
 
 
       allJobs.push(job);
