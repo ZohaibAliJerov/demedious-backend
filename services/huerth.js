@@ -39,7 +39,7 @@ const remschied = async () => {
         link: "",
         level: "",
         position: "",
-        city: "Remschied",
+        city: "Hürth",
         email: "",
         republic: "North Rhine-Westphalia",
       };
