@@ -3,11 +3,12 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-const fabricius = async () => {
+const gerrieshiem = async () => {
   let browser = await puppeteer.launch({ headless: false });
   let page = await browser.newPage();
 
-  let url = "https://www.sana.de/fabricius-remscheid/karriere/#c97471";
+  let url =
+    "https://www.sana.de/duesseldorf-gerresheim/karriere/stellenangebote/#c63039";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
@@ -34,12 +35,12 @@ const fabricius = async () => {
       await page.waitForTimeout(5000);
       let job = {
         title: "",
-        location: "Remscheid",
-        hospital: "Sana Fabricius-Klinik Remschied",
+        location: "Duisburg",
+        hospital: "Sana Krankenhaus Gerreshiem",
         link: "",
         level: "",
         position: "",
-        city: "Remscheid",
+        city: "Düsseldorf",
         email: "",
         republic: "North Rhine-Westphalia",
       };
@@ -116,4 +117,4 @@ function print(...args) {
   console.log(...args);
 }
 
-export default fabricius;
+export default gerrieshiem;
