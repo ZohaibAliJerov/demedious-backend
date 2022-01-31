@@ -52,7 +52,7 @@ const marien = async () => {
       job.email = await page.evaluate(() => {
         return document.body.innerText.match(/\w+@\w+\.\w+/);
       });
-      if (typeof job.email == "object") {
+      if (typeof job.email == "object" && job.email != null) {
         job.email = job.email[0];
       }
       job.location = await page.evaluate(() => {
@@ -120,4 +120,8 @@ function print(...args) {
   console.log(...args);
 }
 
-export default marien;
+//export default marien;
+(async () => {
+  let res = await marien();
+  console.log(res);
+})();
