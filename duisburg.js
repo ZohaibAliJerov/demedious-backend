@@ -34,12 +34,12 @@ const duisburg = async () => {
       await page.waitForTimeout(5000);
       let job = {
         title: "",
-        location: "Remscheid",
+        location: "Duisburg",
         hospital: "Sana Kliniken Duisburg",
         link: "",
         level: "",
         position: "",
-        city: "Remscheid",
+        city: "Duisburg",
         email: "",
         republic: "North Rhine-Westphalia",
       };
