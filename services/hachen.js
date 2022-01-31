@@ -54,9 +54,7 @@ const duisburg = async () => {
       if (typeof job.email == "object") {
         job.email = job.email[0];
       }
-      job.location = await page.evaluate(() => {
-        return document.querySelector(".jobmeta > li").innerText;
-      });
+
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
