@@ -53,11 +53,11 @@ let ddz = async () => {
             let job = {
                 title: "",
                 location: "",
-                hospital: "Gräfliche Kliniken - Caspar Heinrich Klinik",
+                hospital: "Deutsches Diabetes-Zentrum",
                 link: "",
                 level: "",
                 position: "",
-                city: "Bad Driburg",
+                city: "Düsseldorf",
                 email: "",
                 republic: "North Rhine-Westphalia",
             };
