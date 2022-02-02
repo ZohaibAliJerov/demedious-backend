@@ -16,21 +16,23 @@
 // import dortmund2 from "./dortmund2.js";
 // import dortmund3 from "./dortmund3.js";
 //import koln from "./koln.js";
+import heinsbergg from "./heinsbergg/heinsbergg.js";
 
 const mainService = async () => {
   return Promise.all([
-    koln1(),
-    haan(),
-    gut(),
-    gutersloh(),
-    hoxter(),
-    langenfeld(),
-    herten(),
-    hilden(),
-    duren(),
-    dortmund1(),
-    dortmund2(),
-    dortmund3(),
+    // koln1(),
+    // haan(),
+    // gut(),
+    // gutersloh(),
+    // hoxter(),
+    // langenfeld(),
+    // herten(),
+    // hilden(),
+    // duren(),
+    // dortmund1(),
+    // dortmund2(),
+    // dortmund3(),
+    heinsbergg()
   ]).then((results) => {
     return results.flat(1);
   });
