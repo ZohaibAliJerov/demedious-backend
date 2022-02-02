@@ -16,8 +16,8 @@
 // import dortmund2 from "./dortmund2.js";
 // import dortmund3 from "./dortmund3.js";
 //import koln from "./koln.js";
-import heinsbergg from "./heinsbergg/heinsbergg.js";
-
+// import heinsbergg from "./heinsbergg/heinsbergg.js";
+import koln1 from "./koln1/koln1.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -32,7 +32,8 @@ const mainService = async () => {
     // dortmund1(),
     // dortmund2(),
     // dortmund3(),
-    heinsbergg()
+    // heinsbergg()
+    koln1()
   ]).then((results) => {
     return results.flat(1);
   });
