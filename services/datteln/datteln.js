@@ -1,30 +1,28 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt",  "Arzt", "Oberarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let datteln = async () => {
+let dalleln = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
+
     let page = await browser.newPage();
 
-    await page.goto(
-      "https://karriere.vck-gmbh.de/stellenangebote.html?filter%5Bclient_id%5D%5B%5D=2",
-      {
-        waitUntil: "load",
-        timeout: 0,
-      }
-    );
+    await page.goto("https://karriere.vck-gmbh.de/stellenangebote.html?filter%5Bclient_id%5D%5B%5D=2", {
+      waitUntil: "load",
+      timeout: 0,
+    });
 
     await scroll(page);
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("div.joboffer_title_text.joboffer_box > a")).map(
-        (el) => el.href
-      );
+      return Array.from(
+        document.querySelectorAll("div.content.articletype-0 > h3 > a")
+      ).map((el) => el.href);
     });
 
     console.log(jobLinks);
@@ -33,11 +31,14 @@ let datteln = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Datteln",
+        location: "Domagkstraße 5 48149 Münster",
         hospital: "Vestische Kinder- und Jugendklinik Datteln",
         link: "",
         level: "",
         position: "",
+        city: "Datteln",
+        email: "",
+        republic: " North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -48,22 +49,24 @@ let datteln = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1.scheme-content.scheme-title");
+        let ttitle = document.querySelector("div.scheme-content.scheme-title > h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
-
+      
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
       //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
       let position = text.match(/arzt|pflege/);
       job.level = level ? level[0] : "";
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
       ) {
         job.position = "artz";
       }
@@ -75,14 +78,18 @@ let datteln = async () => {
       if (!position in positions) {
         continue;
       }
-      let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div#btn_online_application > a");
-        return lnk ? lnk.href : "";
+
+      //get email
+      let email = await page.evaluate(() => {
+        let eml = document.querySelector("div.text > p > a");
+        return eml ? eml.innerText : "";
       });
-      job.link = link;
+    job.email = String() + email;
+
+      job.link = jobLink;
+
       allJobs.push(job);
     }
-    console.log(allJobs);
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
     console.log(e);
@@ -104,5 +111,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-datteln();
-export default datteln;
+dalleln()
+export default dalleln;
