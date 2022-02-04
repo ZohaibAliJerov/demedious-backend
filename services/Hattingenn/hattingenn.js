@@ -134,5 +134,5 @@ let hattingenn = async () => {
       });
       
     }
-    hattingenn()
+    // hattingenn()
     export default hattingenn;
