@@ -23,7 +23,8 @@
 // import wuppertalOne from "./wuppertalOne/wuppertalOne.js";
 // import bonnOne from "./bonnOne/bonnOne.js";
 // import teildesganzen from "./teildesganzen/teildesganzen.js";
-import herford from "./herford/herford.js";
+// import herford from "./herford/herford.js";
+import mathias from "./mathias/mathias.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -45,7 +46,8 @@ const mainService = async () => {
     // wuppertalOne()
     // bonnOne()
     // teildesganzen()
-    herford()
+    // herford()
+    mathias()
   ]).then((results) => {
     return results.flat(1);
   });
