@@ -50,7 +50,7 @@ const mainService = async () => {
     // teildesganzen()
     // herford()
     // mathias()
-    maerkische()
+    // maerkische()
   ]).then((results) => {
     return results.flat(1);
   });
