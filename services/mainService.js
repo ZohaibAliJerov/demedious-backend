@@ -24,7 +24,9 @@
 // import bonnOne from "./bonnOne/bonnOne.js";
 // import teildesganzen from "./teildesganzen/teildesganzen.js";
 // import herford from "./herford/herford.js";
-import mathias from "./mathias/mathias.js";
+// import maerkische from "./maerkische/maerkische.js";
+// import mathias from "./mathias/mathias.js";
+import maerkische from "./maerkische/maerkische.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -47,7 +49,8 @@ const mainService = async () => {
     // bonnOne()
     // teildesganzen()
     // herford()
-    mathias()
+    // mathias()
+    maerkische()
   ]).then((results) => {
     return results.flat(1);
   });
