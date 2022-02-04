@@ -136,5 +136,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-wuppertalOne();
+// wuppertalOne();
 export default wuppertalOne;

@@ -19,7 +19,8 @@
 // import heinsbergg from "./heinsbergg/heinsbergg.js";
 // import koln1 from "./koln1/koln1.js";
 // import badberleburgg from "./badberleburrg.js";
-import hattingenn from "./hattingenn/hattingenn.js";
+// import hattingenn from "./hattingenn/hattingenn.js";
+import wuppertalOne from "./wuppertalOne/wuppertalOne.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -37,7 +38,8 @@ const mainService = async () => {
     // heinsbergg()
     // koln1()
     // badberleburgg()
-    hattingenn()
+    // hattingenn()
+    wuppertalOne()
   ]).then((results) => {
     return results.flat(1);
   });
