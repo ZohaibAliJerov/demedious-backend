@@ -6,7 +6,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 let karrierKrapp= async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
     });
 
     let page = await browser.newPage();
@@ -139,6 +139,6 @@ async function scroll(page) {
     }, delay);
   });
 }
-karrierKrapp()
-// export default karrierKrapp
+// karrierKrapp()
+export default karrierKrapp
 
