@@ -21,7 +21,8 @@
 // import badberleburgg from "./badberleburrg.js";
 // import hattingenn from "./hattingenn/hattingenn.js";
 // import wuppertalOne from "./wuppertalOne/wuppertalOne.js";
-import bonnOne from "./bonnOne/bonnOne.js";
+// import bonnOne from "./bonnOne/bonnOne.js";
+import teildesganzen from "./teildesganzen/teildesganzen.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -41,7 +42,8 @@ const mainService = async () => {
     // badberleburgg()
     // hattingenn()
     // wuppertalOne()
-    bonnOne()
+    // bonnOne()
+    teildesganzen()
   ]).then((results) => {
     return results.flat(1);
   });
