@@ -29,7 +29,7 @@ let herford = async () => {
       let jobLinks = await page.evaluate(() => {
         return Array.from(
           document.querySelectorAll(
-            "#e10821- > div > div > div.col-xs-12.col-md-5.job-preview-title > div > h3 > a"
+            "div.job-title > h3 > a"
           )
         ).map((el) => el.href);
       });
