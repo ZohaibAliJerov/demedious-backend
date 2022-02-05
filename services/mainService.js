@@ -28,7 +28,8 @@
 // import mathias from "./mathias/mathias.js";
 // import maerkische from "./maerkische/maerkische.js";
 // import diakonie from "./diakonie/diakonie.js";
-import serverinskloesterchen from "./severinskloesterchen/severinskloesterchen.js";
+// import serverinskloesterchen from "./severinskloesterchen/severinskloesterchen.js";
+// import kreisklinikumSiegen from "./kreisklinikumSiegen/kreisklinikumSiegen.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -54,7 +55,8 @@ const mainService = async () => {
     // mathias()
     // maerkische()
     // diakonie()
-    serverinskloesterchen()
+    // serverinskloesterchen()
+    kreisklinikumSiegen()
   ]).then((results) => {
     return results.flat(1);
   });
