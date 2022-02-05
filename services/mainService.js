@@ -27,7 +27,8 @@
 // import maerkische from "./maerkische/maerkische.js";
 // import mathias from "./mathias/mathias.js";
 // import maerkische from "./maerkische/maerkische.js";
-import diakonie from "./diakonie/diakonie.js";
+// import diakonie from "./diakonie/diakonie.js";
+import serverinskloesterchen from "./severinskloesterchen/severinskloesterchen.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -52,7 +53,8 @@ const mainService = async () => {
     // herford()
     // mathias()
     // maerkische()
-    diakonie()
+    // diakonie()
+    serverinskloesterchen()
   ]).then((results) => {
     return results.flat(1);
   });
