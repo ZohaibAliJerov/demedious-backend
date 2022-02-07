@@ -6,7 +6,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 let gfo_kliniken = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
     });
 
     let page = await browser.newPage();
@@ -33,11 +33,11 @@ let gfo_kliniken = async () => {
       let job = {
         title: "",
         location: "",
-        hospital: "Klinik am Ring",
+        hospital: "Klinik am Rosengarten",
         link: "",
         level: "",
         position: "",
-        city: "Köln",
+        city: "Bad Oeynhausen",
         email: "",
         republic: "North Rhine-Westphalia",
       };
@@ -138,5 +138,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-gfo_kliniken()
-// export default gfo_kliniken
+// gfo_kliniken()
+export default gfo_kliniken
