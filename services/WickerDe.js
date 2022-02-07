@@ -6,7 +6,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 let gfo_kliniken = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
     });
 
     let page = await browser.newPage();
@@ -137,5 +137,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-gfo_kliniken()
-// export default gfo_kliniken
+// gfo_kliniken()
+export default gfo_kliniken
