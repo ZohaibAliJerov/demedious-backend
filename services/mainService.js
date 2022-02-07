@@ -36,7 +36,8 @@
 // import hochsauerland from './hochsauerland/hochsauerland.js'
 // import johnniterThree from "./jonniterThree/jonniterThree.js";
 // import lukass from "./lukass/lukass.js";
-import gmbh from "./gmbh/gmbh.js";
+// import gmbh from "./gmbh/gmbh.js";
+import balthasar from "./balthasar/balthasar.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -70,7 +71,8 @@ const mainService = async () => {
     // hochsauerland()
     // lukass()
     // johnniterThree()
-    gmbh()
+    // gmbh()
+    balthasar()
   ]).then((results) => {
     return results.flat(1);
   });
