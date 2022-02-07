@@ -30,6 +30,7 @@
 // import diakonie from "./diakonie/diakonie.js";
 // import serverinskloesterchen from "./severinskloesterchen/severinskloesterchen.js";
 // import kreisklinikumSiegen from "./kreisklinikumSiegen/kreisklinikumSiegen.js";
+import johanniterOne from './johanniterOne/johanniterOne.js'
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -57,6 +58,7 @@ const mainService = async () => {
     // diakonie()
     // serverinskloesterchen()
     // kreisklinikumSiegen()
+    johanniterOne()
   ]).then((results) => {
     return results.flat(1);
   });
