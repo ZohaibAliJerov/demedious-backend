@@ -30,7 +30,9 @@
 // import diakonie from "./diakonie/diakonie.js";
 // import serverinskloesterchen from "./severinskloesterchen/severinskloesterchen.js";
 // import kreisklinikumSiegen from "./kreisklinikumSiegen/kreisklinikumSiegen.js";
-import johanniterOne from './johanniterOne/johanniterOne.js'
+import kaiser from "./kaiser/kaiser.js";
+// import johanniterTwo from "./johanniterTwo/johanniterTwo.js";
+// import johanniterOne from './johanniterOne/johanniterOne.js'
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -58,7 +60,9 @@ const mainService = async () => {
     // diakonie()
     // serverinskloesterchen()
     // kreisklinikumSiegen()
-    johanniterOne()
+    // johanniterOne()
+    // johanniterTwo()
+    kaiser()
   ]).then((results) => {
     return results.flat(1);
   });
