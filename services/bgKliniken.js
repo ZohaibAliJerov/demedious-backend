@@ -8,7 +8,7 @@ const marien = async () => {
   let page = await browser.newPage();
 
   let url =
-    "https://www.sankt-marien-ratingen.de/sankt-marien/beruf-und-karriere/stellenangebote";
+    "https://www.bg-kliniken.de/klinikum-duisburg/karriere/offene-stellen/?origin=4&area=&type=&";
 
   await page.goto(url, { timeout: 0, waitUntil: "load" });
 
