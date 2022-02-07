@@ -56,7 +56,7 @@ const mainService = async () => {
     // maerkische()
     // diakonie()
     // serverinskloesterchen()
-    kreisklinikumSiegen()
+    // kreisklinikumSiegen()
   ]).then((results) => {
     return results.flat(1);
   });
