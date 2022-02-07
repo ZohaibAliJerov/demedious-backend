@@ -37,7 +37,10 @@
 // import johnniterThree from "./jonniterThree/jonniterThree.js";
 // import lukass from "./lukass/lukass.js";
 // import gmbh from "./gmbh/gmbh.js";
-import balthasar from "./balthasar/balthasar.js";
+// import balthasar from "./balthasar/balthasar.js";
+// import hellweg from "./hellweg/hellweg.js";
+// import westfalenn from "./westfalenn/westfalenn.js";
+
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -72,7 +75,9 @@ const mainService = async () => {
     // lukass()
     // johnniterThree()
     // gmbh()
-    balthasar()
+    // balthasar()
+    // hellweg()
+    westfalenn()
   ]).then((results) => {
     return results.flat(1);
   });
