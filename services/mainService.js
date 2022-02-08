@@ -41,8 +41,9 @@
 // import hellweg from "./hellweg/hellweg.js";
 // import westfalenn from "./westfalenn/westfalenn.js";
 // import klinikring from "./klinikring/klinikring.js";
-import christophorus from "./christophorus/christophorus.js";
-
+// import christophorus from "./christophorus/christophorus.js";
+// import klinikumbochum from "./klinikumbochum/klinikumbochum.js";
+import reha from "./reha/reha.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -81,7 +82,9 @@ const mainService = async () => {
     // hellweg()
     // westfalenn()
     // klinikring()
-    christophorus()
+    // christophorus()
+    // klinikumbochum()
+    reha()
   ]).then((results) => {
     return results.flat(1);
   });
