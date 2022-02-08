@@ -43,7 +43,7 @@
 // import klinikring from "./klinikring/klinikring.js";
 // import christophorus from "./christophorus/christophorus.js";
 // import klinikumbochum from "./klinikumbochum/klinikumbochum.js";
-import reha from "./reha/reha.js";
+// import reha from "./reha/reha.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -84,7 +84,7 @@ const mainService = async () => {
     // klinikring()
     // christophorus()
     // klinikumbochum()
-    reha()
+    // reha()
   ]).then((results) => {
     return results.flat(1);
   });
