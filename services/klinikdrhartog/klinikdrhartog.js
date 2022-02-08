@@ -68,7 +68,7 @@ let klinikdrhartog = async () => {
       });
       job.email = String() + email;
       //apply link
-      job.link = jobLink;
+      job.link = joblink;
       //get level
       let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
       let position = text.match(/arzt|pflege/);
