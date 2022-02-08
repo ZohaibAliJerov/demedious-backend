@@ -43,8 +43,9 @@
 // import klinikring from "./klinikring/klinikring.js";
 // import christophorus from "./christophorus/christophorus.js";
 // import klinikumbochum from "./klinikumbochum/klinikumbochum.js";
-import eichholz from "./eichholz/eichholz.js";
+// import eichholz from "./eichholz/eichholz.js";
 // import reha from "./reha/reha.js";
+import deutsche from "./deutsche/deutsche.js"
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -86,7 +87,8 @@ const mainService = async () => {
     // christophorus()
     // klinikumbochum()
     // reha()
-    eichholz()
+    // eichholz()
+    deutsche()
   ]).then((results) => {
     return results.flat(1);
   });
