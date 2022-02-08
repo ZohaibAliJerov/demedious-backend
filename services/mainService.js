@@ -40,6 +40,8 @@
 // import balthasar from "./balthasar/balthasar.js";
 // import hellweg from "./hellweg/hellweg.js";
 // import westfalenn from "./westfalenn/westfalenn.js";
+// import klinikring from "./klinikring/klinikring.js";
+import christophorus from "./christophorus/christophorus.js";
 
 const mainService = async () => {
   return Promise.all([
@@ -77,7 +79,9 @@ const mainService = async () => {
     // gmbh()
     // balthasar()
     // hellweg()
-    westfalenn()
+    // westfalenn()
+    // klinikring()
+    christophorus()
   ]).then((results) => {
     return results.flat(1);
   });
