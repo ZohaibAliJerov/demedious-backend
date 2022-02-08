@@ -45,7 +45,8 @@
 // import klinikumbochum from "./klinikumbochum/klinikumbochum.js";
 // import eichholz from "./eichholz/eichholz.js";
 // import reha from "./reha/reha.js";
-import deutsche from "./deutsche/deutsche.js"
+// import deutsche from "./deutsche/deutsche.js"
+import eduardus from "./eduardus/eduardus.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -88,7 +89,8 @@ const mainService = async () => {
     // klinikumbochum()
     // reha()
     // eichholz()
-    deutsche()
+    // deutsche()
+    eduardus()
   ]).then((results) => {
     return results.flat(1);
   });
