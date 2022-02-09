@@ -1,7 +1,9 @@
+
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
 
 const elisabeth = async () => {
   try {
@@ -36,21 +38,8 @@ const elisabeth = async () => {
       });
       return links;
     });
-    //    console.log(pages);
-    pages = pages.slice(1, pages.length);
-    allPageLinks.push(...pages);
+  
 
-    //    console.log(allPageLinks);
-
-    let allJobLinks = [];
-    let allLocations = [];
-    //get all joblinks
-    for (let pageLink of allPageLinks) {
-      //visit each page
-      await page.goto(pageLink, {
-        waitUntil: "load",
-        timeout: 0,
-      });
 
       //scroll down
       await scroll(page);
@@ -129,11 +118,12 @@ const elisabeth = async () => {
 
       allJobs.push(job);
     }
-
-    console.log(allJobs);
+    console.log(allJobs)
+    await page.close();
     await browser.close();
-  } catch (err) {
-    console.log(err);
+    return allJobs.filter((job) => job.position != "");
+  } catch (e) {
+    console.log(e);
   }
 };
 
@@ -152,5 +142,6 @@ async function scroll(page) {
     }, delay);
   });
 }
-elisabeth();
-//export default elisabeth;
+
+
+export default elisabeth;
