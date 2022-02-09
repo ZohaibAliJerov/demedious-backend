@@ -1,115 +1,164 @@
 
 import puppeteer from "puppeteer";
 
-const celenusKerriere = async () => {
-  try {
-    const browser = await puppeteer.launch({ headless: false })
-    const page = await browser.newPage();
-    page.setDefaultNavigationTimeout(0);
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-    let allJobs = [];
-    let allLinks = [
+let ugos_de = async () => {
+  try {
+    let browser = await puppeteer.launch({
+      headless: false,
+    });
+
+    let page = await browser.newPage();
+
+    let url = [ 
       'https://www.klinik-hilchenbach.de/karriere/',
       'https://www.celenus-karriere.de/jobs/aktuellejobs/aerzte/',
-      'https://www.celenus-karriere.de/salvea/aktuellejobs/aerzte/'
+      'https://www.celenus-karriere.de/salvea/aktuellejobs/ aerzte/'
     ]
+            let allJobLinks = []
+            let counter = 0
+            do {
+                await page.goto(url[counter], {
+                    waitUntil: "load",
+                    timeout: 0,
+                });
+                //wait for a while
+                await page.waitForTimeout(1000);
+                await scroll(page)
+                //get all jobLinks
+                let jobLinks = await page.evaluate(() => {
+                    return Array.from(
+                        document.querySelectorAll(".ce-bodytext > ul > li > a")
+                    ).map((el) => el.href);
+                });
+                allJobLinks.push(...jobLinks)
+                counter++
+              }while(counter < url.length)
+               console.log(allJobLinks)
 
-    async function scroll(page) {
-      await page.evaluate(() => {
-        const distance = 100;
-        const delay = 100;
-        const timer = setInterval(() => {
-          document.scrollingElement.scrollBy(0, distance);
-          if (
-            document.scrollingElement.scrollTop + window.innerHeight >=
-            document.scrollingElement.scrollHeight
-          ) {
-            clearInterval(timer);
-          }
-        }, delay);
-      });
-    }
-    let counter = 0;
-    do {
-      await page.goto(allLinks[counter], { timeout: 0 });
-      scroll(page);
+    let allJobs = [];
 
-      // get all jobs links 
+    for (let jobLink of allJobLinks) {
+      let job = {
+        title: "",
+        location: "",
+        hospital: "CELENUS Fachklinik Hilchenbach",
+        link: "",
+        level: "",
+        position: "",
+        city: "Hilchenbach",
+        email: "",
+        republic: "North Rhine-Westphalia",
+      };
 
-      let jobs = await page.evaluate(() => {
-        return Array.from(
-          document.querySelectorAll('.ce-bodytext > ul > li > a')
-        ).map((el) => el.href)
-      });
-      allJobs.push(...jobs)
-
-      counter++;
-      await page.waitForTimeout(3000);
-    } while (counter < allLinks.length);
-    console.log(allJobs);
-
-    // getting all the data from links 
-    let allJobDetails = []
-    for (const url of allJobs) {
-      await page.goto(url);
-      scroll(page);
-      await page.waitForSelector('.nc-stelle-top > h1');
-      const title = await page.evaluate(() => {
-        return document.querySelector('.nc-stelle-top > h1').innerText || null
-      })
-      // console.log(jobTitles);
-      let address = await page.evaluate(() => {
-        return document.querySelector('.nc-company-address').innerText;
-      })
-
-      // get all emails
-
-      let email = await page.evaluate(() => {
-        return document.querySelector('.nc-company-contactperson > div a').innerText
+      await page.goto(jobLink, {
+        waitUntil: "load",
+        timeout: 0,
       });
 
-      // get all onlineApplucation 
-      let applyLink = await page.evaluate(() => {
-        return document.querySelector('.nc-action-button.nc-link-form a').href
+      await page.waitForTimeout(1000);
+    //   let tit = 0;
+    //   if(tit){
+        let title = await page.evaluate(() => {
+          let ttitle = document.querySelector(".nc-stelle-top > h1");
+          return ttitle ? ttitle.innerText : "";
+        });
+        job.title = title;
+    //   }else{
+    //     let title = await page.evaluate(() => {
+    //       let ttitle = document.querySelector(".news-single-item h2");
+    //       return ttitle ? ttitle.innerText : "";
+    //     });
+    //     job.title = title;
+    //   }
+    
+
+      job.location = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.].+ \d+[\n][\n]\d+[a-zA-Z-. ].+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+/) || "Moltkestraße 27 77654 Offenburg"
+        
       });
 
-
-      // text = text.join(",");
-
-
-      let cell = await page.evaluate(() => {
-        let regex = /\d{5}.?\d{6}|\d{4}.?\d{3}.?\d{2}.?\d{3}|\d{5}.?\d{3}.?\d{4}|\d{5}.?\d{3}.?\d{3}|\d{6}.?\d{2}.?\d{3}|\d{4}.?\d{4}.?\d{3}|\d{5}.?\d{2}.?\d{3}|\d{3}.?\d{3}.?\d{2}.?\d{4}|\d{5}.?\d{4}.?\d{3}|\d{4}.?\d{5}.?\d{4}|\d{5}.?\d{4}|\d{4}.?\d{2}.?\d{2}.?\d{2}.?\d{2}/;
-        let text = Array.from(document.querySelectorAll("div"));
-        text = text.map(el => el.innerText);
-        let str = text.join(" ");
-        str = str.match(regex);
-        return str;
-      });
-
-      let jobDetails = {
-        title,
-        address,
-        email,
-        cell,
-        applyLink
+      if(typeof job.location == 'object' && job.location != null ){
+        job.location = job.location[0]
       }
-      allJobDetails.push(jobDetails);
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
 
+      if (!position in positions) {
+        continue;
+      }
+
+      //get link\
+
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/);
+      });
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
+      }
+      // job.email = email
+
+      // get link 
+      let link1 = 0;
+      if (link1) {
+        const link = await page.evaluate(() => {
+          let applyLink = document.querySelector('.nc-action-button.nc-link-form a')
+          return applyLink ? applyLink.href : ""
+        })
+        job.link = link;
+      } else {
+        job.link = jobLink
+      }
+
+
+
+      allJobs.push(job);
     }
-
-    await page.waitForTimeout(3000);
-
-    console.log(allJobDetails);
+    console.log(allJobs)
     await browser.close();
-    return allJobDetails
-
-
-  } catch (error) {
-    console.log(error)
+    return allJobs.filter((job) => job.position != "");
+  } catch (e) {
+    console.log(e);
   }
+};
+
+async function scroll(page) {
+  await page.evaluate(() => {
+    const distance = 100;
+    const delay = 100;
+    const timer = setInterval(() => {
+      document.scrollingElement.scrollBy(0, distance);
+      if (
+        document.scrollingElement.scrollTop + window.innerHeight >=
+        document.scrollingElement.scrollHeight
+      ) {
+        clearInterval(timer);
+      }
+    }, delay);
+  });
 }
+// ugos_de()
+export default ugos_de
 
-//export default celenusKerriere;
 
-celenusKerriere();
 
