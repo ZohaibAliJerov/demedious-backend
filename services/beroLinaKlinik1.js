@@ -1,219 +1,132 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
 let beraLinaKlinik = async () => {
-  try {
-    let browser = await puppeteer.launch({
-      headless: false,
-    });
+    try {
+        let browser = await puppeteer.launch({
+            headless: true,
+        });
 
-    let page = await browser.newPage();
+        let page = await browser.newPage();
 
-    await page.goto("https://www.berolinaklinik.de/aktuelles/stellenangebote/", {
-      waitUntil: "load",
-      timeout: 0,
-    });
+        await page.goto("https://www.berolinaklinik.de/aktuelles/stellenangebote/", {
+            waitUntil: "load",
+            timeout: 0,
+        });
 
-    await scroll(page);
+        await scroll(page);
 
-    //get all jobLinks
-    const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll(".news-list-container > ul > li > .news-list-item > h3 a")
-      ).map((el) => el.href);
-    });
+        //get all jobLinks
+        const jobLinks = await page.evaluate(() => {
+            return Array.from(
+                document.querySelectorAll(".news-list-container > ul > li > .news-list-item > h3 a")
+            ).map((el) => el.href);
+        });
 
-    console.log(jobLinks);
-    let allJobs = [];
+        console.log(jobLinks);
+        let allJobs = [];
 
-    for (let jobLink of jobLinks) {
-      let job = {
-        title: "",
-        location: "Löhne",
-        hospital: "Berolina Klinik Löhne",
-        link: "",
-        level: "",
-        position: "",
-      };
+        for (let jobLink of jobLinks) {
+            let job = {
+                title: "",
+                location: "",
+                hospital: "Berolina Klinik Löhne",
+                link: "",
+                level: "",
+                position: "",
+                city: "Löhne",
+                email: "",
+                republic: "North Rhine-Westphalia",
+            };
 
-      await page.goto(jobLink, {
-        waitUntil: "load",
-        timeout: 0,
-      });
+            await page.goto(jobLink, {
+                waitUntil: "load",
+                timeout: 0,
+            });
 
-      await page.waitForTimeout(1000);
+            await page.waitForTimeout(1000);
+         
+            let title = await page.evaluate(() => {
+                let ttitle = document.querySelector("h1");
+                return ttitle ? ttitle.innerText : "";
+            });
+            job.title = title;
+          
 
-      let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1");
-        return ttitle ? ttitle.innerText : "";
-      });
-      job.title = title;
 
-      let text = await page.evaluate(() => {
-        return document.body.innerText;
-      });
-      //get level
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
-      let position = text.match(/arzt|pflege/);
-      job.level = level ? level[0] : "";
-      if (
-        level == "Facharzt" ||
-        level == "Chefarzt" ||
-        level == "Assistenzarzt"
-      ) {
-        job.position = "artz";
-      }
-      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
-        job.position = "pflege";
-        job.level = "Nicht angegeben";
-      }
+            job.location = await page.evaluate(() => {
+                let loc = document.querySelector(".contentboxinner");
+                return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+[\n][\n]\d+[a-zA-Z-. ].+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+|[a-zA-Züßö.-]+ \d+. \d+ [a-zA-Zöüß]+|[a-zA-Züßö0-9.-]+. \d+ [a-zA-Züßö.-]+/) : ""
 
-      if (!position in positions) {
-        continue;
-      }
+            });
 
-      //get link
-      let link = await page.evaluate(() => {
-        return document.body.innerText.match(/[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+|[a-zA-Z0-9]+ @[a-zA-Z0-9-]+\ [a-z]\w+ \.[a-z]+/);
-      });
-      if (typeof link == "object") {
-        job.link = link;
-      }
-      // console.log(job);
-      allJobs.push(job);
+            if (typeof job.location == 'object' && job.location != null) {
+                job.location = job.location[0]
+            }
+            let text = await page.evaluate(() => {
+                return document.body.innerText;
+            });
+            //get level
+            let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+            let position = text.match(/arzt|pflege/);
+            job.level = level ? level[0] : "";
+            if (
+                level == "Facharzt" ||
+                level == "Chefarzt" ||
+                level == "Assistenzarzt" ||
+                level == "Arzt" ||
+                level == "Oberarzt"
+            ) {
+                job.position = "artz";
+            }
+            if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+                job.position = "pflege";
+                job.level = "Nicht angegeben";
+            }
+
+            if (!position in positions) {
+                continue;
+            }
+
+            //get link\
+
+            job.email = await page.evaluate(() => {
+                return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/) || "bewerbung@rehaklinik.de";
+            });
+            if (typeof job.email == "object" && job.email != null) {
+                job.email = job.email[0]
+            }
+
+            job.link = jobLink
+
+
+
+            allJobs.push(job);
+        }
+        console.log(allJobs)
+        await browser.close();
+        return allJobs.filter((job) => job.position != "");
+    } catch (e) {
+        console.log(e);
     }
-    console.log(allJobs)
-    await page.close();
-    await browser.close();
-    return allJobs.filter((job) => job.position != "");
-    
-  } catch (e) {
-    console.log(e);
-  }
 };
 
 async function scroll(page) {
-  await page.evaluate(() => {
-    const distance = 100;
-    const delay = 100;
-    const timer = setInterval(() => {
-      document.scrollingElement.scrollBy(0, distance);
-      if (
-        document.scrollingElement.scrollTop + window.innerHeight >=
-        document.scrollingElement.scrollHeight
-      ) {
-        clearInterval(timer);
-      }
-    }, delay);
-  });
+    await page.evaluate(() => {
+        const distance = 100;
+        const delay = 100;
+        const timer = setInterval(() => {
+            document.scrollingElement.scrollBy(0, distance);
+            if (
+                document.scrollingElement.scrollTop + window.innerHeight >=
+                document.scrollingElement.scrollHeight
+            ) {
+                clearInterval(timer);
+            }
+        }, delay);
+    });
 }
-
-beraLinaKlinik();
-
-
-
-// import puppeteer from 'puppeteer';
-
-// const beraLinaKlinik = async () => {
-//     try {
-//         const browser = await puppeteer.launch({ headless: false });
-//         const page = await browser.newPage();
-//         page.setDefaultNavigationTimeout(0);
-
-//         let allJobs = [];
-//         let allLinks = [
-//             "https://www.berolinaklinik.de/aktuelles/stellenangebote/"
-//         ]
-//         async function scroll(page) {
-//             await page.evaluate(() => {
-//                 const distance = 100;
-//                 const delay = 100;
-//                 const timer = setInterval(() => {
-//                     document.scrollingElement.scrollBy(0, distance);
-//                     if (
-//                         document.scrollingElement.scrollTop + window.innerHeight >=
-//                         document.scrollingElement.scrollHeight
-//                     ) {
-//                         clearInterval(timer);
-//                     }
-//                 }, delay);
-//             });
-//         }
-//         let counter = 0;
-//         do {
-//             await page.goto(allLinks[counter], { timeout: 0 });
-//             scroll(page);
-
-//             // get all jobs links 
-
-//             let jobs = await page.evaluate(() => {
-//                 return Array.from(
-//                     document.querySelectorAll('.news-list-container > ul > li > .news-list-item > h3 a')
-//                 ).map(el => el.href)
-//             });
-//             allJobs.push(...jobs)
-
-//             counter++;
-//             await page.waitForTimeout(3000);
-//         } while (counter < allLinks);
-//         console.log(allJobs);
-
-//         const allJobDetails = [];
-//         // get all the data from stored links 
-//         for (const urls of allJobs) {
-//             await page.goto(urls)
-//             scroll(page);
-
-//             // gettingg all the Title of the links 
-//             await page.waitForSelector('h1')
-//             const title = await page.evaluate(() => {
-//                 let Title = document.querySelector('h1');
-//                 return Title ? Title.innerText : null;
-//             });
-
-//             // getting all the address 
-//             const address = await page.evaluate(() => {
-//                 let regex = /[a-zA-Z]+ [a-zA-Z]+ [a-zA-Z]+ [&] [a-zA-Z]+. [a-zA-Z]+ [a-zA-Zü]+. \d+.\d+ [a-zA-Zö]+|[a-zA-Züß]+ \d+, \d+ [a-zA-Zö]+/;
-//                 let adr = document.querySelector('.contentboxinner')
-//                 return adr ? adr.innerText.match(regex) : null;
-
-//             });
-//             // getting all the cell no. 
-//             const cell = await page.evaluate(() => {
-//                 let regex = /\d{1} \d{2} \d{2}[/]\d+ \d{2} - \d+ \d+|\d+ \d+-\d+| \d+ \d+ \d+ [/] \d+ \d+ - \d+ \d+/;
-//                 let text = Array.from(document.querySelectorAll('.contentboxinner'))
-//                 text = text.map(el => el.innerText)
-//                 let str = text.join(" ");
-//                 str = str.match(regex);
-//                 return str;
-
-//             });
-//             // getting email links 
-//             const email = await page.evaluate(() => {
-//                 let regex = /[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+|[a-zA-Z0-9]+ @[a-zA-Z0-9-]+\ [a-z]\w+ \.[a-z]+/
-//                 let text = document.querySelector('.contentboxinner');
-//                 return text ? text.innerText.match(regex) : null;
-//             });
-//             let jobDetails = {
-//                 title,
-//                 address,
-//                 cell,
-//                 email,
-
-
-
-//             }
-//             allJobDetails.push(jobDetails);
-//         }
-//         await page.waitForTimeout(3000);
-//         console.log(allJobDetails);
-//         await browser.close();
-//         return allJobDetails
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-
-// beraLinaKlinik();
+// beraLinaKlinik()
+export default beraLinaKlinik;

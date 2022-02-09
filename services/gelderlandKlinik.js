@@ -1,89 +1,146 @@
-import puppeteer from 'puppeteer'
+import puppeteer from "puppeteer";
 
-const gelderlandKlinik = async () => {
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
+let ugos_de = async () => {
     try {
-        let browser = await puppeteer.launch({ headless: false });
+        let browser = await puppeteer.launch({
+            headless: true,
+        });
+
         let page = await browser.newPage();
-        page.setDefaultNavigationTimeout(0)
+
+        let url = ["https://www.gelderlandklinik.de/arbeit-karriere/stellenangebote-auf-dem-gesundheitscampus-geldern?tx_dg_stellenboerse_stellen%5Baction%5D=test&tx_dg_stellenboerse_stellen%5Bcontroller%5D=test&cHash=bbe5950cd222c16a790c630379b2054d"]
+
+
+        let nextPage = true;
+        let allJobLinks = []
+        let counter = 0
+        do {
+            await page.goto(url[counter], {
+                waitUntil: "load",
+                timeout: 0,
+            });
+            //wait for a while
+            await page.waitForTimeout(1000);
+            await scroll(page)
+            //get all jobLinks
+            let jobLinks = await page.evaluate(() => {
+                return Array.from(
+                    document.querySelectorAll(".stelle a")
+                ).map((el) => el.href);
+            });
+            let bottomNextLink = await page.evaluate(() => {
+                return document.querySelector("#paginate > div > a.next_link");
+            });
+            if (bottomNextLink) {
+                await page.click("#paginate > div > a.next_link");
+                nextPage = true;
+            } else {
+                nextPage = false;
+            }
+            allJobLinks.push(...jobLinks)
+            counter++;
+
+        } while (counter < url);
+        console.log(allJobLinks);
 
         let allJobs = [];
-        let link = [
-            "https://www.gelderlandklinik.de/arbeit-karriere/stellenangebote-auf-dem-gesundheitscampus-geldern?tx_dg_stellenboerse_stellen%5Baction%5D=test&tx_dg_stellenboerse_stellen%5Bcontroller%5D=test&cHash=bbe5950cd222c16a790c630379b2054d"
-        ];
 
-        let counter = 0;
-        do {
-            await page.goto(link[counter], { timeout: 0 });
-            await scroll(page);
+        for (let jobLink of allJobLinks) {
+            let job = {
+                title: "",
+                location: "",
+                hospital: "Gelderland-Klinik Geldern",
+                link: "",
+                level: "",
+                position: "",
+                city: "Geldern",
+                email: "",
+                republic: "North Rhine-Westphalia",
+            };
 
-            const job = await page.evaluate(() => {
-                let links = Array.from(document.querySelectorAll('.stelle a')
-                ).map(el => el.href);
-                return links
-            });
-            allJobs.push(...job);
-            console.log(job);
-            counter++;
-        } while (counter < link.length);
-
-
-        let allJobDetails = [];
-        for (const url of allJobs) {
-            await page.goto(url);
-            await scroll(page);
-
-
-            await page.waitForSelector('h1')
-            ///getting all the title from the links
-            const title = await page.evaluate(() => {
-                let text = document.querySelector('h1')
-                return text ? text.innerText : null;
+            await page.goto(jobLink, {
+                waitUntil: "load",
+                timeout: 0,
             });
 
+            await page.waitForTimeout(1000);
+            //   let tit = 0;
+            //   if(tit){
+            let title = await page.evaluate(() => {
+                let ttitle = document.querySelector("h1");
+                return ttitle ? ttitle.innerText : "";
+            });
+            job.title = title;
 
-            ///getting all the location
-
-            const location = await page.evaluate(() => {
-                let text = document.querySelector('.stellen');
-                return text ? text.innerText.match(/[a-zA-Z- ß.]+[\n][a-zA-Z- ß.]+\d+[\n]\d+ [a-zA-Z- ß.]+|[a-zA-Z.-ß]+ [a-zA-Z- .ß]+[\n][a-zA-Z- .ß]+\d+[\n]\d+[a-zA-Z- .]+/) : null;
-            })
-            /// getting all the cell ; 
-            const cell = await page.evaluate(() => {
-                let text = document.querySelector('.stellen')
-                return text ? text.innerText.match(/\d+[/]\d+|\d+[-/]\d+[-/]\d+|\d+ \d+-\d+|\d+ \d+- \d+|\d+-\d+/) : null;
-            })
-
-            /// getting all the email
-            const email = await page.evaluate(() => {
-
-                let text = document.querySelector('.stellen');
-                return text ? text.innerText.match(/[a-zA-Z.-]+@[a-zA-Z.-]+/) : null;
+            job.location = await page.evaluate(() => {
+                return document.body.innerText.match(/[a-zA-Z-.].+ \d+[\n][\n]\d+[a-zA-Z-. ].+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+/) || ""
             });
 
-            /// getting all the applylinks
-            const applyLink = await page.evaluate(() => {
-                let text = document.querySelector('.btn.online-formular.pull-right');
-                return text ? text.href : null;
-            })
-            const jobDetails = {
-                title,
-                location,
-                cell,
-                email,
-                applyLink
+            if (typeof job.location == 'object' && job.location != null) {
+                job.location = job.location[0]
             }
-            allJobDetails.push(jobDetails);
+            let text = await page.evaluate(() => {
+                return document.body.innerText;
+            });
 
+            //get level
+            let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+            let position = text.match(/arzt|pflege/);
+            job.level = level ? level[0] : "";
+            if (
+                level == "Facharzt" ||
+                level == "Chefarzt" ||
+                level == "Assistenzarzt" ||
+                level == "Arzt" ||
+                level == "Oberarzt"
+            ) {
+                job.position = "artz";
+            }
+            if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+                job.position = "pflege";
+                job.level = "Nicht angegeben";
+            }
+
+            if (!position in positions) {
+                continue;
+            }
+
+            //get link\
+            job.email = await page.evaluate(() => {
+                return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/);
+            });
+            if (typeof job.email == "object" && job.email != null) {
+                job.email = job.email[0]
+            }
+          
+
+            // get link 
+            let link1 = 0;
+            if (link1) {
+                const link = await page.evaluate(() => {
+                    let applyLink = document.querySelector('a.btn.online-formular.pull-right')
+                    return applyLink ? applyLink.href : ""
+                })
+                job.link = link;
+            } else {
+                job.link = jobLink
+            }
+
+
+
+            allJobs.push(job);
         }
-        await page.waitForTimeout(3000)
-        console.log(allJobDetails)
-        await page.close();
+        console.log(allJobs)
         await browser.close();
-        return allJobDetails
-    } catch (error) {
-        console.log(error)
+        return allJobs.filter((job) => job.position != "");
+    } catch (e) {
+        console.log(e);
     }
-}
+};
+
 async function scroll(page) {
     await page.evaluate(() => {
         const distance = 100;
@@ -99,8 +156,6 @@ async function scroll(page) {
         }, delay);
     });
 }
-
-gelderlandKlinik();
-
-
+// ugos_de()
+export default ugos_de
 

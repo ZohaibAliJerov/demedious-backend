@@ -22,6 +22,12 @@ const userSchema = mongoose.Schema({
     max: 16,
     min: 8,
   },
+  savedJobs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Job",
+    },
+  ],
 });
 
 export default mongoose.model("User", userSchema);
