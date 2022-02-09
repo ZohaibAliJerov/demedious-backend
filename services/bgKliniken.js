@@ -17,7 +17,7 @@ const marien = async () => {
   await page.waitForTimeout(3000);
   //get all links
   let links = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".bite-title > a")).map(
+    return Array.from(document.querySelectorAll(".button.button--nav")).map(
       (el) => {
         if (el) {
           return el.href;
@@ -25,79 +25,80 @@ const marien = async () => {
       }
     );
   });
-  if (links.length > 0) {
-    print(links);
-    //slice the links
-    //get all job details
-    let allJobs = [];
-    for (let link of links) {
-      await page.goto(link, { timeout: 0, waitUntil: "load" });
-      await page.waitForTimeout(5000);
-      let job = {
-        title: "",
-        location: "Duisburg",
-        hospital: "Sankt Marien Krankenhaus",
-        link: "",
-        level: "",
-        position: "",
-        city: "Ratingen",
-        email: "",
-        republic: "North Rhine-Westphalia",
-      };
+  print(links);
+  //   if (links.length > 0) {
+  //     print(links);
+  //     //slice the links
+  //     //get all job details
+  //     let allJobs = [];
+  //     for (let link of links) {
+  //       await page.goto(link, { timeout: 0, waitUntil: "load" });
+  //       await page.waitForTimeout(5000);
+  //       let job = {
+  //         title: "",
+  //         location: "Duisburg",
+  //         hospital: "BG Klinikum Duisburg",
+  //         link: "",
+  //         level: "",
+  //         position: "",
+  //         city: "Duisburg",
+  //         email: "",
+  //         republic: "North Rhine-Westphalia",
+  //       };
 
-      await scroll(page);
-      job.title = await page.evaluate(() => {
-        return document.querySelector("h1").innerText;
-      });
-      job.email = await page.evaluate(() => {
-        return document.body.innerText.match(/\w+@\w+\.\w+/);
-      });
-      if (typeof job.email == "object" && job.email != null) {
-        job.email = job.email[0];
-      }
-      job.location = await page.evaluate(() => {
-        return document
-          .querySelector(".container")
-          .innerText.split("\n")
-          .join(",");
-      });
-      let text = await page.evaluate(() => {
-        return document.body.innerText;
-      });
+  //       await scroll(page);
+  //       job.title = await page.evaluate(() => {
+  //         return document.querySelector("h1").innerText;
+  //       });
+  //       job.email = await page.evaluate(() => {
+  //         return document.body.innerText.match(/\w+@\w+\.\w+/);
+  //       });
+  //       if (typeof job.email == "object" && job.email != null) {
+  //         job.email = job.email[0];
+  //       }
+  //       job.location = await page.evaluate(() => {
+  //         return document
+  //           .querySelector(".container")
+  //           .innerText.split("\n")
+  //           .join(",");
+  //       });
+  //       let text = await page.evaluate(() => {
+  //         return document.body.innerText;
+  //       });
 
-      //get level and positions
-      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
-      let position = text.match(/arzt|pflege/);
-      job.level = level ? level[0] : "";
-      if (
-        level == "Facharzt" ||
-        level == "Chefarzt" ||
-        level == "Assistenzarzt" ||
-        level == "Arzt" ||
-        level == "Oberarzt"
-      ) {
-        job.position = "artz";
-      }
-      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
-        job.position = "pflege";
-        job.level = "Nicht angegeben";
-      }
+  //       //get level and positions
+  //       let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+  //       let position = text.match(/arzt|pflege/);
+  //       job.level = level ? level[0] : "";
+  //       if (
+  //         level == "Facharzt" ||
+  //         level == "Chefarzt" ||
+  //         level == "Assistenzarzt" ||
+  //         level == "Arzt" ||
+  //         level == "Oberarzt"
+  //       ) {
+  //         job.position = "artz";
+  //       }
+  //       if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+  //         job.position = "pflege";
+  //         job.level = "Nicht angegeben";
+  //       }
 
-      if (!position in positions) {
-        continue;
-      }
-      job.link = link;
-      if (typeof job.link == "object") {
-        job.link = job.link[0];
-      }
-      allJobs.push(job);
-    } //end of for loop
-    await page.close();
-    await browser.close();
-    return allJobs;
-  } else {
-    return [];
-  }
+  //       if (!position in positions) {
+  //         continue;
+  //       }
+  //       job.link = link;
+  //       if (typeof job.link == "object") {
+  //         job.link = job.link[0];
+  //       }
+  //       allJobs.push(job);
+  //     } //end of for loop
+  //     await page.close();
+  //     await browser.close();
+  //     return allJobs;
+  //   } else {
+  //     return [];
+  //   }
 };
 
 async function scroll(page) {
