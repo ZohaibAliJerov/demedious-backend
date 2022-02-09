@@ -1,4 +1,5 @@
 
+
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
@@ -80,6 +81,7 @@ let gk_bonn = async () => {
       if(typeof job.location == 'object' && job.location != null ){
         job.location = job.location[0]
       }
+
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -105,6 +107,7 @@ let gk_bonn = async () => {
         continue;
       }
 
+
       //get link\
 
       job.email = await page.evaluate(() => {
@@ -125,12 +128,10 @@ let gk_bonn = async () => {
         job.link = jobLink
         
       }
-
-
-
       allJobs.push(job);
     }
     console.log(allJobs)
+
     await browser.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
@@ -153,5 +154,6 @@ async function scroll(page) {
     }, delay);
   });
 }
-// gk_bonn()
-export default gk_bonn
+
+
+export default gk_bonn;
