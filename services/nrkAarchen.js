@@ -1,5 +1,8 @@
 import puppeteer from "puppeteer";
 
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
 const nrkAarchecn = async () => {
   let browser = await puppeteer.launch({ headless: true });
   let page = await browser.newPage();
@@ -32,6 +35,14 @@ const nrkAarchecn = async () => {
   //visit all jobs
   let allJobs = [];
   for (let job of jobs) {
+    let job = {
+      title: "",
+      location: "Aachen",
+      hospital: "NRK Aachen Ambulante",
+      link: "",
+      level: "",
+      position: "",
+    };
     await page.goto(job, { timeout: 0, waitUntil: "load" });
     await page.waitForTimeout(1000);
     //scroll the page
@@ -47,25 +58,35 @@ const nrkAarchecn = async () => {
         setTimeout(1000);
       }
     });
-    let title = await page.evaluate(() => {
+    job.title = await page.evaluate(() => {
       let _title = document.querySelector("div.dt-sc-callout-box.type1 > h4");
       return _title ? _title.innerText : "";
     });
 
-    let location = await page.evaluate(() => {
-      let _location = document.querySelector(
-        "div.dt-sc-callout-box.type1 > h5"
-      );
-      return _location ? _location.innerText : "";
-    });
-
-    let cell = "";
-    let email = await page.evaluate(() => {
+    job.link = await page.evaluate(() => {
       return document.body.innerText.match(/\w+@\w+-\w+\.\w+/);
     });
+    let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+    let position = text.match(/arzt|pflege/);
+    job.level = level ? level[0] : "";
+    if (
+      level == "Facharzt" ||
+      level == "Chefarzt" ||
+      level == "Assistenzarzt" ||
+      level == "Arzt" ||
+      level == "Oberarzt"
+    ) {
+      job.position = "artz";
+    }
+    if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+      job.position = "pflege";
+      job.level = "Nicht angegeben";
+    }
 
-    let applyLink = email;
-    allJobs.push({ title, location, cell, email, applyLink });
+    if (!position in positions) {
+      continue;
+    }
+    allJobs.push(job);
   }
   return allJobs;
 };

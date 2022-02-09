@@ -1,8 +1,10 @@
 
+
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
 
 let gfo_kliniken = async () => {
   try {
@@ -11,38 +13,35 @@ let gfo_kliniken = async () => {
     });
 
     let page = await browser.newPage();
-    let links = [
-        "https://www.gfo-kliniken-rhein-berg.de/arbeit-karriere/stellenangebote.html"
-    ]
-    let jobLinks = []
-    let counter = 0
-    do {
-        await page.goto(links[counter], { timeout: 0 });
-        scroll(page);
-       // get all jobs links 
-       let jobs = await page.evaluate(() => {
-              return Array.from(
-                document.querySelectorAll('.job-item.shuffle-item.shuffle-item--visible a')
-              ).map((el) => el.href)
-            });
-            jobLinks.push(...jobs)
-      
-            counter++;
-            await page.waitForTimeout(3000);
-          } while (counter < links.length);
-         console.log(jobLinks)
-    
-  
+
+    await page.goto("https://www.gfo-kliniken-rhein-berg.de/arbeit-karriere/stellenangebote.html", {
+      waitUntil: "load",
+      timeout: 0,
+    });
+
+    await scroll(page);
+
+    //get all jobLinks
+    const jobLinks = await page.evaluate(() => {
+      return Array.from(
+        document.querySelectorAll(".gi.cell.breakword a")
+      ).map((el) => el.href);
+    });
+
+    console.log(jobLinks);
     let allJobs = [];
 
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Bad Honnef",
-        hospital: "Cura Krankenhaus Bad Ho",
+        location: "",
+        hospital: "GFO Kliniken Rhein-Berg, Betriebsstätte Marien-Krankenhaus",
         link: "",
         level: "",
         position: "",
+        city: "Bergisch Gladbach",
+        email: "",
+        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -51,13 +50,31 @@ let gfo_kliniken = async () => {
       });
 
       await page.waitForTimeout(1000);
+    //   let tit = 0;
+    //   if(tit){
+        let title = await page.evaluate(() => {
+          let ttitle = document.querySelector(".pageHeadline > span");
+          return ttitle ? ttitle.innerText : "";
+        });
+        job.title = title;
+    //   }else{
+    //     let title = await page.evaluate(() => {
+    //       let ttitle = document.querySelector(".news-single-item h2");
+    //       return ttitle ? ttitle.innerText : "";
+    //     });
+    //     job.title = title;
+    //   }
+    
 
-      let title = await page.evaluate(() => {
-        let ttitle = document.querySelector(".pageHeadline");
-        return ttitle ? ttitle.innerText : "";
+      job.location = await page.evaluate(() => {
+        let loc = document.querySelector(".siteFooter");
+        return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+[\n][\n]\d+[a-zA-Z-. ].+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+/) : ""
+        
       });
-      job.title = title;
 
+      if(typeof job.location == 'object' && job.location != null ){
+        job.location = job.location[0]
+      }
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -83,19 +100,33 @@ let gfo_kliniken = async () => {
         continue;
       }
 
-      //get link
-      let link = await page.evaluate(() => {
-        return document.querySelector('a.onlinebewerben.btn.btn--invert').href
+      //get link\
+
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/);
       });
-      job.link = link
-    //   if (typeof link == "object") {
-    //     job.link = link;
-    //   }
-      // console.log(job);
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
+      }
+      // job.email = email
+
+      // get link 
+      let link1 = 0;
+      if (link1) {
+        const link = await page.evaluate(() => {
+          let applyLink = document.querySelector('a.onlinebewerben.btn.btn--invert')
+          return applyLink ? applyLink.href : ""
+        })
+        job.link = link;
+      } else {
+        job.link = jobLink
+      }
+
+
+
       allJobs.push(job);
     }
-    console.log(allJobs);
-    await page.close();
+    console.log(allJobs)
     await browser.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
@@ -118,7 +149,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-gfo_kliniken()
-
-
-
+// gfo_kliniken()
+export default gfo_kliniken
