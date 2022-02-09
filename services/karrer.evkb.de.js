@@ -1,6 +1,4 @@
 
-
-
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
@@ -13,42 +11,36 @@ let Karrer_evkb = async () => {
     });
 
     let page = await browser.newPage();
-            let jobLinks = []
-            let allLinks = [
-              "https://karriere.evkb.de/stellenboerse.html?"
-            ]
-            let counter = 0;
-            do {
-                await page.goto(allLinks[counter], { timeout: 0 })
-                
-               await scroll(page)
-               
-            // await page.waitForTimeout(3000)
-            // await page.click('#headerStartPage > div > dvinci-layout > div > div > div:nth-child(2) > div.col-xs-12.col-sm-7.col-md-8.col-lg-9 > div.dvinci-job-list-pagination > a > span > span')
-         
-                
-                // getting all the links 
-                const links = await page.evaluate(() => {
-                    return Array.from(
-                        document.querySelectorAll('.job-offer a' )
-                        )
-                        .map(el => el.href)
-                });
-                // console.log(links)
-                jobLinks.push(...links);
-                counter++
-            } while (counter > allLinks.length);
-            console.log(jobLinks)
+
+    await page.goto("https://karriere.evkb.de/stellenboerse.html?", {
+      waitUntil: "load",
+      timeout: 0,
+    });
+
+    await scroll(page);
+    
+    await page.waitForSelector('.job-offer a')
+    //get all jobLinks
+    const jobLinks = await page.evaluate(() => {
+      return Array.from(
+        document.querySelectorAll('.job-offer a')
+      ).map((el) => el.href);
+    });
+
+    console.log(jobLinks);
     let allJobs = [];
 
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Bielefeld",
+        location: "",
         hospital: "Evangelisches Klinikum Bethel",
         link: "",
         level: "",
         position: "",
+        city: "Bielefeld",
+        email: "",
+        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -56,13 +48,19 @@ let Karrer_evkb = async () => {
         timeout: 0,
       });
 
-      await scroll(page)
+      await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
         let ttitle = document.querySelector("h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
+
+      const location = await page.evaluate(() => {
+        let loc = document.body.innerText.match(/Bi[A-Za-z]+ [A-Za-z]+|Bi[A-Za-z]+/)
+        return loc;
+      });
+      job.location = location
 
       let text = await page.evaluate(() => {
         return document.body.innerText;
@@ -90,18 +88,23 @@ let Karrer_evkb = async () => {
       }
 
       //get link
-      let link = await page.evaluate(() => {
-       let applink = document.querySelector('a.kein-mitarbeiter.button.btn.btn-default');
-       return applink ? applink.href : null;
-    });
-      // if (typeof link == "object") {
-      //   job.link = link;
-      // }
-      // console.log(job);
+    //   job.email = await page.evaluate(() => {
+    //     return document.body.innerText.match(/[a-zaA-Z]+ [a-zaA-Z]+/);
+    //   });
+  
+    //   job.email = email
+
+    //   getting applylink
+      let link = page.evaluate(()=> {
+          let Link = document.querySelector('.kein-mitarbeiter.button.btn.btn-default');
+          return Link ? Link.href : ""
+      })
       job.link = link
+    //   job.link = jobLink;
+
       allJobs.push(job);
     }
-    console.log(allJobs)
+    console.log(allJobs);
     await page.close();
     await browser.close();
     return allJobs.filter((job) => job.position != "");
@@ -126,7 +129,9 @@ async function scroll(page) {
   });
 }
 
-Karrer_evkb()
+
+// Karrer_evkb()
+export default Karrer_evkb;
 
 
 
