@@ -11,43 +11,43 @@ let fachKlinikOstberge = async () => {
     });
     let page = await browser.newPage();
 
-    await page.goto("https://fachklinik-ostberge.de/freie-stellen", {
+    let link = "https://fachklinik-ostberge.de/freie-stellen"
+    await page.goto(link , {
       waitUntil: "load",
       timeout: 0,
     });
 
     await scroll(page);
-    //           let jobLinks = await page.evaluate(() => {
-    //             return Array.from(
-    //                 document.querySelectorAll('.jotitle > p a')
-    //             ).map(el => el.href)
-    //           });
-    // console.log(jobLinks);
-    // await page.waitForTimeout(3000);
-
+  
     let allJobs = [];
-
-    // for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Dortmund",
+        location: "",
         hospital: "Fachklinik Ostberge",
         link: "",
         level: "",
         position: "",
+        city: "Dortmund",
+        email: "",
+        republic: "Federal Republic of Germany"
       };
-    //   await page.goto(jobLink, {
-    //     waitUntil: "load",
-    //     timeout: 0,
-    //   });
-
+   
       await page.waitForTimeout(1000);
       let title = await page.evaluate(() => {
         let ttitle = document.querySelector("#post-49 > div > ul > li > span");
         return ttitle ? ttitle.innerText : "";
       });
-
       job.title = title;
+
+      
+      job.location = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.ö].+ \d+[\n][\n]\d+ [a-zA-Z-.ö]+/) || ""
+        
+      });
+
+      if(typeof job.location == 'object' && job.location != null ){
+        job.location = job.location[0]
+      }
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -71,12 +71,14 @@ let fachKlinikOstberge = async () => {
     //   if (!position in positions) {
     //     continue;
     //   }
-      //get link
-      let link = await page.evaluate(() => {
-          let links = document.querySelector(".post-inner-content")
-        // document.querySelector('.btn.btn-primary');         
-        return links ? links.innerText.match(/[a-zaA-Z-.]+ [(][a-zaA-Z-]+[)] [a-zaA-Z-.]+/) : "";
-      })
+      //get email 
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/);
+      });
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
+      }
+
       job.link = link
       allJobs.push(job);
     
@@ -103,4 +105,5 @@ async function scroll(page) {
     }, delay)
 });
 }
-fachKlinikOstberge()
+// fachKlinikOstberge()
+export default fachKlinikOstberge
