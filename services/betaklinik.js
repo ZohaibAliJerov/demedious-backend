@@ -6,7 +6,7 @@ let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 let betaKlinik = async () => {
   try {
     let browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
     });
 
     let page = await browser.newPage();
@@ -21,9 +21,7 @@ let betaKlinik = async () => {
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
       return Array.from(
-        document.querySelectorAll(
-          ".vc_custom_heading.vc_custom_1562575030398.vc_gitem-post-data.vc_gitem-post-data-source-post_title > h3 a"
-        )
+        document.querySelectorAll(".vc_gitem-link ")
       ).map((el) => el.href);
     });
 
@@ -33,14 +31,11 @@ let betaKlinik = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Joseph-Schumpeter-Allee 15 53227 Bonn",
+        location: "Bonn",
         hospital: "Beta Klinik",
         link: "",
         level: "",
         position: "",
-        city: "Bonn",
-        email: "",
-        republic: "Bonn Republic",
       };
 
       await page.goto(jobLink, {
@@ -51,21 +46,11 @@ let betaKlinik = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h1");
+        let ttitle = document.querySelector(".content > h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
-      //
 
-      //   job.location = await page.evaluate(() => {
-      //     let loc = document.querySelector("body");
-      //     return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+[\n][\n]\d+[a-zA-Z-. ].+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+|[a-zA-Z]+-[a-zA-Z]+-[a-zA-Z]+ \d+[\n]\d+ [a-zA-Z]/) : ""
-
-      //   });
-
-      //   if(typeof job.location == 'object' && job.location != null ){
-      //     job.location = job.location[0]
-      //   }
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -91,33 +76,18 @@ let betaKlinik = async () => {
         continue;
       }
 
-      //get link\
-
-      job.email = await page.evaluate(() => {
-        return document.body.innerText.match(
-          /[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/
-        );
+      //get link
+      let link = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+/);
       });
-      if (typeof job.email == "object" && job.email != null) {
-        job.email = job.email[0];
+      if (typeof link == "object") {
+        job.link = link;
       }
-      // job.email = email
-
-      // get link
-      //   let link1 = 0;
-      //   if (link1) {
-      //     const link = await page.evaluate(() => {
-      //       let applyLink = document.querySelector('a.onlinebewerben.btn.btn--invert')
-      //       return applyLink ? applyLink.href : ""
-      //     })
-      //     job.link = link;
-      //   } else {
-      job.link = jobLink;
-      //   }
-
+      // console.log(job);
       allJobs.push(job);
     }
-    console.log(allJobs);
+    console.log(allJobs)
+    await page.close();
     await browser.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
@@ -140,5 +110,7 @@ async function scroll(page) {
     }, delay);
   });
 }
-// betaKlinik()
-export default betaKlinik;
+
+betaKlinik()
+
+
