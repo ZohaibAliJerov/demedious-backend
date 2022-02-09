@@ -11,12 +11,45 @@ let ugos_de = async () => {
     });
 
     let page = await browser.newPage();
+    
+    let links = [
 
     let url = [ 
       'https://www.klinik-hilchenbach.de/karriere/',
       'https://www.celenus-karriere.de/jobs/aktuellejobs/aerzte/',
       'https://www.celenus-karriere.de/salvea/aktuellejobs/ aerzte/'
     ]
+
+    let jobLinks = []
+    let counter = 0
+    do {
+        await page.goto(links[counter], { timeout: 0 });
+        scroll(page);
+       // get all jobs links 
+       let jobs = await page.evaluate(() => {
+              return Array.from(
+                document.querySelectorAll('.ce-bodytext > ul > li > a')
+              ).map((el) => el.href)
+            });
+            jobLinks.push(...jobs)
+      
+            counter++;
+            await page.waitForTimeout(3000);
+          } while (counter < links.length);
+         console.log(jobLinks)
+    
+  
+    let allJobs = [];
+
+    for (let jobLink of jobLinks) {
+      let job = {
+        title: "",
+        location: "Hilchenbach",
+        hospital: "CELENUS Fachklinik Hilche",
+        link: "",
+        level: "",
+        position: "",
+        
             let allJobLinks = []
             let counter = 0
             do {
@@ -57,7 +90,7 @@ let ugos_de = async () => {
         waitUntil: "load",
         timeout: 0,
       });
-
+      
       await page.waitForTimeout(1000);
     //   let tit = 0;
     //   if(tit){
@@ -66,13 +99,7 @@ let ugos_de = async () => {
           return ttitle ? ttitle.innerText : "";
         });
         job.title = title;
-    //   }else{
-    //     let title = await page.evaluate(() => {
-    //       let ttitle = document.querySelector(".news-single-item h2");
-    //       return ttitle ? ttitle.innerText : "";
-    //     });
-    //     job.title = title;
-    //   }
+  
     
 
       job.location = await page.evaluate(() => {
@@ -157,8 +184,7 @@ async function scroll(page) {
     }, delay);
   });
 }
-// ugos_de()
-export default ugos_de
 
+export default ugos_de
 
 
