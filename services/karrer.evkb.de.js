@@ -129,7 +129,9 @@ async function scroll(page) {
   });
 }
 
+
 // Karrer_evkb()
 export default Karrer_evkb;
+
 
 
