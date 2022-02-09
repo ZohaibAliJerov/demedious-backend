@@ -1,108 +1,175 @@
 import puppeteer from "puppeteer";
 
-const evk_ge = async () => {
-    try {
-        const browser = await puppeteer.launch({ headless: false });
-        const page = await browser.newPage();
-        page.setDefaultNavigationTimeout(0);
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-        let allJobs = [];
-        let link = ["https://control2.jobcluster.de/JobPortal.php?id=1022#page-1",
-            // "https://control2.jobcluster.de/JobPortal.php?id=1022#page-2",
-            // "https://control2.jobcluster.de/JobPortal.php?id=1022#page-3",
-            // "https://control2.jobcluster.de/JobPortal.php?id=1022#page-4"
-        ]
-
-        let counter = 0;
-        do {
-            await page.goto(link[counter], { timeout: 0 })
-            scroll(page);
-
-            //getting all the jobs links 
-
-
-            await page.waitForTimeout(3000)
-            const jobs = await page.evaluate(() => {
-                return Array.from(
-                    document.querySelectorAll('a.vacancy_title')
-                ).map(el => el.href)
-            });
-
-            console.log(jobs);
-            allJobs.push(...jobs);
-            counter++;
-        } while (counter < link);
-
-        const allJobDetails = []
-
-        for (const url of allJobs) {
-            await page.goto(url)
-            await scroll(page)
-            /// getting all the title
-            await page.waitForSelector('h1')
-            const title = await page.evaluate(() => {
-                return document.querySelector('h1').innerText || null;
-            })
-
-            /// getting all the cell no.
-            const cell = await page.evaluate(() => {
-                let text = document.querySelector('.jcd_joboffer.evk');
-                return text ? text.innerText.match(/\d+[-]\d+ \d+ \d+-\d+|\d+[/\s].\d+[-\s]\d+|\d+.. \d+ . \d+|\d+ [/] \d+[-]\d+/) : null;
-            });
-
-            // getting all the links
-            const applyLink = await page.evaluate(() => {
-                let link = document.querySelector('a.btnInfoBoxAction.jcdBtnApplication.btn.btn-jcd-green.btn-apply-now.btn-sm')
-                return link ? link.href : null;
-
-            })
-            // getting all the location from the links 
-            const location = await page.evaluate(() => {
-                let text = document.querySelector('.jcd_joboffer.evk');
-                return text ? text.innerText.match(/[a-zA-Z]+.. \d+[\n][\n]\d+ [a-zA-Z]+/) : null;
-            });
-
-            // /// getting all the emails 
-            const email = await page.evaluate(() => {
-                let text = document.querySelector('.jcd_joboffer.evk');
-                return text ? text.innerText.match(/[a-zA-Z.]+[a-zA-Z]+@[a-zA-Z.-]+/) : null;
-            });
-
-
-            const jobDetails = {
-                title,
-                cell,
-                applyLink,
-                location,
-                email
-
-            };
-            allJobDetails.push(jobDetails);
-            await page.waitForTimeout(3000);
-        }
-        console.log(allJobDetails);
-        await page.close();
-        await browser.close();
-        return allJobDetails;
-    } catch (error) {
-        console.log(error)
-    }
-}
-
-async function scroll(page) {
-    await page.evaluate(() => {
-        const distance = 100;
-        const delay = 100;
-        const timer = setInterval(() => {
-            document.scrollingElement.scrollBy(0, distance);
-            if (
-                document.scrollingElement.scrollTop + window.innerHeight >=
-                document.scrollingElement.scrollHeight
-            ) {
-                clearInterval(timer);
-            }
-        }, delay);
+let ugos_de = async () => {
+  try {
+    let browser = await puppeteer.launch({
+      headless: false,
     });
+
+    let page = await browser.newPage();
+
+    let url = [ "https://control2.jobcluster.de/JobPortal.php?id=1022#page-2"]
+            
+            
+            let nextPage = true;
+            let allJobLinks = []
+            let counter = 0
+            do {
+                await page.goto(url[counter], {
+                    waitUntil: "load",
+                    timeout: 0,
+                });
+                //wait for a while
+                await page.waitForTimeout(1000);
+                
+                await scroll(page)
+                await page.waitForSelector('a.vacancy_title')
+                //get all jobLinks
+                let jobLinks = await page.evaluate(() => {
+                    return Array.from(
+                        document.querySelectorAll("a.vacancy_title")
+                    ).map((el) => el.href);
+                });
+                let bottomNextLink = await page.evaluate(() => {
+                  return document.querySelector("#light-pagination > ul > li:nth-child(5) > a");
+                });
+                if (bottomNextLink) {
+                  await page.click("#light-pagination > ul > li:nth-child(5) > a");
+                  nextPage = true;
+                } else {
+                  nextPage = false;
+                }
+                allJobLinks.push(...jobLinks)
+                counter++;
+    
+            } while (counter < url.length);
+            console.log(allJobLinks);
+    
+    let allJobs = [];
+
+    for (let jobLink of allJobLinks) {
+      let job = {
+        title: "",
+        location: "",
+        hospital: "Evangelische Kliniken Gelsenkirchen GmbH",
+        link: "",
+        level: "",
+        position: "",
+        city: "Gelsenkirchen",
+        email: "",
+        republic: "North Rhine-Westphalia",
+      };
+
+      await page.goto(jobLink, {
+        waitUntil: "load",
+        timeout: 0,
+      });
+
+      await page.waitForTimeout(1000);
+    //   await page.click("button.btn.btn-default")
+    //   let tit = 0;
+    //   if(tit){
+        let title = await page.evaluate(() => {
+          let ttitle = document.querySelector("h1");
+          return ttitle ? ttitle.innerText : "";
+        });
+        job.title = title;
+    //   }else{
+    //     let title = await page.evaluate(() => {
+    //       let ttitle = document.querySelector(".news-single-item h2");
+    //       return ttitle ? ttitle.innerText : "";
+    //     });
+    //     job.title = title;
+    //   }
+    
+
+      job.location = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.ßöü ]+ \d+[\n][\n]\d+[a-zA-Z-.ßöü ]+|[a-zA-Z-.ßöü ]+ \d+[\n]\d+[a-zA-Z-. ßöü]+|[a-zA-Z-.ßöü]+ \d+ . \d+ [a-zA-Z-.ßöü]+/) || ""
+        
+      });
+
+      if(typeof job.location == 'object' && job.location != null ){
+        job.location = job.location[0]
+      }
+      let text = await page.evaluate(() => {
+        return document.body.innerText;
+      });
+      //get level
+      let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+      let position = text.match(/arzt|pflege/);
+      job.level = level ? level[0] : "";
+      if (
+        level == "Facharzt" ||
+        level == "Chefarzt" ||
+        level == "Assistenzarzt" ||
+        level == "Arzt" ||
+        level == "Oberarzt"
+      ) {
+        job.position = "artz";
+      }
+      if (position == "pflege" || (position == "Pflege" && !level in levels)) {
+        job.position = "pflege";
+        job.level = "Nicht angegeben";
+      }
+
+      if (!position in positions) {
+        continue;
+      }
+
+      //get link\
+
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/);
+      });
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
+      }
+      // job.email = email
+
+    //   get link 
+      let link1 = 0;
+      if (link1) {
+        const link = await page.evaluate(() => {
+          let applyLink = document.querySelector('a.btnInfoBoxAction.jcdBtnApplication.btn.btn-jcd-green.btn-apply-now.btn-sm')
+          return applyLink ? applyLink.href : ""
+        })
+        job.link = link;
+      } else {
+        job.link = jobLink
+      }
+
+
+
+      allJobs.push(job);
+    }
+    console.log(allJobs)
+    await browser.close();
+    return allJobs.filter((job) => job.position != "");
+  } catch (e) {
+    console.log(e);
+  }
 };
 
-evk_ge();
+async function scroll(page) {
+  await page.evaluate(() => {
+    const distance = 100;
+    const delay = 100;
+    const timer = setInterval(() => {
+      document.scrollingElement.scrollBy(0, distance);
+      if (
+        document.scrollingElement.scrollTop + window.innerHeight >=
+        document.scrollingElement.scrollHeight
+      ) {
+        clearInterval(timer);
+      }
+    }, delay);
+  });
+}
+ugos_de()
+// export default ugos_de
+
+
+

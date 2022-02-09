@@ -4,11 +4,14 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let stellengBOt = async () => {
+let stellenangobotOnline = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
+
+
+ 
 
     let page = await browser.newPage();
 
@@ -32,11 +35,14 @@ let stellengBOt = async () => {
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "Nachrodt-Wiblingwerde",
+        location: "",
         hospital: "Gut Sassenscheid",
         link: "",
         level: "",
         position: "",
+        city: "Nachrodt-Wiblingwerde",
+        email: "",
+        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -45,13 +51,31 @@ let stellengBOt = async () => {
       });
 
       await page.waitForTimeout(1000);
+    //   let tit = 0;
+    //   if(tit){
+        let title = await page.evaluate(() => {
+          let ttitle = document.querySelector("h1");
+          return ttitle ? ttitle.innerText : "";
+        });
+        job.title = title;
+    //   }else{
+    //     let title = await page.evaluate(() => {
+    //       let ttitle = document.querySelector(".news-single-item h2");
+    //       return ttitle ? ttitle.innerText : "";
+    //     });
+    //     job.title = title;
+    //   }
+    
 
-      let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("#post-11306 > div > p:nth-child(3)");
-        return ttitle ? ttitle.innerText : "";
+      job.location = await page.evaluate(() => {
+        let loc = document.querySelector(".entry-content");
+        return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+[\n][\n]\d+[a-zA-Z-. ].+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+/) : ""
+        
       });
-      job.title = title;
 
+      if(typeof job.location == 'object' && job.location != null ){
+        job.location = job.location[0]
+      }
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -77,18 +101,33 @@ let stellengBOt = async () => {
         continue;
       }
 
-      //get link
-      let link = await page.evaluate(() => {
-        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+/);
+      //get link\
+
+      job.email = await page.evaluate(() => {
+        return document.body.innerText.match(/[a-zA-Z-.]+@[a-zA-Z-.]+|[a-zA-Z-.]+[(]\w+[)][a-zA-Z-.]+/);
       });
-      if (typeof link == "object") {
-        job.link = link;
+      if(typeof job.email == "object" && job.email != null ){
+        job.email = job.email[0]
       }
-      // console.log(job);
+      // job.email = email
+
+      // get link 
+      // let link1 = 0;
+      // if (link1) {
+      //   const link = await page.evaluate(() => {
+      //     let applyLink = document.querySelector('a.onlinebewerben.btn.btn--invert')
+      //     return applyLink ? applyLink.href : ""
+      //   })
+      //   job.link = link;
+      // } else {
+        job.link = jobLink
+      // }
+
+
+
       allJobs.push(job);
     }
     console.log(allJobs)
-    await page.close();
     await browser.close();
     return allJobs.filter((job) => job.position != "");
   } catch (e) {
@@ -111,8 +150,5 @@ async function scroll(page) {
     }, delay);
   });
 }
-
-stellengBOt()
-
-
-
+stellenangobotOnline()
+// export default stellenangobotOnline
