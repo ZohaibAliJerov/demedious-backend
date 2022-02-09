@@ -1,5 +1,7 @@
 import puppeteer from "puppeteer";
 
+let positions = ["arzt", "pflege"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 const recruiting = async () => {
   try {
     let browser = await puppeteer.launch({ headless: false });
@@ -51,45 +53,71 @@ const recruiting = async () => {
     let allJobs = [];
     //visit each job link
     for (let jobLink of allJobLinks) {
-      await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
+      for (let jobLink of allJobs) {
+        let job = {
+          title: "",
+          location: "Düsseldorf",
+          hospital: "Klinik für Psychiatrie und",
+          link: "",
+          level: "",
+          position: "",
+        };
+        await page.goto(jobLink, { timeout: 0, waitUntil: "load" });
 
-      await waitForTimeout(1000);
-      //scroll the page
-      await page.evaluate(() => {
-        for (let i = 0; i < 100; i++) {
-          if (
-            document.scrollingElement.scrollTop + window.innerHeight >=
-            document.scrollingElement.scrollHeight
-          ) {
-            break;
+        await waitForTimeout(1000);
+        //scroll the page
+        await page.evaluate(() => {
+          for (let i = 0; i < 100; i++) {
+            if (
+              document.scrollingElement.scrollTop + window.innerHeight >=
+              document.scrollingElement.scrollHeight
+            ) {
+              break;
+            }
+            document.scrollingElement.scrollBy(0, 100);
+            setTimeout(1000);
           }
-          document.scrollingElement.scrollBy(0, 100);
-          setTimeout(1000);
+        });
+        //get title
+        job.title = await page.evaluate(() => {
+          return document.querySelector("h1").innerText;
+        });
+        let text = await page.evaluate(() => {
+          return document.body.innerText;
+        });
+        //get level
+        let level = text.match(/Facharzt|Chefarzt|Assistenzarzt|Arzt|Oberarzt/);
+        let position = text.match(/arzt|pflege/);
+        job.level = level ? level[0] : "";
+        if (
+          level == "Facharzt" ||
+          level == "Chefarzt" ||
+          level == "Assistenzarzt" ||
+          level == "Arzt" ||
+          level == "Oberarzt"
+        ) {
+          job.position = "artz";
         }
-      });
-      //get title
-      let title = await page.evaluate(() => {
-        return document.querySelector("h1").innerText;
-      });
-      //get location
-      let location = await page.evaluate(() => {
-        return document.querySelector(".inserat-short-info > font").innerText;
-      });
-      //get email
-      let email = await page.evaluate(() => {
-        return "";
-      });
-      //get cell
-      let cell = await page.evaluate(() => {
-        return document.body.innerText.match(/\d+\s\d+\s\d+\s\d+/);
-      });
-      //get applyLink
-      let applyLink = await page.evaluate(() => {
-        return document.querySelector("a.button.apply-link").href;
-      });
-      allJobLinks.push({ title, location, cell, email, applyLink });
+        if (
+          position == "pflege" ||
+          (position == "Pflege" && !level in levels)
+        ) {
+          job.position = "pflege";
+          job.level = "Nicht angegeben";
+        }
+
+        if (!position in positions) {
+          continue;
+        }
+
+        //get applyLink
+        job.link = await page.evaluate(() => {
+          return document.querySelector("a.button.apply-link").href;
+        });
+        allJobLinks.push(job);
+      }
+      return allJobs;
     }
-    return allJobs;
   } catch (error) {
     console.log(error);
   }
