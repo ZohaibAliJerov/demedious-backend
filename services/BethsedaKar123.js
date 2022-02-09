@@ -1,45 +1,38 @@
-
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let bethseda_karken = async () => {
+let bethseda_kar = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
 
     let page = await browser.newPage();
-
-
-    await page.goto("https://www.bethesda-krankenhaus-duisburg.de/karriere/%C3%A4rztlicher-dienst/", {
-        waitForTimeout : 0
-    })
-    await scroll(page)
-  
-      // get all job links
-      const jobLinks = await page.evaluate(() => {
-        return Array.from(
-          document.querySelectorAll('.j-module.n.j-text > ul > li a ')
-        ).map((el) => el.href);
-      });
-      console.log(jobLinks);
-
-
+               
+        await page.goto("https://www.bethesda-krankenhaus-duisburg.de/karriere/%C3%A4rztlicher-dienst/",
+         {timeout : 0}
+         )
+                await scroll(page)
+                // getting all the links 
+                const jobLinks = await page.evaluate(() => {
+                    return Array.from(
+                        document.querySelectorAll('.j-module.n.j-text > ul > li a ')
+                        )
+                        .map(el => el.href)
+                });
+             console.log(jobLinks)
     let allJobs = [];
 
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "",
+        location: "Duisburg",
         hospital: "Evangelisches Krankenhaus BETHESDA zu Duisburg",
         link: "",
         level: "",
         position: "",
-        city: "Duisburg",
-        email: "",
-        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -54,18 +47,6 @@ let bethseda_karken = async () => {
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
-
-      job.location = await page.evaluate(() => {
-        let text = document.querySelector(".j-module.n.j-text ");
-        return text ? text.innerText.match(
-          /[a-zA-Z-.]+ \d+[-.,] \d+ [a-zA-Z-.]+|[a-zA-Z-.]+ \d+[\n][\n]\d+ [a-zA-Z-.]+|[a-zA-Z-.]+ \d+[\n]\d+ [a-zA-Z-.]+/
-        )
-          : null;
-      });
-
-      if(typeof job.location =="object" && job.location != null){
-        job.location = job.location[0];
-      }
 
       let text = await page.evaluate(() => {
         return document.body.innerText;
@@ -93,31 +74,18 @@ let bethseda_karken = async () => {
       }
 
       //get link
-      job.email = await page.evaluate(() => {
-        let text = document.querySelector(".j-module.n.j-text");
-        return text ? text.innerText.match(
-            /[a-zA-Z-.]+@[a-zA-Z-.]+/
-          )
-          : null;
-      });
-
-     if(typeof job.email == "object" && job.email != null) {
-        job.email = job.email[0];
-     }
-
-      //   getting applylink
-      // let link = page.evaluate(() => {
-      //   let Link = document.querySelector('a.c-button.c-button--main.c-button--large');
-      //   return Link ? Link.href : "";
-      // })
-      // job.link = link
-    job.link = jobLink;
-   if(typeof job.link == "object") {
-        job.link=job.link[0];
-    } 
+      let link = await page.evaluate(() => {
+       return document.body.innerText.match(/[a-zA-Z-. ]+@[a-zA-Z-. ]+/);
+               
+    });
+    //   if (typeof link == "object") {
+    //     job.link = link;
+    //   }
+      // console.log(job);
+      job.link = link
       allJobs.push(job);
     }
-    console.log(allJobs);
+    console.log(allJobs)
     await page.close();
     await browser.close();
     return allJobs.filter((job) => job.position != "");
@@ -142,9 +110,5 @@ async function scroll(page) {
   });
 }
 
-bethseda_karken()
-// export default Karrer_evkb;
-
-
-
+bethseda_kar()
 
