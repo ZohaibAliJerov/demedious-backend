@@ -129,4 +129,4 @@ async function scroll(page) {
     });
 }
 // beraLinaKlinik()
-export default beraLinaKlinik
+export default beraLinaKlinik;

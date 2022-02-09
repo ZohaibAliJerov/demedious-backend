@@ -51,21 +51,12 @@ let betaKlinik = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
+
         let ttitle = document.querySelector("h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
-      //
-
-      //   job.location = await page.evaluate(() => {
-      //     let loc = document.querySelector("body");
-      //     return loc ? loc.innerText.match(/[a-zA-Z-.].+ \d+[\n][\n]\d+[a-zA-Z-. ].+|[a-zA-Z-.].+ \d+[\n]\d+[a-zA-Z-. ].+|[a-zA-Z]+-[a-zA-Z]+-[a-zA-Z]+ \d+[\n]\d+ [a-zA-Z]/) : ""
-
-      //   });
-
-      //   if(typeof job.location == 'object' && job.location != null ){
-      //     job.location = job.location[0]
-      //   }
+    
       let text = await page.evaluate(() => {
         return document.body.innerText;
       });
@@ -91,7 +82,6 @@ let betaKlinik = async () => {
         continue;
       }
 
-      //get link\
 
       job.email = await page.evaluate(() => {
         return document.body.innerText.match(
@@ -101,20 +91,8 @@ let betaKlinik = async () => {
       if (typeof job.email == "object" && job.email != null) {
         job.email = job.email[0];
       }
-      // job.email = email
-
-      // get link
-      //   let link1 = 0;
-      //   if (link1) {
-      //     const link = await page.evaluate(() => {
-      //       let applyLink = document.querySelector('a.onlinebewerben.btn.btn--invert')
-      //       return applyLink ? applyLink.href : ""
-      //     })
-      //     job.link = link;
-      //   } else {
+ 
       job.link = jobLink;
-      //   }
-
       allJobs.push(job);
     }
     console.log(allJobs);
@@ -140,5 +118,6 @@ async function scroll(page) {
     }, delay);
   });
 }
-// betaKlinik()
+
+
 export default betaKlinik;
