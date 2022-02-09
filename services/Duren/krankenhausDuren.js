@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
+
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
 let krankenhausDuren = async () => {
@@ -123,3 +124,4 @@ async function scroll(page) {
 
 
 export default krankenhausDuren;
+
