@@ -63,7 +63,9 @@ let bonn = async () => {
             if (
                 level == "Facharzt" ||
                 level == "Chefarzt" ||
-                level == "Assistenzarzt"
+                level == "Assistenzarzt"||
+                level =="Arzt"||
+                level == "Oberarzt"
             ) {
                 job.position = "artz";
             }

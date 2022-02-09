@@ -6,7 +6,8 @@ let positions = [
 let levels = [
     "Facharzt", 
     "Chefarzt", 
-"Assistenzarzt"
+"Assistenzarzt",
+"Arzt", "Oberarzt"
  ];
 const lungenklinik_Hemer = async () =>{
     try {
@@ -65,7 +66,9 @@ const lungenklinik_Hemer = async () =>{
           if (
             level == "Facharzt" ||
             level == "Chefarzt" ||
-            level == "Assistenzarzt"
+            level == "Assistenzarzt" ||
+            level == "Arzt" ||
+            level == "Oberarzt"
           ) {
             job.position = "artz";
           }
@@ -82,9 +85,10 @@ const lungenklinik_Hemer = async () =>{
           let link = await page.evaluate(() => {
             return document.body.innerText.match(/[A_Za-z0-9-._+/]+@[A_Za-z0-9-._+/]+\.[A_Za-z0-9-]+/g);
           });
-          if (typeof link == 'object') {
+          if (typeof link == "object") {
             job.link = {...link}
           }
+          
            jobDetails.push(job)
           await page.waitForTimeout(4000)
        }

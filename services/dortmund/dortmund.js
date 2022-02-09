@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
-let levels = ["Facharzt", "Chefarzt", "Assistenzarzt"];
+let levels = ["Facharzt", "Chefarzt", "Assistenzarzt",  "Arzt", "Oberarzt"];
 
 let dortmund = async () => {
   try {
@@ -11,7 +11,7 @@ let dortmund = async () => {
     let page = await browser.newPage();
 
     await page.goto(
-      "https://www.huettenhospital.de/stellenangebote.html/",
+      "https://www.huettenhospital.de/stellenangebote.html",
       {
         waitUntil: "load",
         timeout: 0,
@@ -22,7 +22,7 @@ let dortmund = async () => {
 
     //get all jobLinks
     const jobLinks = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("div.headline > h3 > a")).map(
+      return Array.from(document.querySelectorAll("a.job-posting-link")).map(
         (el) => el.href
       );
     });
@@ -48,7 +48,7 @@ let dortmund = async () => {
       await page.waitForTimeout(1000);
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector("h3");
+        let ttitle = document.querySelector("h1");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
@@ -63,7 +63,10 @@ let dortmund = async () => {
       if (
         level == "Facharzt" ||
         level == "Chefarzt" ||
-        level == "Assistenzarzt"
+        level == "Assistenzarzt"||
+        level =="Arzt"||
+        level == "Oberarzt"
+
       ) {
         job.position = "artz";
       }
@@ -76,7 +79,7 @@ let dortmund = async () => {
         continue;
       }
       let link = await page.evaluate(() => {
-        let lnk = document.querySelector("div.col-md-12 > a");
+        let lnk = document.querySelector("body > div.container-fluid > div.row.row-content > div.col-lg-8 > div > div > div > div > div.nd > div.f > p > a");
         return lnk ? lnk.href : "";
       });
       job.link = link;
