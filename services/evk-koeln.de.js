@@ -1,47 +1,57 @@
 
 
+
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let stifiungTan = async () => {
+let evk_koeln = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
 
     let page = await browser.newPage();
-
-    await page.goto("https://stiftung-tannenhof-karriere.dvinci-easy.com/de/jobs", {
-      waitUntil: "load",
-      timeout: 0,
-    });
-
-    await scroll(page);
-    
-    await page.waitForSelector('a.dvinci-job-position.ng-binding')
-    //get all jobLinks
-    const jobLinks = await page.evaluate(() => {
-      return Array.from(
-        document.querySelectorAll("a.dvinci-job-position.ng-binding")
-      ).map((el) => el.href);
-    });
-
-    console.log(jobLinks);
+            let jobLinks = []
+            let allLinks = [
+              "https://jobcluster.jcd.de/JobPortal.php?id=1272#page-1",
+              "https://jobcluster.jcd.de/JobPortal.php?id=1272#page-2",
+              "https://jobcluster.jcd.de/JobPortal.php?id=1272#page-3",
+              "https://jobcluster.jcd.de/JobPortal.php?id=1272#page-4"
+            ]
+            let counter = 0;
+            do {
+                await page.goto(allLinks[counter], { timeout: 0 })
+                
+               await scroll(page)
+               
+            // await page.waitForTimeout(3000)
+            // await page.click('#headerStartPage > div > dvinci-layout > div > div > div:nth-child(2) > div.col-xs-12.col-sm-7.col-md-8.col-lg-9 > div.dvinci-job-list-pagination > a > span > span')
+         
+                
+                // getting all the links 
+                const links = await page.evaluate(() => {
+                    return Array.from(
+                        document.querySelectorAll('.vacancy_title' )
+                        )
+                        .map(el => el.href)
+                });
+                // console.log(links)
+                jobLinks.push(...links);
+                counter++
+            } while (counter > allLinks.length);
+            console.log(jobLinks)
     let allJobs = [];
 
     for (let jobLink of jobLinks) {
       let job = {
         title: "",
-        location: "",
-        hospital: "Evangelische Stiftung Tannenhof - Fachkrankenhaus für Psychiatrie, Psychotherapie, Psychosomatik und",
+        location: "Köln",
+        hospital: "Evangelisches Klinikum Köln Weyertal",
         link: "",
         level: "",
         position: "",
-        city: "Remscheid",
-        email: "",
-        republic: "North Rhine-Westphalia",
       };
 
       await page.goto(jobLink, {
@@ -49,19 +59,13 @@ let stifiungTan = async () => {
         timeout: 0,
       });
 
-      await page.waitForTimeout(1000);
+      await scroll(page)
 
       let title = await page.evaluate(() => {
-        let ttitle = document.querySelector(".default-design-box h1");
+        let ttitle = document.querySelector("strong.job-jobtitle");
         return ttitle ? ttitle.innerText : "";
       });
       job.title = title;
-
-    //   job.location = await page.evaluate(() => {
-    //     let loc = document.querySelector(".sidebar-widget").innerText;
-    //     loc = loc.replace("\n", " ");
-    //     return loc.replace(/\w+@\w+\.\w+/, "");
-    //   });
 
       let text = await page.evaluate(() => {
         return document.body.innerText;
@@ -89,23 +93,18 @@ let stifiungTan = async () => {
       }
 
       //get link
-    //   job.email = await page.evaluate(() => {
-    //     return document.body.innerText.match(/\w+@\w+\.\w+/);
-    //   });
-    //   if (typeof job.email == "object") {
-    //     job.email = job.email[0];
-    //   }
-
-      let link = page.evaluate(()=> {
-          let Link = document.querySelector('.btn.btn-primary');
-          return Link ? Link.href : ""
-      })
+      let link = await page.evaluate(() => {
+       let applink = document.querySelector('a.btnInfoBoxAction.jcdBtnApplication.btn.btn-jcd-green.btn-apply-now.btn-sm');
+       return applink ? applink.href : null;
+    });
+      // if (typeof link == "object") {
+      //   job.link = link;
+      // }
+      // console.log(job);
       job.link = link
-    //   job.link = jobLink;
-
       allJobs.push(job);
     }
-    console.log(allJobs);
+    console.log(allJobs)
     await page.close();
     await browser.close();
     return allJobs.filter((job) => job.position != "");
@@ -129,4 +128,11 @@ async function scroll(page) {
     }, delay);
   });
 }
-stifiungTan()
+
+evk_koeln()
+
+
+
+
+
+
