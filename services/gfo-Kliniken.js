@@ -1,7 +1,10 @@
+
+
 import puppeteer from "puppeteer";
 
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
+
 
 let gfo_kliniken = async () => {
   try {
