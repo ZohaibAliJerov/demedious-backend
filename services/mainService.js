@@ -18,7 +18,35 @@
 //import koln from "./koln.js";
 // import heinsbergg from "./heinsbergg/heinsbergg.js";
 // import koln1 from "./koln1/koln1.js";
-import badberleburgg from "./badberleburrg.js";
+// import badberleburgg from "./badberleburrg.js";
+// import hattingenn from "./hattingenn/hattingenn.js";
+// import wuppertalOne from "./wuppertalOne/wuppertalOne.js";
+// import bonnOne from "./bonnOne/bonnOne.js";
+// import teildesganzen from "./teildesganzen/teildesganzen.js";
+// import herford from "./herford/herford.js";
+// import maerkische from "./maerkische/maerkische.js";
+// import mathias from "./mathias/mathias.js";
+// import maerkische from "./maerkische/maerkische.js";
+// import diakonie from "./diakonie/diakonie.js";
+// import serverinskloesterchen from "./severinskloesterchen/severinskloesterchen.js";
+// import kreisklinikumSiegen from "./kreisklinikumSiegen/kreisklinikumSiegen.js";
+// import kaiser from "./kaiser/kaiser.js";
+// import johanniterTwo from "./johanniterTwo/johanniterTwo.js";
+// import johanniterOne from './johanniterOne/johanniterOne.js'
+// import hochsauerland from './hochsauerland/hochsauerland.js'
+// import johnniterThree from "./jonniterThree/jonniterThree.js";
+// import lukass from "./lukass/lukass.js";
+// import gmbh from "./gmbh/gmbh.js";
+// import balthasar from "./balthasar/balthasar.js";
+// import hellweg from "./hellweg/hellweg.js";
+// import westfalenn from "./westfalenn/westfalenn.js";
+// import klinikring from "./klinikring/klinikring.js";
+// import christophorus from "./christophorus/christophorus.js";
+// import klinikumbochum from "./klinikumbochum/klinikumbochum.js";
+// import eichholz from "./eichholz/eichholz.js";
+// import reha from "./reha/reha.js";
+// import deutsche from "./deutsche/deutsche.js"
+import eduardus from "./eduardus/eduardus.js";
 const mainService = async () => {
   return Promise.all([
     // koln1(),
@@ -35,7 +63,34 @@ const mainService = async () => {
     // dortmund3(),
     // heinsbergg()
     // koln1()
-    badberleburgg()
+    // badberleburgg()
+    // hattingenn()
+    // wuppertalOne()
+    // bonnOne()
+    // teildesganzen()
+    // herford()
+    // mathias()
+    // maerkische()
+    // diakonie()
+    // serverinskloesterchen()
+    // kreisklinikumSiegen()
+    // johanniterOne()
+    // johanniterTwo()
+    // kaiser()
+    // hochsauerland()
+    // lukass()
+    // johnniterThree()
+    // gmbh()
+    // balthasar()
+    // hellweg()
+    // westfalenn()
+    // klinikring()
+    // christophorus()
+    // klinikumbochum()
+    // reha()
+    // eichholz()
+    // deutsche()
+    eduardus()
   ]).then((results) => {
     return results.flat(1);
   });

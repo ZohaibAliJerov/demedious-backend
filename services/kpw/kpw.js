@@ -3,56 +3,36 @@ import puppeteer from "puppeteer";
 let positions = ["arzt", "pflege"];
 let levels = ["Facharzt", "Chefarzt", "Assistenzarzt", "Arzt", "Oberarzt"];
 
-let hattingenn = async () => {
+let kpw = async () => {
   try {
     let browser = await puppeteer.launch({
       headless: false,
     });
     let page = await browser.newPage();
 
-    await page.goto("https://www.vamed-gesundheit.de/reha/hattingen/unsere-klinik/karriere/stellenangebote/",
+    await page.goto("https://www.kpw.eu/karriere",
       {
         waitUntil: "load",
         timeout: 0,
       }
-    );
-
-    let nextPage = true;
-    let allJobLinks = [];
-    while (nextPage) {
-      //scroll the page
-      await scroll(page)
-     
-      await page.waitForTimeout(1000)
-      //get all jobLinks
+    );      //get all jobLinks
       let jobLinks = await page.evaluate(() => {
         return Array.from(
-          document.querySelectorAll("#c45756 > div > section > div > div > div > div > article > a")
+          document.querySelectorAll("body > main > div > main > div > div.mainItemAjax > section.o-section.-padding.module-items-outer > div > div.moduleItems-element.moduleItems-content > div.moduleItems-items > a")
         ).map((el) => el.href);
       });
-      allJobLinks.push(...jobLinks);
-      await page.waitForTimeout(1000);
-      let bottomNextLink = await page.evaluate(() => {
-        return document.querySelector("#c45756 > div > div > nav > ul > li.pagination__item.pagination__item--jump.pagination__item--next > a");
-      });
-      if (bottomNextLink) {
-        await page.click("#c45756 > div > div > nav > ul > li.pagination__item.pagination__item--jump.pagination__item--next > a");
-        nextPage = true;
-      } else {
-        nextPage = false;
-      }
-    } //end of while loop
+      //end of while loop
   
-    console.log(allJobLinks)
+    console.log(jobLinks)
     
         let allJobs = [];
     
-        for (let jobLink of allJobLinks) {
+        for (let jobLink of jobLinks) {
           let job = {
             title: "",
-            location: "45527 Hattingen",
-            hospital: "VAMED Klinik Hattingen",
-            city : "Hattingen",
+            location: "53127 Bonn",
+            hospital: "Zentrum für Kinderheilkunde des Universitätsklinikums Bonn",
+            city : "Bonn",
             link: "",
             level: "",
             email : "",
@@ -67,7 +47,7 @@ let hattingenn = async () => {
           await page.waitForTimeout(1000);
           //get title
           let title = await page.evaluate(() => {
-            let ttitle = document.querySelector("h1.content-page-header__title");
+            let ttitle = document.querySelector("h1.headline");
             return ttitle ? ttitle.innerText : "";
           });
           job.title = title;
@@ -77,16 +57,12 @@ let hattingenn = async () => {
           });
           //get email
           let email = await page.evaluate(()=>{
-            let eml = document.querySelector("div.block-text > p > a");
-            return eml ? eml.innerText : "N/A"
+              let eml = document.querySelector("body > main > div > main > div > div.mainItemAjax > section.o-section.-padding.module-visual-statement.-offerdetail > div > div > div:nth-child(8) > div > p:nth-child(2) > a");
+            return eml ? eml.innerText : "N/A";
           })
           job.email = String() + email
           //apply link
-          let link = await page.evaluate(()=>{
-              let lnk = document.querySelector("a.button");
-              return lnk ? lnk.href : "N/A"
-          })
-          job.link = link;
+          job.link = jobLink;
           //get level
           let level = text.match(/Facharzt|Chefarzt|Assistenzarzt/);
           let position = text.match(/arzt|pflege/);
@@ -134,5 +110,5 @@ let hattingenn = async () => {
       });
       
     }
-    // hattingenn()
-    export default hattingenn;
+    kpw()
+    export default kpw;
